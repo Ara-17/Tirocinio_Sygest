@@ -128,11 +128,17 @@ def run_monitoring():
                             missing_headers = value.get("missing", [])
                             break
 
+                # Formatto la lista in una stringa di testo pulita per Zabbix e per le email
+                missing_text = ", ".join(missing_headers) if missing_headers else "Tutti gli header di sicurezza sono presenti."
+
                 # unisco le informazioni dell'SSL e quelle degli Header
+                # Creo la chiave "headers" in modo che corrisponda al JSONPath $.headers.x di Zabbix
                 report = {
                     "ssl": ssl_info,
-                    "missing_headers": missing_headers,
-                    "missing_count": len(missing_headers) # Conto quanti header mancano
+                    "headers": {
+                        "missing_count": len(missing_headers), # Conto quanti header mancano
+                        "missing_list": missing_text           # Passo il testo formattato
+                    }
                 }
 
                 # Creo un oggetto 'ItemValue', il formato richiesto da Zabbix per ricevere i dati.
@@ -150,4 +156,5 @@ def run_monitoring():
             connection.close()
 
 if __name__ == "__main__":
+
     run_monitoring()
