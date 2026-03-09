@@ -207,6 +207,40 @@ def sync_hosts(api, db_targets):
                     }
                 ]
             )
+
+            # Item dipendenti dagli Header di Sicurezza
+            api.item.create(
+                name="Sicurezza Web: Totale Header mancanti", 
+                key_="headers.missing_count", 
+                hostid=host_id, 
+                type=18, # type = 18 vuol dire che stiamo creando un Dependent Item
+                value_type=3, # value_type = 3 vuol dire numerico intero (per fare controlli matematici)
+                master_itemid=i_ssl['itemids'][0], # si aggancia al Master Item (sygest.ssl_headers)
+                preprocessing=[
+                    {
+                        "type": 12, # usa il JSONPath per estrarre la singola variabile
+                        "params": "$.headers.missing_count", 
+                        "error_handler": 0, # obbligatorio dopo Zabbix 7.0
+                        "error_handler_params": ""
+                    }
+                ]
+            )
+            api.item.create(
+                name="Sicurezza Web: Lista Header mancanti", 
+                key_="headers.missing_list", 
+                hostid=host_id, 
+                type=18, # type = 18 vuol dire che stiamo creando un Dependent Item
+                value_type=4, # value_type = 4 vuol dire testo
+                master_itemid=i_ssl['itemids'][0], # si aggancia al Master Item
+                preprocessing=[
+                    {
+                        "type": 12, # usa il JSONPath per estrarre la singola variabile
+                        "params": "$.headers.missing_list", 
+                        "error_handler": 0, # obbligatorio dopo Zabbix 7.0
+                        "error_handler_params": ""
+                    }
+                ]
+            )
             
             # Item dipendenti dalle Vulnerabilità
             api.item.create(
@@ -269,6 +303,19 @@ def sync_hosts(api, db_targets):
                 expression=f"last(/{hostname}/ssl.thumbprint)<>last(/{hostname}/ssl.thumbprint,#2)", 
                 priority=1
             )
+            
+            # Trigger per gli Header di Sicurezza
+            api.trigger.create(
+                description=f"Peggioramento Web: Aumentati gli header di sicurezza mancanti su {{HOST.NAME}}", 
+                expression=f"last(/{hostname}/headers.missing_count)>last(/{hostname}/headers.missing_count,#2)", 
+                priority=3
+            )
+            api.trigger.create(
+                description=f"Miglioramento Web: Diminuiti gli header di sicurezza mancanti su {{HOST.NAME}}", 
+                expression=f"last(/{hostname}/headers.missing_count)<last(/{hostname}/headers.missing_count,#2)", 
+                priority=1
+            )
+
             api.trigger.create(
                 description=f"Allarme Sicurezza: Nuovi CVE rilevati su {{HOST.NAME}}", 
                 expression=f"length(last(/{hostname}/vuln.new_active_list))>0", 
