@@ -46,7 +46,7 @@ def configure_zabbix_alerts(api):
         )
         print("Server SMTP (Gmail) configurato e ATTIVATO su Zabbix.")
     
-    # CONFIGURAZIONE UTENTE ADMIN (DESTINATARIO)
+    # CONFIGURAZIONE UTENTE ADMIN (DESTINATARIO E FILTRO ANTI-SPAM)
     # Cerco l'utente "Admin" nel sistema
     users = api.user.get(filter={"username": "Admin"})
     if users and media_types:
@@ -60,15 +60,17 @@ def configure_zabbix_alerts(api):
                 "mediatypeid": media_id,
                 "sendto": ["arashpreet.singh@studenti.unipr.it"], # Destinatario
                 "active": 0,    # (0 = enable)
-                "severity": 63, # Per ricevere tutti i livelli di gravita'
+                # Filtro ANTI-SPAM dove imposto la Severity a 60 (esclude gli allarmi di tipo "Info").
+                # In questo modo, la prima lettura massiva di CVE non spamma la casella mail.
+                "severity": 60, 
                 "period": "1-7,00:00-24:00" # Accetto mail 7 giorni su 7, 24 ore su 24
             }]
         )
-        print("Email di destinazione associata all'utente Admin.")
+        print("Email di destinazione associata all'utente Admin (Filtro Anti-Spam ATTIVO).")
 
     # CREAZIONE DELLA ACTION PER L'INVIO
     action_name = "Invia Notifiche di Sicurezza via Mail"
-    # Controllo se l'Action esiste già per evitare di crearne dei duplicati
+    # Controllo se l'Action esiste già per evitare di crearne duplicati
     actions = api.action.get(filter={"name": action_name})
     if not actions and users and media_types:
         
@@ -123,224 +125,325 @@ def sync_hosts(api, db_targets):
     
     db_hostnames = []
 
-    print("\nSincronizzazione Host...")
+    print("\nSincronizzazione Host e configurazione Items/Triggers...")
     
     # FASE DI CREAZIONE E AGGIORNAMENTO
     for target in db_targets:
         hostname = target['hostname']
         db_hostnames.append(hostname) # Salvo i nomi per la fase di cancellazione successiva
         
-        # In Zabbix, status 0 significa "Monitorato" e 1 significa "Non Monitorato".
-        # Nel mio DB è l'opposto (1=ON, 0=OFF), quindi applico l'inversione logica.
-        desired_status = 0 if target['active'] else 1 
+        # Se un host va in errore, Zabbix va in crash ma passa al prossimo.
+        try:
+            # In Zabbix, status 0 significa "Monitorato" e 1 significa "Non Monitorato".
+            # Nel mio DB è l'opposto (1=ON, 0=OFF), quindi applico l'inversione logica.
+            desired_status = 0 if target['active'] else 1 
+            host_id = None
 
-        # Se l'host del database non esiste in Zabbix, procedo alla creazione
-        if hostname not in zbx_host_dict:
-            print(f"Creazione di '{hostname}' e dei suoi Items/Triggers...")
-            
-            # Creo l'Host
-            # L'interfaccia richiede un IP perché io uso item di tipo "Trapper", non agent
-            new_host = api.host.create(
-                host=hostname, 
-                status=desired_status, 
-                groups=[{"groupid": group_id}],
-                interfaces=[
-                    {
-                        "type": 1, 
-                        "main": 1, 
-                        "useip": 1, 
-                        "ip": "127.0.0.1", 
-                        "dns": "", 
-                        "port": "10050"
-                    }
-                ]
-            )
-            host_id = new_host['hostids'][0]
-            
+            # Se l'host del database non esiste in Zabbix, procedo alla creazione
+            if hostname not in zbx_host_dict:
+                print(f"Creazione di '{hostname}' e dei suoi Items/Triggers...")
+                
+                # Creo l'Host
+                # L'interfaccia richiede un IP perché io uso item di tipo "Trapper", non agent
+                new_host = api.host.create(
+                    host=hostname, 
+                    status=desired_status, 
+                    groups=[{"groupid": group_id}],
+                    interfaces=[
+                        {
+                            "type": 1, 
+                            "main": 1, 
+                            "useip": 1, 
+                            "ip": "127.0.0.1", 
+                            "dns": "", 
+                            "port": "10050"
+                        }
+                    ]
+                )
+                host_id = new_host['hostids'][0]
+                
+            # Se invece l'host esiste già in Zabbix, controllo se lo stato (ON/OFF) sia cambiato
+            else:
+                host_id = zbx_host_dict[hostname]['hostid']
+                zbx_status = int(zbx_host_dict[hostname]['status'])
+                if zbx_status != desired_status:
+                    # Se c'è una discrepanza tra il mio DB e Zabbix, aggiorno Zabbix
+                    api.host.update(hostid=host_id, status=desired_status)
+                    print(f"Stato aggiornato per '{hostname}'")
+
+            # --- FUNZIONE DI AIUTO PER GLI ITEM ---
+            # Questa funzione risolve il bug di Zabbix costruendo dinamicamente i parametri
+            # per evitare di mandare master_itemid vuoti che farebbero crashare le API
+            def create_or_update_item(name, key_, item_type, val_type, master_id=None, prep=None):
+                existing = api.item.get(filter={"key_": key_}, hostids=host_id)
+                
+                # Prendo i parametri base richiesti
+                params = {
+                    "name": name,
+                    "type": item_type,
+                    "value_type": val_type
+                }
+                # Aggiungo i parametri opzionali SOLO se esistono
+                if master_id is not None:
+                    params["master_itemid"] = master_id
+                if prep is not None:
+                    params["preprocessing"] = prep
+
+                if existing:
+                    # L'Item esiste gia', quindi lo aggiorno
+                    params["itemid"] = existing[0]['itemid']
+                    api.item.update(**params)
+                    return existing[0]['itemid']
+                else:
+                    # L'Item non esiste, lo creo agganciandolo all'host corrente
+                    params["hostid"] = host_id
+                    params["key_"] = key_
+                    new_item = api.item.create(**params)
+                    return new_item['itemids'][0]
+
             # --- CREAZIONE TRAPPER ITEMS ---
-            i_ssl = api.item.create(
-                name="JSON - SSL", 
-                key_="sygest.ssl_headers", 
-                hostid=host_id, 
-                type=2, # type = 2 indica che stiamo creando un Zabbix trapper item
-                value_type=4 # value_type = 4 vuole dire che sia d tipo text
-            )
-            i_vuln = api.item.create(
-                name="JSON - Vuln", 
-                key_="sygest.vuln", 
-                hostid=host_id, 
-                type=2, # type = 2 indica che stiamo creando un Zabbix trapper item
-                value_type=4 # value_type = 4 vuole dire che sia d tipo text
-            )
+            # type = 2 indica che stiamo creando un Zabbix trapper item
+            # value_type = 4 vuole dire che è di tipo text
+            i_ssl_id = create_or_update_item("JSON - SSL", "sygest.ssl_headers", 2, 4)
+            i_vuln_id = create_or_update_item("JSON - Vuln", "sygest.vuln", 2, 4)
             
             # --- CREAZIONE DEPENDENT ITEMS ---            
             # Item dipendenti dall'SSL
-            api.item.create(
-                name="SSL: Giorni scadenza CA", 
-                key_="ssl.days_left", 
-                hostid=host_id, 
-                type=18, # type = 18 vuol dire che stiamo creando un Dependent Item
-                value_type=3, 
-                master_itemid=i_ssl['itemids'][0], # si aggancia al Master Item
-                preprocessing=[
+            # type = 18 vuol dire che stiamo creando un Dependent Item
+            create_or_update_item(
+                "SSL: Giorni scadenza CA",  # Il nome visibile dell'Item nell'interfaccia di Zabbix
+                "ssl.days_left",            # La chiave univoca interna dell'Item per Zabbix
+                18,                         # type = 18 indica a Zabbix che questo è un "Dependent Item"
+                3,                          # value_type = 3 indica un "Numerico Intero". Fondamentale per fare i calcoli matematici nei Trigger
+                i_ssl_id,                   # L'ID del Master Item (il Trapper che ha ricevuto il JSON intero) a cui questo item è agganciato                    
+                [
+                    # Definisco lo step di "Preprocessing" per dire a Zabbix come estrarre il dato
                     {
-                        "type": 12, # usa il JSONPath per estrarre la singola variabile
-                        "params": "$.ssl.days_left", 
-                        "error_handler": 0, # obbligatorio dopo Zabbix 7.0
+                        "type": 12,                              # type = 12 indica il metodo "JSONPath"
+                        "params": "$.new_patched_count",         # Il percorso esatto nel JSON dove si trova il numero
+                        "error_handler": 0,                      # 0 = Default (Requisito obbligatorio imposto dalle API di Zabbix 7.0 in poi)
                         "error_handler_params": ""
                     }
                 ]
             )
-            api.item.create(
-                name="SSL: Thumbprint", 
-                key_="ssl.thumbprint", 
-                hostid=host_id, 
-                type=18, # type = 18 vuol dire che stiamo creando un Dependent Item
-                value_type=1, 
-                master_itemid=i_ssl['itemids'][0], # si aggancia al Master Item
-                preprocessing=[
+            create_or_update_item(
+                "SSL: Thumbprint", # Il nome visibile dell'Item nell'interfaccia di Zabbix
+                "ssl.thumbprint",  # La chiave univoca interna dell'Item per Zabbix
+                18,                # type = 18 indica a Zabbix che questo è un "Dependent Item"
+                1,                 # value_type = 4 indica un "Character"
+                i_ssl_id,          # L'ID del Master Item (il Trapper che ha ricevuto il JSON intero) a cui questo item è agganciato
+                [
                     {
-                        "type": 12, # usa il JSONPath per estrarre la singola variabile
-                        "params": "$.ssl.thumbprint", 
-                        "error_handler": 0, # obbligatorio dopo Zabbix 7.0
+                        "type": 12,                              # type = 12 indica il metodo "JSONPath"
+                        "params": "$.new_patched_count",         # Il percorso esatto nel JSON dove si trova il numero
+                        "error_handler": 0,                      # 0 = Default (Requisito obbligatorio imposto dalle API di Zabbix 7.0 in poi)
                         "error_handler_params": ""
                     }
                 ]
             )
 
             # Item dipendenti dagli Header di Sicurezza
-            api.item.create(
-                name="Sicurezza Web: Totale Header mancanti", 
-                key_="headers.missing_count", 
-                hostid=host_id, 
-                type=18, # type = 18 vuol dire che stiamo creando un Dependent Item
-                value_type=3, # value_type = 3 vuol dire numerico intero (per fare controlli matematici)
-                master_itemid=i_ssl['itemids'][0], # si aggancia al Master Item (sygest.ssl_headers)
-                preprocessing=[
+            # value_type = 3 vuol dire numerico intero (per fare controlli matematici)
+            create_or_update_item(
+                "Sicurezza Web: Totale Header mancanti", # Il nome visibile dell'Item nell'interfaccia di Zabbix
+                "headers.missing_count",                 # La chiave univoca interna dell'Item per Zabbix
+                18,                                      # type = 18 indica a Zabbix che questo è un "Dependent Item"
+                3,                                       # value_type = 3 indica un "Numerico Intero". Fondamentale per fare i calcoli matematici nei Trigger
+                i_ssl_id,                                # L'ID del Master Item (il Trapper che ha ricevuto il JSON intero) a cui questo item è agganciato
+                [
+                    # Definisco lo step di "Preprocessing" per dire a Zabbix come estrarre il dato
                     {
-                        "type": 12, # usa il JSONPath per estrarre la singola variabile
-                        "params": "$.headers.missing_count", 
-                        "error_handler": 0, # obbligatorio dopo Zabbix 7.0
+                        "type": 12,                              # type = 12 indica il metodo "JSONPath"
+                        "params": "$.new_patched_count",         # Il percorso esatto nel JSON dove si trova il numero
+                        "error_handler": 0,                      # 0 = Default (Requisito obbligatorio imposto dalle API di Zabbix 7.0 in poi)
                         "error_handler_params": ""
                     }
                 ]
             )
-            api.item.create(
-                name="Sicurezza Web: Lista Header mancanti", 
-                key_="headers.missing_list", 
-                hostid=host_id, 
-                type=18, # type = 18 vuol dire che stiamo creando un Dependent Item
-                value_type=4, # value_type = 4 vuol dire testo
-                master_itemid=i_ssl['itemids'][0], # si aggancia al Master Item
-                preprocessing=[
+            create_or_update_item(
+                "Sicurezza Web: Lista Header mancanti", # Il nome visibile dell'Item nell'interfaccia di Zabbix
+                "headers.missing_list",                 # La chiave univoca interna dell'Item per Zabbix
+                18,                                     # type = 18 indica a Zabbix che questo è un "Dependent Item"
+                4,                                      # value_type = 4 indica un "Text"
+                i_ssl_id,                               # L'ID del Master Item (il Trapper che ha ricevuto il JSON intero) a cui questo item è agganciato
+                [
+                    # Definisco lo step di "Preprocessing" per dire a Zabbix come estrarre il dato
                     {
-                        "type": 12, # usa il JSONPath per estrarre la singola variabile
-                        "params": "$.headers.missing_list", 
-                        "error_handler": 0, # obbligatorio dopo Zabbix 7.0
+                        "type": 12,                              # type = 12 indica il metodo "JSONPath"
+                        "params": "$.new_patched_count",         # Il percorso esatto nel JSON dove si trova il numero
+                        "error_handler": 0,                      # 0 = Default (Requisito obbligatorio imposto dalle API di Zabbix 7.0 in poi)
                         "error_handler_params": ""
                     }
                 ]
             )
             
             # Item dipendenti dalle Vulnerabilità
-            api.item.create(
-                name="Sicurezza: Totale CVE attivi", 
-                key_="vuln.total_active", 
-                hostid=host_id,
-                type=18, value_type=3, 
-                master_itemid=i_vuln['itemids'][0], 
-                preprocessing=[
+            create_or_update_item(
+                "Sicurezza: Totale CVE attivi", # Il nome visibile dell'Item nell'interfaccia di Zabbix
+                "vuln.total_active",            # La chiave univoca interna dell'Item per Zabbix
+                18,                             # type = 18 indica a Zabbix che questo è un "Dependent Item"
+                3,                              # value_type = 3 indica un "Numerico Intero". Fondamentale per fare i calcoli matematici nei Trigger
+                i_vuln_id,                      # L'ID del Master Item (il Trapper che ha ricevuto il JSON intero) a cui questo item è agganciato
+                [
+                    # Definisco lo step di "Preprocessing" per dire a Zabbix come estrarre il dato
                     {
-                        "type": 12, # usa il JSONPath per estrarre la singola variabile
-                        "params": "$.total_active",
-                        "error_handler": 0, # obbligatorio dopo Zabbix 7.0
+                        "type": 12,                              # type = 12 indica il metodo "JSONPath"
+                        "params": "$.new_patched_count",         # Il percorso esatto nel JSON dove si trova il numero
+                        "error_handler": 0,                      # 0 = Default (Requisito obbligatorio imposto dalle API di Zabbix 7.0 in poi)
                         "error_handler_params": ""
                     }
                 ]
             )
-            api.item.create(
-                name="Sicurezza: Lista nuovi CVE attivi", 
-                key_="vuln.new_active_list", 
-                hostid=host_id, 
-                type=18, 
-                value_type=4, 
-                master_itemid=i_vuln['itemids'][0], 
-                preprocessing=[
+            create_or_update_item(
+                "Sicurezza: Lista nuovi CVE attivi", # Il nome visibile dell'Item nell'interfaccia di Zabbix
+                "vuln.new_active_list",              # La chiave univoca interna dell'Item per Zabbix
+                18,                                  # type = 18 indica a Zabbix che questo è un "Dependent Item"
+                4,                                   # value_type = 4 indica un "Text"
+                i_vuln_id,                           # L'ID del Master Item (il Trapper che ha ricevuto il JSON intero) a cui questo item è agganciato
+                [
+                    # Definisco lo step di "Preprocessing" per dire a Zabbix come estrarre il dato
                     {
-                        "type": 12, # usa il JSONPath per estrarre la singola variabile
-                        "params": "$.new_active_text", 
-                        "error_handler": 0, # obbligatorio dopo Zabbix 7.0
+                        "type": 12,                              # type = 12 indica il metodo "JSONPath"
+                        "params": "$.new_patched_count",         # Il percorso esatto nel JSON dove si trova il numero
+                        "error_handler": 0,                      # 0 = Default (Requisito obbligatorio imposto dalle API di Zabbix 7.0 in poi)
                         "error_handler_params": ""
                     }
                 ]
             )
-            api.item.create(
-                name="Sicurezza: Lista patch trovate",
-                key_="vuln.new_patched_list", 
-                hostid=host_id, 
-                type=18, 
-                value_type=4, 
-                master_itemid=i_vuln['itemids'][0], 
-                preprocessing=[
+            create_or_update_item(
+                "Sicurezza: Lista patch trovate", # Il nome visibile dell'Item nell'interfaccia di Zabbix
+                "vuln.new_patched_list",          # La chiave univoca interna dell'Item per Zabbix
+                18,                               # type = 18 indica a Zabbix che questo è un "Dependent Item"
+                4,                                # value_type = 4 indica un "Text"
+                i_vuln_id,                        # L'ID del Master Item (il Trapper che ha ricevuto il JSON intero) a cui questo item è agganciato
+                [
+                    # Definisco lo step di "Preprocessing" per dire a Zabbix come estrarre il dato
                     {
-                        "type": 12, # usa il JSONPath per estrarre la singola variabile
-                        "params": "$.new_patched_text", 
-                        "error_handler": 0, # obbligatorio dopo Zabbix 7.0
+                        "type": 12,                              # type = 12 indica il metodo "JSONPath"
+                        "params": "$.new_patched_count",         # Il percorso esatto nel JSON dove si trova il numero
+                        "error_handler": 0,                      # 0 = Default (Requisito obbligatorio imposto dalle API di Zabbix 7.0 in poi)
+                        "error_handler_params": ""
+                    }
+                ]
+            )
+            
+            # Nuovi Item per contare i CVE in modo da poter far scattare i trigger giusti
+            create_or_update_item(
+                "Sicurezza: Nuovi CVE (Count)", # Il nome visibile dell'Item nell'interfaccia di Zabbix
+                "vuln.new_active_count",        # La chiave univoca interna dell'Item per Zabbix
+                18,                             # type = 18 indica a Zabbix che questo è un "Dependent Item"
+                3,                              # value_type = 3 indica un "Numerico Intero". Fondamentale per fare i calcoli matematici nei Trigger
+                i_vuln_id,                      # L'ID del Master Item (il Trapper che ha ricevuto il JSON intero) a cui questo item è agganciato
+                [
+                    # Definisco lo step di "Preprocessing" per dire a Zabbix come estrarre il dato
+                    {
+                        "type": 12,                              # type = 12 indica il metodo "JSONPath"
+                        "params": "$.new_patched_count",         # Il percorso esatto nel JSON dove si trova il numero
+                        "error_handler": 0,                      # 0 = Default (Requisito obbligatorio imposto dalle API di Zabbix 7.0 in poi)
+                        "error_handler_params": ""
+                    }
+                ]
+            )
+            create_or_update_item(
+                "Sicurezza: Nuovi CVE patchati (Count)", # Il nome visibile dell'Item nell'interfaccia di Zabbix
+                "vuln.new_patched_count",                # La chiave univoca interna dell'Item per Zabbix
+                18,                                      # type = 18 indica a Zabbix che questo è un "Dependent Item"
+                3,                                       # value_type = 3 indica un "Numerico Intero". Fondamentale per fare i calcoli matematici nei Trigger
+                i_vuln_id,                               # L'ID del Master Item (il Trapper che ha ricevuto il JSON intero) a cui questo item è agganciato
+                [
+                    # Definisco lo step di "Preprocessing" per dire a Zabbix come estrarre il dato
+                    {
+                        "type": 12,                              # type = 12 indica il metodo "JSONPath"
+                        "params": "$.new_patched_count",         # Il percorso esatto nel JSON dove si trova il numero
+                        "error_handler": 0,                      # 0 = Default (Requisito obbligatorio imposto dalle API di Zabbix 7.0 in poi)
                         "error_handler_params": ""
                     }
                 ]
             )
 
+            # --- FUNZIONE DI AIUTO PER I TRIGGERS ---
+            # Questa funzione crea un trigger se non esiste, o lo aggiorna se le regole (expression/priority) sono cambiate
+            def create_or_update_trigger(desc, expr, prio):
+                # Interrogo Zabbix per vedere se su questo specifico Host c'è già un trigger con questa esatta descrizione
+                existing = api.trigger.get(filter={"description": desc}, hostids=host_id)
+                
+                if existing:
+                    # Se il trigger esiste già, tento di sovrascrivere la sua logica e la sua priorità
+                    try:
+                        api.trigger.update(triggerid=existing[0]['triggerid'], expression=expr, priority=prio)
+                    except Exception:
+                        # Zabbix ha un comportamento particolare nelle API: se gli mandi un comando di update
+                        # con un'espressione che è già perfettamente identica a quella che ha in pancia, 
+                        # lui va in panico e lancia un'eccezione. Con questo pass ignoriamo il falso errore in modo pulito.
+                        pass 
+                else:
+                    # Se non trova nessun trigger con quel nome, chiama l'API di creazione per farlo da zero
+                    api.trigger.create(description=desc, expression=expr, priority=prio)
+
             # --- CREAZIONE DEI TRIGGERS ---
-            # Passo lexpression e il livello di gravità che va da 1 (Info) a 5 (Disaster).
-            api.trigger.create(
-                description=f"Allarme: Certificato SSL in scadenza per {{HOST.NAME}}", 
-                expression=f"last(/{hostname}/ssl.days_left)<30", 
-                priority=4
+            # Passo l'expression e il livello di gravità che va da 1 (Info) a 5 (Disaster).
+            create_or_update_trigger(
+                f"Allarme: Certificato SSL in scadenza per {{HOST.NAME}}", 
+                f"last(/{hostname}/ssl.days_left)<30",
+                4
             )
-            api.trigger.create(
-                description=f"Info: Thumbprint SSL cambiato per {{HOST.NAME}}", 
-                expression=f"last(/{hostname}/ssl.thumbprint)<>last(/{hostname}/ssl.thumbprint,#2)", 
-                priority=1
-            )
+            create_or_update_trigger(f"Info: Thumbprint SSL cambiato per {{HOST.NAME}}", f"last(/{hostname}/ssl.thumbprint)<>last(/{hostname}/ssl.thumbprint,#2)", 1)
             
             # Trigger per gli Header di Sicurezza
-            api.trigger.create(
-                description=f"Peggioramento Web: Aumentati gli header di sicurezza mancanti su {{HOST.NAME}}", 
-                expression=f"length(last(/{hostname}/headers.missing_list))>=0 and last(/{hostname}/headers.missing_count)>last(/{hostname}/headers.missing_count,#2)", 
-                priority=3
+            create_or_update_trigger(
+                f"Peggioramento Web: Aumentati gli header di sicurezza mancanti su {{HOST.NAME}}", 
+                f"length(last(/{hostname}/headers.missing_list))>=0 and last(/{hostname}/headers.missing_count)>last(/{hostname}/headers.missing_count,#2)", 
+                4
             )
-            api.trigger.create(
-                description=f"Miglioramento Web: Diminuiti gli header di sicurezza mancanti su {{HOST.NAME}}", 
-                expression=f"length(last(/{hostname}/headers.missing_list))>=0 and last(/{hostname}/headers.missing_count)<last(/{hostname}/headers.missing_count,#2)", 
-                priority=1
+            create_or_update_trigger(
+                f"Miglioramento Web: Diminuiti gli header di sicurezza mancanti su {{HOST.NAME}}", 
+                f"length(last(/{hostname}/headers.missing_list))>=0 and last(/{hostname}/headers.missing_count)<last(/{hostname}/headers.missing_count,#2)", 
+                3
             )
-            api.trigger.create(
-                description = f"Prima lettura Web: Header di sicurezza mancanti su {{HOST.NAME}}",
-                expression=f"length(last(/{hostname}/headers.missing_list))>=0 and count(/{hostname}/headers.missing_count,#1)>=1 and count(/{hostname}/headers.missing_count,#2)=1",
-                priority = 3
-            )
-            api.trigger.create(
-                description=f"Risoluzione: Trovate nuove patch di sicurezza per {{HOST.NAME}}", 
-                expression=f"length(last(/{hostname}/vuln.new_patched_list))>0", 
-                priority=1
+            create_or_update_trigger(
+                f"Prima lettura Web: Header di sicurezza mancanti su {{HOST.NAME}}", 
+                f"length(last(/{hostname}/headers.missing_list))>=0 and count(/{hostname}/headers.missing_count,#1)>=1 and count(/{hostname}/headers.missing_count,#2)=1", 
+                3
             )
             
-        # Se invece l'host esiste già in Zabbix, controllo se lo stato (ON/OFF) è cambiato
-        else:
-            zbx_status = int(zbx_host_dict[hostname]['status'])
-            if zbx_status != desired_status:
-                # Se c'è una discrepanza tra il mio DB e Zabbix, aggiorno Zabbix
-                api.host.update(hostid=zbx_host_dict[hostname]['hostid'], status=desired_status)
-                print(f"Stato aggiornato per '{hostname}'")
+            # Trigger per le Vulnerabilita e CVE
+            # CASO 1: Tra 1 e 20 CVE Nuovi senza patch (High) -> Scatta l'Allarme e manda la mail (Priority 4)
+            create_or_update_trigger(
+                f"Allarme: Rilevati nuovi CVE critici su {{HOST.NAME}}", 
+                f"last(/{hostname}/vuln.new_active_count)>0 and last(/{hostname}/vuln.new_active_count)<=20", 
+                4
+            )
+            
+            # CASO 2: Tra 1 e 20 Patch Nuove trovate (Warning) -> Scatta l'Allarme e manda la mail (Priority 2)
+            create_or_update_trigger(
+                f"Risoluzione: Trovate nuove patch di sicurezza per {{HOST.NAME}}", 
+                f"last(/{hostname}/vuln.new_patched_count)>0 and last(/{hostname}/vuln.new_patched_count)<=20", 
+                2
+            )
+            
+            # CASO 3: Oltre 20 CVE (Prima Lettura Server) -> Scatta a livello Info (Priority 1)
+            # La regola "Severity 60" sull'utente Admin bloccherà l'invio della mail salvandoti dallo spam!
+            create_or_update_trigger(
+                f"Info: Prima lettura massiva CVE su {{HOST.NAME}}", 
+                f"last(/{hostname}/vuln.new_active_count)>20", 
+                1
+            )
+
+        except Exception as e:
+            # Catturo l'errore del singolo host per evitare che blocchi gli altri host successivi
+            print(f"Errore critico durante la sincronizzazione dell'host '{hostname}': {e}")
+            continue
 
     # FASE DI PULIZIA
     # Ora ciclo sugli host che sono in Zabbix. Se ne trovo uno che NON è più nel mio DB locale,
     # significa che l'ho cancellato tramite il mio host_manager quindi lo elimino anche da Zabbix
     for zbx_hostname, zbx_data in zbx_host_dict.items():
         if zbx_hostname not in db_hostnames:
-            api.host.delete(zbx_data['hostid'])
-            print(f"Host '{zbx_hostname}' eliminato da Zabbix perche' non piu' presente nel DB")
+            try:
+                api.host.delete(zbx_data['hostid'])
+                print(f"Host '{zbx_hostname}' eliminato da Zabbix perche' non piu' presente nel DB")
+            except Exception as e:
+                print(f"Impossibile eliminare l'host '{zbx_hostname}': {e}")
 
 def main():
     connection = None

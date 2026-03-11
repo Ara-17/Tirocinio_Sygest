@@ -98,8 +98,9 @@ def nvd_request(cpe_new_value):
             # In caso di disconnessione di rete, mi fermo 2 secondi e riprovo
             time.sleep(2)
             
-    # Se falliscono tutti e 3 i tentativi, ritorno una lista vuota
-    return []
+    # MODIFICA: Se falliscono tutti e 3 i tentativi, ritorno None (Errore API) anziche' una lista vuota.
+    # Cosi' lo script principale capisce che c'e' stato un disastro di rete e si ferma per sicurezza.
+    return None
 
 # Dal JSON fornito da NVD estraggo solo i tre dati che mi servono
 def extract_cve_details(cve_item):
@@ -192,13 +193,16 @@ def run_monitoring():
                 # già rilevato in passato su questo specifico Host
                 cursor.execute("SELECT id, cve_id FROM vulnerabilities WHERE target_id = %s", (target_id,))
                 
-                # Salvo l'elenco in memoria  sotto forma di Dizionario {cve_id: id_database}
-                # Questo rende la ricerca di un elemento piu' comoda
+                # Salvo l'elenco in memoria sotto forma di Dizionario {cve_id: id_database}
                 existing_db_cves = {row['cve_id']: row['id'] for row in cursor.fetchall()}
                 
                 new_active_list = []    # Per i nuovi CVE che non erano gia' nel DB
                 new_patched_list = []   # Per i CVE che erano gia' nel DB per cui e' uscita una patch
-                total_active_count = 0  # Contatore per il contggio di CVE
+                total_active_count = 0  # Contatore per il conteggio di CVE
+                
+                # MODIFICA: Variabili per proteggere Zabbix e scovare i vecchi CVE disinstallati
+                currently_detected_cves = set()
+                api_error_occurred = False
                 
                 # Inizio ad iterare per ogni software trovato sul server
                 for cpe in found_cpes:
@@ -207,9 +211,18 @@ def run_monitoring():
                     # Interrogo il database NVD per quel software
                     vulnerabilities = nvd_request(cpe)
                     
+                    # MODIFICA: Controllo "Anti-Disastro"
+                    if vulnerabilities is None:
+                        print(f" [!] Errore critico API NVD per '{cpe}'. Salto l'host per evitare falsi positivi/negativi.")
+                        api_error_occurred = True
+                        break
+                    
                     # Analizzo ogni vulnerabilità riportata
                     for item in vulnerabilities:
                         cve_id, desc, patch_link = extract_cve_details(item)
+                        
+                        # Salvo in memoria che oggi ho visto fisicamente questo CVE
+                        currently_detected_cves.add(cve_id)
                         
                         # CASO 1:TROVATA PATCH
                         if patch_link:
@@ -236,6 +249,18 @@ def run_monitoring():
                     # Pausa forzata di 0.6 secondi tra un software e l'altro per rispettare le policy del server NVD
                     time.sleep(0.6) 
 
+                # MODIFICA: Se l'API e' caduta a meta' controllo, annullo tutte le query al DB per questo host e vado al prossimo
+                if api_error_occurred:
+                    connection.rollback()
+                    continue
+
+                # MODIFICA: FASE DI PULIZIA "CVE FANTASMA"
+                for db_cve_id, db_row_id in existing_db_cves.items():
+                    # Se Nmap non ha piu' trovato il software che generava questo CVE...
+                    if db_cve_id not in currently_detected_cves:
+                        # ...significa che e' stato rimosso o aggiornato! Lo elimino dal DB.
+                        cursor.execute("DELETE FROM vulnerabilities WHERE id = %s", (db_row_id,))
+
                 connection.commit()
 
                 # Creo una variabile di testo vuota
@@ -258,7 +283,7 @@ def run_monitoring():
                         patched_text_formatted += f"[{cve['cve_id']}] Software: {cve['vendor'].capitalize()} {cve['product']}\n"
                         patched_text_formatted += f"Download Patch: {cve['patch']}\n\n"
 
-                # Preparo il pacchetto finale da consegnare a Zabbi
+                # Preparo il pacchetto finale da consegnare a Zabbix
                 report = {
                     "total_active": total_active_count,
                     "new_active_count": len(new_active_list),
