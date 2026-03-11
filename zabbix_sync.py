@@ -307,11 +307,6 @@ def sync_hosts(api, db_targets):
             # Trigger per gli Header di Sicurezza
             api.trigger.create(
                 description=f"Peggioramento Web: Aumentati gli header di sicurezza mancanti su {{HOST.NAME}}", 
-                expression=f"last(/{hostname}/headers.missing_count)>last(/{hostname}/headers.missing_count,#2)", 
-                priority=3
-            )
-            api.trigger.create(
-                description=f"Peggioramento Web: Aumentati gli header di sicurezza mancanti su {{HOST.NAME}}", 
                 expression=f"length(last(/{hostname}/headers.missing_list))>=0 and last(/{hostname}/headers.missing_count)>last(/{hostname}/headers.missing_count,#2)", 
                 priority=3
             )
