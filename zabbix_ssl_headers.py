@@ -41,7 +41,7 @@ def get_ssl_details(hostname):
                     # ottengo il certificato presentato dal server
                     cert = ssock.getpeercert()
                     
-                    # Calcolo il thumbprint" e prendo il certificato in formato binario,
+                    # Calcolo il thumbprint e prendo il certificato in formato binario,
                     # lo passo all'algoritmo di hashing SHA-256 e lo converto in stringa esadecimale
                     thumbprint = hashlib.sha256(ssock.getpeercert(binary_form=True)).hexdigest().upper()
                     
@@ -71,15 +71,15 @@ def get_headers_with_shcheck(hostname):
         # Uso 'subprocess.run' per eseguire il tool shcheck come se stessi scrivendo nel terminale.
         result = subprocess.run(
             [
-                sys.executable,        # Uso lo stesso Python che sta eseguendo questo script
+                sys.executable,          # Uso lo stesso Python che sta eseguendo questo script
                 "-m", "shcheck.shcheck", # Richiamo il modulo shcheck installato tramite pip
-                "-j",                  # -j dico a shcheck di restituirmi i risultati in formato JSON
-                "-g", "-x", "-i",      # Disabilito alcuni controlli marginali per velocizzare l'esecuzione
-                f"https://{hostname}"  # Il target da analizzare
+                "-j",                    # -j dico a shcheck di restituirmi i risultati in formato JSON
+                "-g", "-x", "-i",        # Disabilito alcuni controlli marginali per velocizzare l'esecuzione
+                f"https://{hostname}"    # Il target da analizzare
             ],
-            capture_output=True,       # non stampo a video l'output
+            capture_output=True,         # non stampo a video l'output
             text=True, 
-            timeout=15                 # Imposto un timeout massimo di 15 secondi per evitare che lo script si blocchi all'infinito
+            timeout=15                   # Imposto un timeout massimo di 15 secondi per evitare che lo script si blocchi all'infinito
         )
         
         # Pulisco l'output da eventuali spazi vuoti iniziali e finali
@@ -131,7 +131,7 @@ def run_monitoring():
                 # Formatto la lista in una stringa di testo pulita per Zabbix e per le email
                 missing_text = ", ".join(missing_headers) if missing_headers else "Tutti gli header di sicurezza sono presenti."
 
-                # unisco le informazioni dell'SSL e quelle degli Header
+                # Unisco le informazioni dell'SSL e quelle degli Header
                 # Creo la chiave "headers" in modo che corrisponda al JSONPath $.headers.x di Zabbix
                 report = {
                     "ssl": ssl_info,
@@ -156,5 +156,4 @@ def run_monitoring():
             connection.close()
 
 if __name__ == "__main__":
-
     run_monitoring()

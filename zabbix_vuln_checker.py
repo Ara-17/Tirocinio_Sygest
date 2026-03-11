@@ -149,6 +149,7 @@ def esegui_nmap(hostname):
     comando = [
         nmap_path, 
         "-sV", # cerca di determinare le versioni esatte dei servizi in ascolto
+        "-Pn",
         "--version-intensity", "9", # Alzo al massimo il livello di test da eseguire
         "--top-ports", "1000", # Analizzo le 1000 porte più comuni per risparmiare tempo
         "--open", 

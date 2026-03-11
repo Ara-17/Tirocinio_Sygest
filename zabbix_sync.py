@@ -311,15 +311,19 @@ def sync_hosts(api, db_targets):
                 priority=3
             )
             api.trigger.create(
+                description=f"Peggioramento Web: Aumentati gli header di sicurezza mancanti su {{HOST.NAME}}", 
+                expression=f"length(last(/{hostname}/headers.missing_list))>=0 and last(/{hostname}/headers.missing_count)>last(/{hostname}/headers.missing_count,#2)", 
+                priority=3
+            )
+            api.trigger.create(
                 description=f"Miglioramento Web: Diminuiti gli header di sicurezza mancanti su {{HOST.NAME}}", 
-                expression=f"last(/{hostname}/headers.missing_count)<last(/{hostname}/headers.missing_count,#2)", 
+                expression=f"length(last(/{hostname}/headers.missing_list))>=0 and last(/{hostname}/headers.missing_count)<last(/{hostname}/headers.missing_count,#2)", 
                 priority=1
             )
-
             api.trigger.create(
-                description=f"Allarme Sicurezza: Nuovi CVE rilevati su {{HOST.NAME}}", 
-                expression=f"length(last(/{hostname}/vuln.new_active_list))>0", 
-                priority=4
+                description = f"Prima lettura Web: Header di sicurezza mancanti su {{HOST.NAME}}",
+                expression=f"length(last(/{hostname}/headers.missing_list))>=0 and count(/{hostname}/headers.missing_count,#1)>=1 and count(/{hostname}/headers.missing_count,#2)=1",
+                priority = 3
             )
             api.trigger.create(
                 description=f"Risoluzione: Trovate nuove patch di sicurezza per {{HOST.NAME}}", 
