@@ -220,7 +220,7 @@ def sync_hosts(api, db_targets):
                     # Definisco lo step di "Preprocessing" per dire a Zabbix come estrarre il dato
                     {
                         "type": 12,                              # type = 12 indica il metodo "JSONPath"
-                        "params": "$.new_patched_count",         # Il percorso esatto nel JSON dove si trova il numero
+                        "params": "$.ssl.days_left",             # Il percorso esatto nel JSON dove si trova il numero
                         "error_handler": 0,                      # 0 = Default (Requisito obbligatorio imposto dalle API di Zabbix 7.0 in poi)
                         "error_handler_params": ""
                     }
@@ -230,12 +230,12 @@ def sync_hosts(api, db_targets):
                 "SSL: Thumbprint", # Il nome visibile dell'Item nell'interfaccia di Zabbix
                 "ssl.thumbprint",  # La chiave univoca interna dell'Item per Zabbix
                 18,                # type = 18 indica a Zabbix che questo è un "Dependent Item"
-                1,                 # value_type = 4 indica un "Character"
+                1,                 # value_type = 1 indica un "Character"
                 i_ssl_id,          # L'ID del Master Item (il Trapper che ha ricevuto il JSON intero) a cui questo item è agganciato
                 [
                     {
                         "type": 12,                              # type = 12 indica il metodo "JSONPath"
-                        "params": "$.new_patched_count",         # Il percorso esatto nel JSON dove si trova il numero
+                        "params": "$.ssl.thumbprint",            # Il percorso esatto nel JSON dove si trova il numero
                         "error_handler": 0,                      # 0 = Default (Requisito obbligatorio imposto dalle API di Zabbix 7.0 in poi)
                         "error_handler_params": ""
                     }
@@ -254,7 +254,7 @@ def sync_hosts(api, db_targets):
                     # Definisco lo step di "Preprocessing" per dire a Zabbix come estrarre il dato
                     {
                         "type": 12,                              # type = 12 indica il metodo "JSONPath"
-                        "params": "$.new_patched_count",         # Il percorso esatto nel JSON dove si trova il numero
+                        "params": "$.headers.missing_count",     # Il percorso esatto nel JSON dove si trova il numero
                         "error_handler": 0,                      # 0 = Default (Requisito obbligatorio imposto dalle API di Zabbix 7.0 in poi)
                         "error_handler_params": ""
                     }
@@ -270,7 +270,7 @@ def sync_hosts(api, db_targets):
                     # Definisco lo step di "Preprocessing" per dire a Zabbix come estrarre il dato
                     {
                         "type": 12,                              # type = 12 indica il metodo "JSONPath"
-                        "params": "$.new_patched_count",         # Il percorso esatto nel JSON dove si trova il numero
+                        "params": "$.headers.missing_list",      # Il percorso esatto nel JSON dove si trova il testo
                         "error_handler": 0,                      # 0 = Default (Requisito obbligatorio imposto dalle API di Zabbix 7.0 in poi)
                         "error_handler_params": ""
                     }
@@ -288,7 +288,7 @@ def sync_hosts(api, db_targets):
                     # Definisco lo step di "Preprocessing" per dire a Zabbix come estrarre il dato
                     {
                         "type": 12,                              # type = 12 indica il metodo "JSONPath"
-                        "params": "$.new_patched_count",         # Il percorso esatto nel JSON dove si trova il numero
+                        "params": "$.total_active",              # Il percorso esatto nel JSON dove si trova il numero
                         "error_handler": 0,                      # 0 = Default (Requisito obbligatorio imposto dalle API di Zabbix 7.0 in poi)
                         "error_handler_params": ""
                     }
@@ -304,7 +304,7 @@ def sync_hosts(api, db_targets):
                     # Definisco lo step di "Preprocessing" per dire a Zabbix come estrarre il dato
                     {
                         "type": 12,                              # type = 12 indica il metodo "JSONPath"
-                        "params": "$.new_patched_count",         # Il percorso esatto nel JSON dove si trova il numero
+                        "params": "$.new_active_text",           # Il percorso esatto nel JSON dove si trova il testo
                         "error_handler": 0,                      # 0 = Default (Requisito obbligatorio imposto dalle API di Zabbix 7.0 in poi)
                         "error_handler_params": ""
                     }
@@ -320,7 +320,7 @@ def sync_hosts(api, db_targets):
                     # Definisco lo step di "Preprocessing" per dire a Zabbix come estrarre il dato
                     {
                         "type": 12,                              # type = 12 indica il metodo "JSONPath"
-                        "params": "$.new_patched_count",         # Il percorso esatto nel JSON dove si trova il numero
+                        "params": "$.new_patched_text",          # Il percorso esatto nel JSON dove si trova il testo
                         "error_handler": 0,                      # 0 = Default (Requisito obbligatorio imposto dalle API di Zabbix 7.0 in poi)
                         "error_handler_params": ""
                     }
@@ -338,7 +338,7 @@ def sync_hosts(api, db_targets):
                     # Definisco lo step di "Preprocessing" per dire a Zabbix come estrarre il dato
                     {
                         "type": 12,                              # type = 12 indica il metodo "JSONPath"
-                        "params": "$.new_patched_count",         # Il percorso esatto nel JSON dove si trova il numero
+                        "params": "$.new_active_count",          # Il percorso esatto nel JSON dove si trova il numero
                         "error_handler": 0,                      # 0 = Default (Requisito obbligatorio imposto dalle API di Zabbix 7.0 in poi)
                         "error_handler_params": ""
                     }
