@@ -1,0 +1,4638 @@
+{
+  "SchemaVersion": 2,
+  "Trivy": {
+    "Version": "0.69.3"
+  },
+  "ReportID": "019ce675-2b5e-7c4f-9652-985c9f34531c",
+  "CreatedAt": "2026-03-13T10:09:24.4468068+01:00",
+  "ArtifactName": "C:/",
+  "ArtifactType": "filesystem",
+  "Results": [
+    {
+      "Target": "Program Files (x86)/dotnet/shared/Microsoft.AspNetCore.App/6.0.23/Microsoft.AspNetCore.App.deps.json",
+      "Class": "lang-pkgs",
+      "Type": "dotnet-core",
+      "Packages": [
+        {
+          "ID": "Microsoft.AspNetCore.App.Runtime.win-x86/6.0.23",
+          "Name": "Microsoft.AspNetCore.App.Runtime.win-x86",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.App.Runtime.win-x86@6.0.23",
+            "UID": "e14eac0ee4f3d6ab"
+          },
+          "Version": "6.0.23",
+          "Locations": [
+            {
+              "StartLine": 546,
+              "EndLine": 551
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2024-21386",
+          "VendorIDs": [
+            "GHSA-g74q-5xw3-j7q9"
+          ],
+          "PkgID": "Microsoft.AspNetCore.App.Runtime.win-x86/6.0.23",
+          "PkgName": "Microsoft.AspNetCore.App.Runtime.win-x86",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.App.Runtime.win-x86@6.0.23",
+            "UID": "e14eac0ee4f3d6ab"
+          },
+          "InstalledVersion": "6.0.23",
+          "FixedVersion": "6.0.27, 7.0.16, 8.0.2",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-21386",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:06b2414400f8ad13d4b5c3f4f39f85e92cb21ab93c116177204ab7bff28c8aa4",
+          "Title": "dotnet: Denial of Service in SignalR server",
+          "Description": ".NET Denial of Service Vulnerability",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-400"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "bitnami": 3,
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2024:0848",
+            "https://access.redhat.com/security/cve/CVE-2024-21386",
+            "https://bugzilla.redhat.com/2263085",
+            "https://bugzilla.redhat.com/2263086",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2263085",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2263086",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2279695",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2279697",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-21386",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-21404",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-30045",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-30046",
+            "https://devblogs.microsoft.com/dotnet/february-2024-updates/",
+            "https://errata.almalinux.org/9/ALSA-2024-0848.html",
+            "https://errata.rockylinux.org/RLSA-2024:2843",
+            "https://github.com/dotnet/aspnetcore",
+            "https://github.com/dotnet/aspnetcore/security/advisories/GHSA-g74q-5xw3-j7q9",
+            "https://linux.oracle.com/cve/CVE-2024-21386.html",
+            "https://linux.oracle.com/errata/ELSA-2024-0848.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-21386",
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-21386",
+            "https://ubuntu.com/security/notices/USN-6634-1",
+            "https://www.cve.org/CVERecord?id=CVE-2024-21386"
+          ],
+          "PublishedDate": "2024-02-13T18:15:56.737Z",
+          "LastModifiedDate": "2024-11-21T08:54:15.27Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2025-24070",
+          "VendorIDs": [
+            "GHSA-2865-hh9g-w894"
+          ],
+          "PkgID": "Microsoft.AspNetCore.App.Runtime.win-x86/6.0.23",
+          "PkgName": "Microsoft.AspNetCore.App.Runtime.win-x86",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.App.Runtime.win-x86@6.0.23",
+            "UID": "e14eac0ee4f3d6ab"
+          },
+          "InstalledVersion": "6.0.23",
+          "FixedVersion": "8.0.14, 9.0.3",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2025-24070",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:19ed9828d1eee2de81599a155a7ee7b28f7339c1bb611feb02e1cdeb5ff4132a",
+          "Title": "dotnet: Privilege Escalation Vulnerability in .NET SignInManager.RefreshSignInAsync Method",
+          "Description": "Weak authentication in ASP.NET Core \u0026amp; Visual Studio allows an unauthorized attacker to elevate privileges over a network.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-1390"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "bitnami": 3,
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:H",
+              "V3Score": 7
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:H",
+              "V3Score": 7
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+              "V3Score": 7.8
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2025:2669",
+            "https://access.redhat.com/security/cve/CVE-2025-24070",
+            "https://bugzilla.redhat.com/2349733",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2349733",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-24070",
+            "https://devblogs.microsoft.com/dotnet/dotnet-and-dotnet-framework-march-2025-servicing-updates/",
+            "https://errata.almalinux.org/9/ALSA-2025-2669.html",
+            "https://errata.rockylinux.org/RLSA-2025:2670",
+            "https://github.com/dotnet/aspnetcore",
+            "https://github.com/dotnet/aspnetcore/security/advisories/GHSA-2865-hh9g-w894",
+            "https://linux.oracle.com/cve/CVE-2025-24070.html",
+            "https://linux.oracle.com/errata/ELSA-2025-2670.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-24070",
+            "https://nvd.nist.gov/vuln/detail/CVE-2025-24070",
+            "https://ubuntu.com/security/notices/USN-7345-1",
+            "https://www.cve.org/CVERecord?id=CVE-2025-24070",
+            "https://www.herodevs.com/vulnerability-directory/cve-2025-24070"
+          ],
+          "PublishedDate": "2025-03-11T17:16:29.68Z",
+          "LastModifiedDate": "2025-07-02T14:25:46.603Z"
+        }
+      ]
+    },
+    {
+      "Target": "Program Files (x86)/dotnet/shared/Microsoft.AspNetCore.App/8.0.21/Microsoft.AspNetCore.App.deps.json",
+      "Class": "lang-pkgs",
+      "Type": "dotnet-core",
+      "Packages": [
+        {
+          "ID": "Microsoft.AspNetCore.App.Runtime.win-x86/8.0.21",
+          "Name": "Microsoft.AspNetCore.App.Runtime.win-x86",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.App.Runtime.win-x86@8.0.21",
+            "UID": "519ca42e8927d8ad"
+          },
+          "Version": "8.0.21",
+          "Locations": [
+            {
+              "StartLine": 582,
+              "EndLine": 587
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2026-26130",
+          "VendorIDs": [
+            "GHSA-4vgm-c2wm-63mw"
+          ],
+          "PkgID": "Microsoft.AspNetCore.App.Runtime.win-x86/8.0.21",
+          "PkgName": "Microsoft.AspNetCore.App.Runtime.win-x86",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.App.Runtime.win-x86@8.0.21",
+            "UID": "519ca42e8927d8ad"
+          },
+          "InstalledVersion": "8.0.21",
+          "FixedVersion": "8.0.25, 9.0.14, 10.0.4",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-26130",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:1329f01a8c80a0fb957fec5305d03846842d8adcc6f09494ae8feb50bcad74e5",
+          "Title": "asp.net: ASP.NET Core: Denial of Service via uncontrolled resource allocation",
+          "Description": "Allocation of resources without limits or throttling in ASP.NET Core allows an unauthorized attacker to deny service over a network.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-770"
+          ],
+          "VendorSeverity": {
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "redhat": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2026-26130",
+            "https://devblogs.microsoft.com/dotnet/dotnet-and-dotnet-framework-march-2026-servicing-updates",
+            "https://github.com/dotnet/announcements/issues/385",
+            "https://github.com/dotnet/aspnetcore",
+            "https://github.com/dotnet/aspnetcore/security/advisories/GHSA-4vgm-c2wm-63mw",
+            "https://linux.oracle.com/cve/CVE-2026-26130.html",
+            "https://linux.oracle.com/errata/ELSA-2026-4453.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-26130",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-26130",
+            "https://ubuntu.com/security/notices/USN-8085-1",
+            "https://www.cve.org/CVERecord?id=CVE-2026-26130"
+          ],
+          "PublishedDate": "2026-03-10T18:18:42.223Z",
+          "LastModifiedDate": "2026-03-11T13:53:20.707Z"
+        }
+      ]
+    },
+    {
+      "Target": "Program Files (x86)/dotnet/shared/Microsoft.AspNetCore.App/8.0.5/Microsoft.AspNetCore.App.deps.json",
+      "Class": "lang-pkgs",
+      "Type": "dotnet-core",
+      "Packages": [
+        {
+          "ID": "Microsoft.AspNetCore.App.Runtime.win-x86/8.0.5",
+          "Name": "Microsoft.AspNetCore.App.Runtime.win-x86",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.App.Runtime.win-x86@8.0.5",
+            "UID": "fa4a1ed103ed403f"
+          },
+          "Version": "8.0.5",
+          "Locations": [
+            {
+              "StartLine": 582,
+              "EndLine": 587
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2024-35264",
+          "VendorIDs": [
+            "GHSA-chfc-9w6m-75rf"
+          ],
+          "PkgID": "Microsoft.AspNetCore.App.Runtime.win-x86/8.0.5",
+          "PkgName": "Microsoft.AspNetCore.App.Runtime.win-x86",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.App.Runtime.win-x86@8.0.5",
+            "UID": "fa4a1ed103ed403f"
+          },
+          "InstalledVersion": "8.0.5",
+          "FixedVersion": "8.0.7",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-35264",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:0f802270ff2b49789d18bf76de48b73710daf3a71cb03d8f3140548a55eeefa9",
+          "Title": "dotnet: DoS in ASP.NET Core 8",
+          "Description": ".NET and Visual Studio Remote Code Execution Vulnerability",
+          "Severity": "CRITICAL",
+          "CweIDs": [
+            "CWE-416"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "bitnami": 3,
+            "ghsa": 4,
+            "oracle-oval": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+              "V3Score": 8.1
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+              "V40Vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+              "V3Score": 8.1,
+              "V40Score": 9.2
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+              "V3Score": 8.1
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2024:4450",
+            "https://access.redhat.com/security/cve/CVE-2024-35264",
+            "https://bugzilla.redhat.com/2295320",
+            "https://bugzilla.redhat.com/2295321",
+            "https://bugzilla.redhat.com/2295323",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2295320",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2295321",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2295323",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-30105",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-35264",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-38095",
+            "https://devblogs.microsoft.com/dotnet/dotnet-and-dotnet-framework-july-2024-servicing-updates/",
+            "https://errata.almalinux.org/9/ALSA-2024-4450.html",
+            "https://errata.rockylinux.org/RLSA-2024:4450",
+            "https://github.com/dotnet/announcements/issues/314",
+            "https://github.com/dotnet/aspnetcore",
+            "https://github.com/dotnet/aspnetcore/security/advisories/GHSA-chfc-9w6m-75rf",
+            "https://linux.oracle.com/cve/CVE-2024-35264.html",
+            "https://linux.oracle.com/errata/ELSA-2024-4451.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-35264",
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-35264",
+            "https://ubuntu.com/security/notices/USN-6889-1",
+            "https://www.cve.org/CVERecord?id=CVE-2024-35264",
+            "https://www.herodevs.com/vulnerability-directory/cve-2024-35264"
+          ],
+          "PublishedDate": "2024-07-09T17:15:18.213Z",
+          "LastModifiedDate": "2025-05-06T15:16:00.42Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2025-55315",
+          "VendorIDs": [
+            "GHSA-5rrx-jjjq-q2r5"
+          ],
+          "PkgID": "Microsoft.AspNetCore.App.Runtime.win-x86/8.0.5",
+          "PkgName": "Microsoft.AspNetCore.App.Runtime.win-x86",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.App.Runtime.win-x86@8.0.5",
+            "UID": "fa4a1ed103ed403f"
+          },
+          "InstalledVersion": "8.0.5",
+          "FixedVersion": "10.0.0-rc.2.25502.107, 9.0.10, 8.0.21",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2025-55315",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:375396efa76742b7b668b01eb45b4dec2ee85abefe8b5b44513b8044618429a3",
+          "Title": "dotnet: .NET Security Feature Bypass Vulnerability",
+          "Description": "Inconsistent interpretation of http requests ('http request/response smuggling') in ASP.NET Core allows an authorized attacker to bypass a security feature over a network.",
+          "Severity": "CRITICAL",
+          "CweIDs": [
+            "CWE-444"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 4,
+            "bitnami": 4,
+            "ghsa": 4,
+            "oracle-oval": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:L",
+              "V3Score": 9.9
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:L",
+              "V3Score": 9.9
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:L/A:N",
+              "V3Score": 8.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2025:18151",
+            "https://access.redhat.com/security/cve/CVE-2025-55315",
+            "https://andrewlock.net/understanding-the-worst-dotnet-vulnerability-request-smuggling-and-cve-2025-55315/",
+            "https://bugzilla.redhat.com/2403083",
+            "https://bugzilla.redhat.com/2403085",
+            "https://bugzilla.redhat.com/2403086",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2403083",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2403085",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2403086",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-55247",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-55248",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-55315",
+            "https://errata.almalinux.org/9/ALSA-2025-18151.html",
+            "https://errata.rockylinux.org/RLSA-2025:18151",
+            "https://gist.github.com/N3mes1s/d0897c13ca199e739ecc2b562f466040",
+            "https://github.com/dotnet/announcements/issues/371",
+            "https://github.com/dotnet/aspnetcore",
+            "https://github.com/dotnet/aspnetcore/security/advisories/GHSA-5rrx-jjjq-q2r5",
+            "https://linux.oracle.com/cve/CVE-2025-55315.html",
+            "https://linux.oracle.com/errata/ELSA-2025-18153.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55315",
+            "https://nvd.nist.gov/vuln/detail/CVE-2025-55315",
+            "https://ubuntu.com/security/notices/USN-7822-1",
+            "https://www.cve.org/CVERecord?id=CVE-2025-55315"
+          ],
+          "PublishedDate": "2025-10-14T17:15:44.96Z",
+          "LastModifiedDate": "2025-10-28T21:15:37.933Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2024-38168",
+          "VendorIDs": [
+            "GHSA-7qrv-8f9x-3h32"
+          ],
+          "PkgID": "Microsoft.AspNetCore.App.Runtime.win-x86/8.0.5",
+          "PkgName": "Microsoft.AspNetCore.App.Runtime.win-x86",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.App.Runtime.win-x86@8.0.5",
+            "UID": "fa4a1ed103ed403f"
+          },
+          "InstalledVersion": "8.0.5",
+          "FixedVersion": "8.0.8",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-38168",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:990dd62b53e702d947e5a874e88ba557604337968b36eeeab3f117f2aaaff949",
+          "Title": "dotnet8.0: (DoS) Attacker influenced crash in Http.Sys",
+          "Description": ".NET and Visual Studio Denial of Service Vulnerability",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-400"
+          ],
+          "VendorSeverity": {
+            "bitnami": 3,
+            "ghsa": 3,
+            "redhat": 3
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V40Vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N",
+              "V3Score": 7.5,
+              "V40Score": 8.7
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:R/S:U/C:H/I:H/A:H",
+              "V3Score": 7.3
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2024-38168",
+            "https://github.com/dotnet/aspnetcore",
+            "https://github.com/dotnet/aspnetcore/security/advisories/GHSA-7qrv-8f9x-3h32",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-38168",
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-38168",
+            "https://www.cve.org/CVERecord?id=CVE-2024-38168"
+          ],
+          "PublishedDate": "2024-08-13T18:15:24.627Z",
+          "LastModifiedDate": "2024-08-16T19:10:52.113Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2024-38229",
+          "VendorIDs": [
+            "GHSA-7vw9-cfwx-9gx9"
+          ],
+          "PkgID": "Microsoft.AspNetCore.App.Runtime.win-x86/8.0.5",
+          "PkgName": "Microsoft.AspNetCore.App.Runtime.win-x86",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.App.Runtime.win-x86@8.0.5",
+            "UID": "fa4a1ed103ed403f"
+          },
+          "InstalledVersion": "8.0.5",
+          "FixedVersion": "9.0.0-rc.2.24474.3, 8.0.10",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-38229",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:bbf582832ae9a5a6c88bbb339c81bd1f38af621581a4f187bf74dc8e434a5629",
+          "Title": "dotnet: kestrel: closing an HTTP/3 stream can cause a race condition and lead to remote code execution",
+          "Description": ".NET and Visual Studio Remote Code Execution Vulnerability",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-416"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "bitnami": 3,
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+              "V3Score": 8.1
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H/E:U/RL:O/RC:C",
+              "V40Vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N/E:P",
+              "V3Score": 7.1,
+              "V40Score": 8.2
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+              "V3Score": 8.1
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2024:7869",
+            "https://access.redhat.com/security/cve/CVE-2024-38229",
+            "https://bugzilla.redhat.com/2315729",
+            "https://bugzilla.redhat.com/2315730",
+            "https://bugzilla.redhat.com/2315731",
+            "https://bugzilla.redhat.com/2316161",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2315729",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2315730",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2315731",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2316161",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-38229",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-43483",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-43484",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-43485",
+            "https://devblogs.microsoft.com/dotnet/dotnet-and-dotnet-framework-october-2024-servicing-updates",
+            "https://errata.almalinux.org/9/ALSA-2024-7869.html",
+            "https://errata.rockylinux.org/RLSA-2024:7869",
+            "https://github.com/dotnet/announcements/issues/326",
+            "https://github.com/dotnet/aspnetcore",
+            "https://github.com/dotnet/aspnetcore/issues/58297",
+            "https://github.com/dotnet/aspnetcore/security/advisories/GHSA-7vw9-cfwx-9gx9",
+            "https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints?view=aspnetcore-8.0#configure-http-protocols-in-appsettingsjson",
+            "https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/http3?view=aspnetcore-8.0#getting-started",
+            "https://linux.oracle.com/cve/CVE-2024-38229.html",
+            "https://linux.oracle.com/errata/ELSA-2024-7869.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-38229",
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-38229",
+            "https://ubuntu.com/security/notices/USN-7058-1",
+            "https://www.cve.org/CVERecord?id=CVE-2024-38229",
+            "https://www.herodevs.com/vulnerability-directory/cve-2024-38229"
+          ],
+          "PublishedDate": "2024-10-08T18:15:08.153Z",
+          "LastModifiedDate": "2025-05-06T15:16:00.563Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2025-24070",
+          "VendorIDs": [
+            "GHSA-2865-hh9g-w894"
+          ],
+          "PkgID": "Microsoft.AspNetCore.App.Runtime.win-x86/8.0.5",
+          "PkgName": "Microsoft.AspNetCore.App.Runtime.win-x86",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.App.Runtime.win-x86@8.0.5",
+            "UID": "fa4a1ed103ed403f"
+          },
+          "InstalledVersion": "8.0.5",
+          "FixedVersion": "8.0.14, 9.0.3",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2025-24070",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:b72807de951151d7c36b2a86da2ef32916e6bbb27bc8a13e63b92177ca9cdfe1",
+          "Title": "dotnet: Privilege Escalation Vulnerability in .NET SignInManager.RefreshSignInAsync Method",
+          "Description": "Weak authentication in ASP.NET Core \u0026amp; Visual Studio allows an unauthorized attacker to elevate privileges over a network.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-1390"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "bitnami": 3,
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:H",
+              "V3Score": 7
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:H",
+              "V3Score": 7
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+              "V3Score": 7.8
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2025:2669",
+            "https://access.redhat.com/security/cve/CVE-2025-24070",
+            "https://bugzilla.redhat.com/2349733",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2349733",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-24070",
+            "https://devblogs.microsoft.com/dotnet/dotnet-and-dotnet-framework-march-2025-servicing-updates/",
+            "https://errata.almalinux.org/9/ALSA-2025-2669.html",
+            "https://errata.rockylinux.org/RLSA-2025:2670",
+            "https://github.com/dotnet/aspnetcore",
+            "https://github.com/dotnet/aspnetcore/security/advisories/GHSA-2865-hh9g-w894",
+            "https://linux.oracle.com/cve/CVE-2025-24070.html",
+            "https://linux.oracle.com/errata/ELSA-2025-2670.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-24070",
+            "https://nvd.nist.gov/vuln/detail/CVE-2025-24070",
+            "https://ubuntu.com/security/notices/USN-7345-1",
+            "https://www.cve.org/CVERecord?id=CVE-2025-24070",
+            "https://www.herodevs.com/vulnerability-directory/cve-2025-24070"
+          ],
+          "PublishedDate": "2025-03-11T17:16:29.68Z",
+          "LastModifiedDate": "2025-07-02T14:25:46.603Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-26130",
+          "VendorIDs": [
+            "GHSA-4vgm-c2wm-63mw"
+          ],
+          "PkgID": "Microsoft.AspNetCore.App.Runtime.win-x86/8.0.5",
+          "PkgName": "Microsoft.AspNetCore.App.Runtime.win-x86",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.App.Runtime.win-x86@8.0.5",
+            "UID": "fa4a1ed103ed403f"
+          },
+          "InstalledVersion": "8.0.5",
+          "FixedVersion": "8.0.25, 9.0.14, 10.0.4",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-26130",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:0f3b3b5b9e9d4b045823e8ab0dac60de71b7c8a3dc55b2f09ff950dbaea7da99",
+          "Title": "asp.net: ASP.NET Core: Denial of Service via uncontrolled resource allocation",
+          "Description": "Allocation of resources without limits or throttling in ASP.NET Core allows an unauthorized attacker to deny service over a network.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-770"
+          ],
+          "VendorSeverity": {
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "redhat": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2026-26130",
+            "https://devblogs.microsoft.com/dotnet/dotnet-and-dotnet-framework-march-2026-servicing-updates",
+            "https://github.com/dotnet/announcements/issues/385",
+            "https://github.com/dotnet/aspnetcore",
+            "https://github.com/dotnet/aspnetcore/security/advisories/GHSA-4vgm-c2wm-63mw",
+            "https://linux.oracle.com/cve/CVE-2026-26130.html",
+            "https://linux.oracle.com/errata/ELSA-2026-4453.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-26130",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-26130",
+            "https://ubuntu.com/security/notices/USN-8085-1",
+            "https://www.cve.org/CVERecord?id=CVE-2026-26130"
+          ],
+          "PublishedDate": "2026-03-10T18:18:42.223Z",
+          "LastModifiedDate": "2026-03-11T13:53:20.707Z"
+        }
+      ]
+    },
+    {
+      "Target": "Program Files (x86)/dotnet/shared/Microsoft.NETCore.App/6.0.23/Microsoft.NETCore.App.deps.json",
+      "Class": "lang-pkgs",
+      "Type": "dotnet-core",
+      "Packages": [
+        {
+          "ID": "Microsoft.NETCore.App.Runtime.win-x86/6.0.23",
+          "Name": "Microsoft.NETCore.App.Runtime.win-x86",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.NETCore.App.Runtime.win-x86@6.0.23",
+            "UID": "afea1b027e24f8b1"
+          },
+          "Version": "6.0.23",
+          "Locations": [
+            {
+              "StartLine": 850,
+              "EndLine": 855
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2024-38095",
+          "VendorIDs": [
+            "GHSA-447r-wph3-92pm"
+          ],
+          "PkgID": "Microsoft.NETCore.App.Runtime.win-x86/6.0.23",
+          "PkgName": "Microsoft.NETCore.App.Runtime.win-x86",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.NETCore.App.Runtime.win-x86@6.0.23",
+            "UID": "afea1b027e24f8b1"
+          },
+          "InstalledVersion": "6.0.23",
+          "FixedVersion": "6.0.32, 8.0.7",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-38095",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:7a0df75e7b8bebb4f46a4b6eefce56e0227eb0734062f75daf3b75b109baaf3b",
+          "Title": "dotnet: DoS when parsing X.509 Content and ObjectIdentifiers",
+          "Description": ".NET and Visual Studio Denial of Service Vulnerability",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-20"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "bitnami": 3,
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "redhat": 2,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V40Vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N",
+              "V3Score": 7.5,
+              "V40Score": 8.7
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+              "V3Score": 5.3
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2024:4450",
+            "https://access.redhat.com/security/cve/CVE-2024-38095",
+            "https://bugzilla.redhat.com/2295320",
+            "https://bugzilla.redhat.com/2295321",
+            "https://bugzilla.redhat.com/2295323",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2295320",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2295321",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2295323",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-30105",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-35264",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-38095",
+            "https://devblogs.microsoft.com/dotnet/dotnet-and-dotnet-framework-july-2024-servicing-updates/",
+            "https://errata.almalinux.org/9/ALSA-2024-4450.html",
+            "https://errata.rockylinux.org/RLSA-2024:4450",
+            "https://github.com/dotnet/announcements/issues/312",
+            "https://github.com/dotnet/runtime",
+            "https://github.com/dotnet/runtime/security/advisories/GHSA-447r-wph3-92pm",
+            "https://linux.oracle.com/cve/CVE-2024-38095.html",
+            "https://linux.oracle.com/errata/ELSA-2024-4451.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-38095",
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-38095",
+            "https://ubuntu.com/security/notices/USN-6889-1",
+            "https://www.cve.org/CVERecord?id=CVE-2024-38095"
+          ],
+          "PublishedDate": "2024-07-09T17:15:46.313Z",
+          "LastModifiedDate": "2024-11-21T09:24:53.863Z"
+        }
+      ]
+    },
+    {
+      "Target": "Program Files (x86)/dotnet/shared/Microsoft.NETCore.App/8.0.21/Microsoft.NETCore.App.deps.json",
+      "Class": "lang-pkgs",
+      "Type": "dotnet-core",
+      "Packages": [
+        {
+          "ID": "Microsoft.NETCore.App.Runtime.win-x86/8.0.21",
+          "Name": "Microsoft.NETCore.App.Runtime.win-x86",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.NETCore.App.Runtime.win-x86@8.0.21",
+            "UID": "56af86393579f369"
+          },
+          "Version": "8.0.21",
+          "Locations": [
+            {
+              "StartLine": 730,
+              "EndLine": 735
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        }
+      ]
+    },
+    {
+      "Target": "Program Files (x86)/dotnet/shared/Microsoft.NETCore.App/8.0.5/Microsoft.NETCore.App.deps.json",
+      "Class": "lang-pkgs",
+      "Type": "dotnet-core",
+      "Packages": [
+        {
+          "ID": "Microsoft.NETCore.App.Runtime.win-x86/8.0.5",
+          "Name": "Microsoft.NETCore.App.Runtime.win-x86",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.NETCore.App.Runtime.win-x86@8.0.5",
+            "UID": "1024b053358ebd93"
+          },
+          "Version": "8.0.5",
+          "Locations": [
+            {
+              "StartLine": 730,
+              "EndLine": 735
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2024-38095",
+          "VendorIDs": [
+            "GHSA-447r-wph3-92pm"
+          ],
+          "PkgID": "Microsoft.NETCore.App.Runtime.win-x86/8.0.5",
+          "PkgName": "Microsoft.NETCore.App.Runtime.win-x86",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.NETCore.App.Runtime.win-x86@8.0.5",
+            "UID": "1024b053358ebd93"
+          },
+          "InstalledVersion": "8.0.5",
+          "FixedVersion": "6.0.32, 8.0.7",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-38095",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:bc8a9868c55b9c3949fe8e5755c05ffe780d98ee2896ce1db4ae81bac75c29d3",
+          "Title": "dotnet: DoS when parsing X.509 Content and ObjectIdentifiers",
+          "Description": ".NET and Visual Studio Denial of Service Vulnerability",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-20"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "bitnami": 3,
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "redhat": 2,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V40Vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N",
+              "V3Score": 7.5,
+              "V40Score": 8.7
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+              "V3Score": 5.3
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2024:4450",
+            "https://access.redhat.com/security/cve/CVE-2024-38095",
+            "https://bugzilla.redhat.com/2295320",
+            "https://bugzilla.redhat.com/2295321",
+            "https://bugzilla.redhat.com/2295323",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2295320",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2295321",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2295323",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-30105",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-35264",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-38095",
+            "https://devblogs.microsoft.com/dotnet/dotnet-and-dotnet-framework-july-2024-servicing-updates/",
+            "https://errata.almalinux.org/9/ALSA-2024-4450.html",
+            "https://errata.rockylinux.org/RLSA-2024:4450",
+            "https://github.com/dotnet/announcements/issues/312",
+            "https://github.com/dotnet/runtime",
+            "https://github.com/dotnet/runtime/security/advisories/GHSA-447r-wph3-92pm",
+            "https://linux.oracle.com/cve/CVE-2024-38095.html",
+            "https://linux.oracle.com/errata/ELSA-2024-4451.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-38095",
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-38095",
+            "https://ubuntu.com/security/notices/USN-6889-1",
+            "https://www.cve.org/CVERecord?id=CVE-2024-38095"
+          ],
+          "PublishedDate": "2024-07-09T17:15:46.313Z",
+          "LastModifiedDate": "2024-11-21T09:24:53.863Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2025-21176",
+          "VendorIDs": [
+            "GHSA-gjf6-3w4p-7xfh"
+          ],
+          "PkgID": "Microsoft.NETCore.App.Runtime.win-x86/8.0.5",
+          "PkgName": "Microsoft.NETCore.App.Runtime.win-x86",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.NETCore.App.Runtime.win-x86@8.0.5",
+            "UID": "1024b053358ebd93"
+          },
+          "InstalledVersion": "8.0.5",
+          "FixedVersion": "9.0.1, 8.0.12",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2025-21176",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:6a308d4d7b6ae31450fdc95fbd83002791c26314434644c136a2adcd167005e1",
+          "Title": "dotnet: .NET, .NET Framework, and Visual Studio Remote Code Execution Vulnerability",
+          "Description": ".NET, .NET Framework, and Visual Studio Remote Code Execution Vulnerability",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-126"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "bitnami": 3,
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "V3Score": 8.8
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "V3Score": 8.8
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "V3Score": 8.8
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2025:0382",
+            "https://access.redhat.com/security/cve/CVE-2025-21176",
+            "https://bugzilla.redhat.com/2337893",
+            "https://bugzilla.redhat.com/2337926",
+            "https://bugzilla.redhat.com/2337927",
+            "https://bugzilla.redhat.com/2337958",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2337893",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2337926",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2337927",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2337958",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-21171",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-21172",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-21173",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-21176",
+            "https://devblogs.microsoft.com/dotnet/net-and-net-framework-january-2025-servicing-releases-updates/",
+            "https://errata.almalinux.org/8/ALSA-2025-0382.html",
+            "https://errata.rockylinux.org/RLSA-2025:0382",
+            "https://github.com/dotnet/runtime",
+            "https://github.com/dotnet/runtime/security/advisories/GHSA-gjf6-3w4p-7xfh",
+            "https://linux.oracle.com/cve/CVE-2025-21176.html",
+            "https://linux.oracle.com/errata/ELSA-2025-0382.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-21176",
+            "https://nvd.nist.gov/vuln/detail/CVE-2025-21176",
+            "https://ubuntu.com/security/notices/USN-7210-1",
+            "https://www.cve.org/CVERecord?id=CVE-2025-21176",
+            "https://www.herodevs.com/vulnerability-directory/cve-2025-21176"
+          ],
+          "PublishedDate": "2025-01-14T18:15:30.65Z",
+          "LastModifiedDate": "2025-05-06T15:16:00.953Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2025-30399",
+          "VendorIDs": [
+            "GHSA-266m-wp2v-x7mq"
+          ],
+          "PkgID": "Microsoft.NETCore.App.Runtime.win-x86/8.0.5",
+          "PkgName": "Microsoft.NETCore.App.Runtime.win-x86",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.NETCore.App.Runtime.win-x86@8.0.5",
+            "UID": "1024b053358ebd93"
+          },
+          "InstalledVersion": "8.0.5",
+          "FixedVersion": "9.0.6, 8.0.17",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2025-30399",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:401e9c3f168aac45ff4bb6f57863ba2efb17649be4f08c31ca112bd4e0c32d62",
+          "Title": "dotnet: .NET Remote Code Vulnerability",
+          "Description": "Untrusted search path in .NET and Visual Studio allows an unauthorized attacker to execute code over a network.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-426"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "bitnami": 3,
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "photon": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "V3Score": 7.5
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "V3Score": 7.5
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "V3Score": 7.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2025:8817",
+            "https://access.redhat.com/security/cve/CVE-2025-30399",
+            "https://bugzilla.redhat.com/2369701",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2369701",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-30399",
+            "https://errata.almalinux.org/9/ALSA-2025-8817.html",
+            "https://errata.rockylinux.org/RLSA-2025:8817",
+            "https://github.com/dotnet/runtime",
+            "https://github.com/dotnet/runtime/issues/116495",
+            "https://github.com/dotnet/runtime/security/advisories/GHSA-266m-wp2v-x7mq",
+            "https://linux.oracle.com/cve/CVE-2025-30399.html",
+            "https://linux.oracle.com/errata/ELSA-2025-8817.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-30399",
+            "https://nvd.nist.gov/vuln/detail/CVE-2025-30399",
+            "https://ubuntu.com/security/notices/USN-7563-1",
+            "https://www.cve.org/CVERecord?id=CVE-2025-30399"
+          ],
+          "PublishedDate": "2025-06-13T02:15:23.43Z",
+          "LastModifiedDate": "2025-07-10T14:25:37.313Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2024-38167",
+          "VendorIDs": [
+            "GHSA-3r34-r6w3-fqp6"
+          ],
+          "PkgID": "Microsoft.NETCore.App.Runtime.win-x86/8.0.5",
+          "PkgName": "Microsoft.NETCore.App.Runtime.win-x86",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.NETCore.App.Runtime.win-x86@8.0.5",
+            "UID": "1024b053358ebd93"
+          },
+          "InstalledVersion": "8.0.5",
+          "FixedVersion": "8.0.8",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-38167",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:c80b0ef8dd27686e1fc24786f135726ae8fd1896b816a9bb6417bf29569d0173",
+          "Title": "dotnet8.0: Information disclosure vulnerability in TlsStream",
+          "Description": ".NET and Visual Studio Information Disclosure Vulnerability",
+          "Severity": "MEDIUM",
+          "CweIDs": [
+            "CWE-319"
+          ],
+          "VendorSeverity": {
+            "alma": 2,
+            "bitnami": 2,
+            "ghsa": 2,
+            "oracle-oval": 2,
+            "redhat": 2,
+            "rocky": 2,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N",
+              "V3Score": 6.5
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N",
+              "V40Vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:A/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N",
+              "V3Score": 6.5,
+              "V40Score": 6.9
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N",
+              "V3Score": 6.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2024:5334",
+            "https://access.redhat.com/security/cve/CVE-2024-38167",
+            "https://bugzilla.redhat.com/2302428",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2302428",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-38167",
+            "https://devblogs.microsoft.com/dotnet/dotnet-and-dotnet-framework-august-2024-updates/",
+            "https://errata.almalinux.org/9/ALSA-2024-5334.html",
+            "https://errata.rockylinux.org/RLSA-2024:5337",
+            "https://github.com/dotnet/runtime",
+            "https://github.com/dotnet/runtime/issues/106359",
+            "https://github.com/dotnet/runtime/security/advisories/GHSA-3r34-r6w3-fqp6",
+            "https://linux.oracle.com/cve/CVE-2024-38167.html",
+            "https://linux.oracle.com/errata/ELSA-2024-5337.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-38167",
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-38167",
+            "https://ubuntu.com/security/notices/USN-6959-1",
+            "https://www.cve.org/CVERecord?id=CVE-2024-38167"
+          ],
+          "PublishedDate": "2024-08-13T18:15:24.37Z",
+          "LastModifiedDate": "2024-08-16T19:07:00.757Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2025-55248",
+          "VendorIDs": [
+            "GHSA-gwq6-fmvp-qp68"
+          ],
+          "PkgID": "Microsoft.NETCore.App.Runtime.win-x86/8.0.5",
+          "PkgName": "Microsoft.NETCore.App.Runtime.win-x86",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.NETCore.App.Runtime.win-x86@8.0.5",
+            "UID": "1024b053358ebd93"
+          },
+          "InstalledVersion": "8.0.5",
+          "FixedVersion": "9.0.10, 8.0.21",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2025-55248",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:af62e69ae96165334e3a5d99cbfbf85c94670ab63797dc305927ec9e37790f38",
+          "Title": "dotnet: .NET Information Disclosure Vulnerability",
+          "Description": "Inadequate encryption strength in .NET, .NET Framework, Visual Studio allows an authorized attacker to disclose information over a network.",
+          "Severity": "MEDIUM",
+          "CweIDs": [
+            "CWE-326"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 4,
+            "bitnami": 2,
+            "ghsa": 2,
+            "nvd": 2,
+            "oracle-oval": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:H/I:N/A:N",
+              "V3Score": 5.7
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:H/I:N/A:N",
+              "V3Score": 5.7
+            },
+            "nvd": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:H/I:N/A:N",
+              "V3Score": 5.7
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:L/A:N",
+              "V3Score": 8.2
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2025:18151",
+            "https://access.redhat.com/security/cve/CVE-2025-55248",
+            "https://bugzilla.redhat.com/2403083",
+            "https://bugzilla.redhat.com/2403085",
+            "https://bugzilla.redhat.com/2403086",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2403083",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2403085",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2403086",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-55247",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-55248",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-55315",
+            "https://errata.almalinux.org/9/ALSA-2025-18151.html",
+            "https://errata.rockylinux.org/RLSA-2025:18151",
+            "https://github.com/dotnet/announcements/issues/372",
+            "https://github.com/dotnet/runtime",
+            "https://github.com/dotnet/runtime/issues/120713",
+            "https://github.com/dotnet/runtime/security/advisories/GHSA-gwq6-fmvp-qp68",
+            "https://linux.oracle.com/cve/CVE-2025-55248.html",
+            "https://linux.oracle.com/errata/ELSA-2025-18153.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55248",
+            "https://nvd.nist.gov/vuln/detail/CVE-2025-55248",
+            "https://ubuntu.com/security/notices/USN-7822-1",
+            "https://www.cve.org/CVERecord?id=CVE-2025-55248"
+          ],
+          "PublishedDate": "2025-10-14T17:15:44.787Z",
+          "LastModifiedDate": "2025-10-23T15:01:44.97Z"
+        }
+      ]
+    },
+    {
+      "Target": "Program Files/dotnet/shared/Microsoft.AspNetCore.App/6.0.23/Microsoft.AspNetCore.App.deps.json",
+      "Class": "lang-pkgs",
+      "Type": "dotnet-core",
+      "Packages": [
+        {
+          "ID": "Microsoft.AspNetCore.App.Runtime.win-x64/6.0.23",
+          "Name": "Microsoft.AspNetCore.App.Runtime.win-x64",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.App.Runtime.win-x64@6.0.23",
+            "UID": "1560005a2bd5c769"
+          },
+          "Version": "6.0.23",
+          "Locations": [
+            {
+              "StartLine": 546,
+              "EndLine": 551
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2024-21386",
+          "VendorIDs": [
+            "GHSA-g74q-5xw3-j7q9"
+          ],
+          "PkgID": "Microsoft.AspNetCore.App.Runtime.win-x64/6.0.23",
+          "PkgName": "Microsoft.AspNetCore.App.Runtime.win-x64",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.App.Runtime.win-x64@6.0.23",
+            "UID": "1560005a2bd5c769"
+          },
+          "InstalledVersion": "6.0.23",
+          "FixedVersion": "6.0.27, 7.0.16, 8.0.2",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-21386",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:2630193f38a944d6911047c31123028473175149f8972bcb94f8d871df460bba",
+          "Title": "dotnet: Denial of Service in SignalR server",
+          "Description": ".NET Denial of Service Vulnerability",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-400"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "bitnami": 3,
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2024:0848",
+            "https://access.redhat.com/security/cve/CVE-2024-21386",
+            "https://bugzilla.redhat.com/2263085",
+            "https://bugzilla.redhat.com/2263086",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2263085",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2263086",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2279695",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2279697",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-21386",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-21404",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-30045",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-30046",
+            "https://devblogs.microsoft.com/dotnet/february-2024-updates/",
+            "https://errata.almalinux.org/9/ALSA-2024-0848.html",
+            "https://errata.rockylinux.org/RLSA-2024:2843",
+            "https://github.com/dotnet/aspnetcore",
+            "https://github.com/dotnet/aspnetcore/security/advisories/GHSA-g74q-5xw3-j7q9",
+            "https://linux.oracle.com/cve/CVE-2024-21386.html",
+            "https://linux.oracle.com/errata/ELSA-2024-0848.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-21386",
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-21386",
+            "https://ubuntu.com/security/notices/USN-6634-1",
+            "https://www.cve.org/CVERecord?id=CVE-2024-21386"
+          ],
+          "PublishedDate": "2024-02-13T18:15:56.737Z",
+          "LastModifiedDate": "2024-11-21T08:54:15.27Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2025-24070",
+          "VendorIDs": [
+            "GHSA-2865-hh9g-w894"
+          ],
+          "PkgID": "Microsoft.AspNetCore.App.Runtime.win-x64/6.0.23",
+          "PkgName": "Microsoft.AspNetCore.App.Runtime.win-x64",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.App.Runtime.win-x64@6.0.23",
+            "UID": "1560005a2bd5c769"
+          },
+          "InstalledVersion": "6.0.23",
+          "FixedVersion": "9.0.3, 8.0.14",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2025-24070",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:58b8c7a970f5a4563fdddde4918fa61ae46c41a7ff384914be77b86b010ebc49",
+          "Title": "dotnet: Privilege Escalation Vulnerability in .NET SignInManager.RefreshSignInAsync Method",
+          "Description": "Weak authentication in ASP.NET Core \u0026amp; Visual Studio allows an unauthorized attacker to elevate privileges over a network.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-1390"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "bitnami": 3,
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:H",
+              "V3Score": 7
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:H",
+              "V3Score": 7
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+              "V3Score": 7.8
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2025:2669",
+            "https://access.redhat.com/security/cve/CVE-2025-24070",
+            "https://bugzilla.redhat.com/2349733",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2349733",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-24070",
+            "https://devblogs.microsoft.com/dotnet/dotnet-and-dotnet-framework-march-2025-servicing-updates/",
+            "https://errata.almalinux.org/9/ALSA-2025-2669.html",
+            "https://errata.rockylinux.org/RLSA-2025:2670",
+            "https://github.com/dotnet/aspnetcore",
+            "https://github.com/dotnet/aspnetcore/security/advisories/GHSA-2865-hh9g-w894",
+            "https://linux.oracle.com/cve/CVE-2025-24070.html",
+            "https://linux.oracle.com/errata/ELSA-2025-2670.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-24070",
+            "https://nvd.nist.gov/vuln/detail/CVE-2025-24070",
+            "https://ubuntu.com/security/notices/USN-7345-1",
+            "https://www.cve.org/CVERecord?id=CVE-2025-24070",
+            "https://www.herodevs.com/vulnerability-directory/cve-2025-24070"
+          ],
+          "PublishedDate": "2025-03-11T17:16:29.68Z",
+          "LastModifiedDate": "2025-07-02T14:25:46.603Z"
+        }
+      ]
+    },
+    {
+      "Target": "Program Files/dotnet/shared/Microsoft.AspNetCore.App/8.0.21/Microsoft.AspNetCore.App.deps.json",
+      "Class": "lang-pkgs",
+      "Type": "dotnet-core",
+      "Packages": [
+        {
+          "ID": "Microsoft.AspNetCore.App.Runtime.win-x64/8.0.21",
+          "Name": "Microsoft.AspNetCore.App.Runtime.win-x64",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.App.Runtime.win-x64@8.0.21",
+            "UID": "4b7e8cc3460e1551"
+          },
+          "Version": "8.0.21",
+          "Locations": [
+            {
+              "StartLine": 582,
+              "EndLine": 587
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2026-26130",
+          "VendorIDs": [
+            "GHSA-4vgm-c2wm-63mw"
+          ],
+          "PkgID": "Microsoft.AspNetCore.App.Runtime.win-x64/8.0.21",
+          "PkgName": "Microsoft.AspNetCore.App.Runtime.win-x64",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.App.Runtime.win-x64@8.0.21",
+            "UID": "4b7e8cc3460e1551"
+          },
+          "InstalledVersion": "8.0.21",
+          "FixedVersion": "8.0.25, 9.0.14, 10.0.4",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-26130",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:47e5fa8ce44b6f10e8324024956f1ff1c60c287220c649fbbb5c47577cc1a13d",
+          "Title": "asp.net: ASP.NET Core: Denial of Service via uncontrolled resource allocation",
+          "Description": "Allocation of resources without limits or throttling in ASP.NET Core allows an unauthorized attacker to deny service over a network.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-770"
+          ],
+          "VendorSeverity": {
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "redhat": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2026-26130",
+            "https://devblogs.microsoft.com/dotnet/dotnet-and-dotnet-framework-march-2026-servicing-updates",
+            "https://github.com/dotnet/announcements/issues/385",
+            "https://github.com/dotnet/aspnetcore",
+            "https://github.com/dotnet/aspnetcore/security/advisories/GHSA-4vgm-c2wm-63mw",
+            "https://linux.oracle.com/cve/CVE-2026-26130.html",
+            "https://linux.oracle.com/errata/ELSA-2026-4453.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-26130",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-26130",
+            "https://ubuntu.com/security/notices/USN-8085-1",
+            "https://www.cve.org/CVERecord?id=CVE-2026-26130"
+          ],
+          "PublishedDate": "2026-03-10T18:18:42.223Z",
+          "LastModifiedDate": "2026-03-11T13:53:20.707Z"
+        }
+      ]
+    },
+    {
+      "Target": "Program Files/dotnet/shared/Microsoft.NETCore.App/6.0.23/Microsoft.NETCore.App.deps.json",
+      "Class": "lang-pkgs",
+      "Type": "dotnet-core",
+      "Packages": [
+        {
+          "ID": "Microsoft.NETCore.App.Runtime.win-x64/6.0.23",
+          "Name": "Microsoft.NETCore.App.Runtime.win-x64",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.NETCore.App.Runtime.win-x64@6.0.23",
+            "UID": "9105e78884186b4a"
+          },
+          "Version": "6.0.23",
+          "Locations": [
+            {
+              "StartLine": 847,
+              "EndLine": 852
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2024-38095",
+          "VendorIDs": [
+            "GHSA-447r-wph3-92pm"
+          ],
+          "PkgID": "Microsoft.NETCore.App.Runtime.win-x64/6.0.23",
+          "PkgName": "Microsoft.NETCore.App.Runtime.win-x64",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.NETCore.App.Runtime.win-x64@6.0.23",
+            "UID": "9105e78884186b4a"
+          },
+          "InstalledVersion": "6.0.23",
+          "FixedVersion": "8.0.7, 6.0.32",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-38095",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:c50909c279c551a5409c82d3457b3f6c70dcb9ce27fd1e03cd498405545b1cf6",
+          "Title": "dotnet: DoS when parsing X.509 Content and ObjectIdentifiers",
+          "Description": ".NET and Visual Studio Denial of Service Vulnerability",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-20"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "bitnami": 3,
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "redhat": 2,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V40Vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N",
+              "V3Score": 7.5,
+              "V40Score": 8.7
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+              "V3Score": 5.3
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2024:4450",
+            "https://access.redhat.com/security/cve/CVE-2024-38095",
+            "https://bugzilla.redhat.com/2295320",
+            "https://bugzilla.redhat.com/2295321",
+            "https://bugzilla.redhat.com/2295323",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2295320",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2295321",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2295323",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-30105",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-35264",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-38095",
+            "https://devblogs.microsoft.com/dotnet/dotnet-and-dotnet-framework-july-2024-servicing-updates/",
+            "https://errata.almalinux.org/9/ALSA-2024-4450.html",
+            "https://errata.rockylinux.org/RLSA-2024:4450",
+            "https://github.com/dotnet/announcements/issues/312",
+            "https://github.com/dotnet/runtime",
+            "https://github.com/dotnet/runtime/security/advisories/GHSA-447r-wph3-92pm",
+            "https://linux.oracle.com/cve/CVE-2024-38095.html",
+            "https://linux.oracle.com/errata/ELSA-2024-4451.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-38095",
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-38095",
+            "https://ubuntu.com/security/notices/USN-6889-1",
+            "https://www.cve.org/CVERecord?id=CVE-2024-38095"
+          ],
+          "PublishedDate": "2024-07-09T17:15:46.313Z",
+          "LastModifiedDate": "2024-11-21T09:24:53.863Z"
+        }
+      ]
+    },
+    {
+      "Target": "Program Files/dotnet/shared/Microsoft.NETCore.App/8.0.21/Microsoft.NETCore.App.deps.json",
+      "Class": "lang-pkgs",
+      "Type": "dotnet-core",
+      "Packages": [
+        {
+          "ID": "Microsoft.NETCore.App.Runtime.win-x64/8.0.21",
+          "Name": "Microsoft.NETCore.App.Runtime.win-x64",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.NETCore.App.Runtime.win-x64@8.0.21",
+            "UID": "7a64dd06beb4a06a"
+          },
+          "Version": "8.0.21",
+          "Locations": [
+            {
+              "StartLine": 730,
+              "EndLine": 735
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        }
+      ]
+    },
+    {
+      "Target": "Program Files/dotnet/shared/Microsoft.NETCore.App/8.0.5/Microsoft.NETCore.App.deps.json",
+      "Class": "lang-pkgs",
+      "Type": "dotnet-core",
+      "Packages": [
+        {
+          "ID": "Microsoft.NETCore.App.Runtime.win-x64/8.0.5",
+          "Name": "Microsoft.NETCore.App.Runtime.win-x64",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.NETCore.App.Runtime.win-x64@8.0.5",
+            "UID": "9f2312b892d77507"
+          },
+          "Version": "8.0.5",
+          "Locations": [
+            {
+              "StartLine": 730,
+              "EndLine": 735
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2024-38095",
+          "VendorIDs": [
+            "GHSA-447r-wph3-92pm"
+          ],
+          "PkgID": "Microsoft.NETCore.App.Runtime.win-x64/8.0.5",
+          "PkgName": "Microsoft.NETCore.App.Runtime.win-x64",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.NETCore.App.Runtime.win-x64@8.0.5",
+            "UID": "9f2312b892d77507"
+          },
+          "InstalledVersion": "8.0.5",
+          "FixedVersion": "8.0.7, 6.0.32",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-38095",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:8577a9cf1ee246d3ad815165fd8259e1501098d67b650022ac93d96cd97b8578",
+          "Title": "dotnet: DoS when parsing X.509 Content and ObjectIdentifiers",
+          "Description": ".NET and Visual Studio Denial of Service Vulnerability",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-20"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "bitnami": 3,
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "redhat": 2,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V40Vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N",
+              "V3Score": 7.5,
+              "V40Score": 8.7
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+              "V3Score": 5.3
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2024:4450",
+            "https://access.redhat.com/security/cve/CVE-2024-38095",
+            "https://bugzilla.redhat.com/2295320",
+            "https://bugzilla.redhat.com/2295321",
+            "https://bugzilla.redhat.com/2295323",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2295320",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2295321",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2295323",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-30105",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-35264",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-38095",
+            "https://devblogs.microsoft.com/dotnet/dotnet-and-dotnet-framework-july-2024-servicing-updates/",
+            "https://errata.almalinux.org/9/ALSA-2024-4450.html",
+            "https://errata.rockylinux.org/RLSA-2024:4450",
+            "https://github.com/dotnet/announcements/issues/312",
+            "https://github.com/dotnet/runtime",
+            "https://github.com/dotnet/runtime/security/advisories/GHSA-447r-wph3-92pm",
+            "https://linux.oracle.com/cve/CVE-2024-38095.html",
+            "https://linux.oracle.com/errata/ELSA-2024-4451.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-38095",
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-38095",
+            "https://ubuntu.com/security/notices/USN-6889-1",
+            "https://www.cve.org/CVERecord?id=CVE-2024-38095"
+          ],
+          "PublishedDate": "2024-07-09T17:15:46.313Z",
+          "LastModifiedDate": "2024-11-21T09:24:53.863Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2025-21172",
+          "VendorIDs": [
+            "GHSA-jjcv-wr2g-4rv4"
+          ],
+          "PkgID": "Microsoft.NETCore.App.Runtime.win-x64/8.0.5",
+          "PkgName": "Microsoft.NETCore.App.Runtime.win-x64",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.NETCore.App.Runtime.win-x64@8.0.5",
+            "UID": "9f2312b892d77507"
+          },
+          "InstalledVersion": "8.0.5",
+          "FixedVersion": "9.0.1, 8.0.12",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2025-21172",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:8e8d9f7411d7a2c33d454b7fc0f42211a3c29cb17b85fa62ddc10908ceb468c3",
+          "Title": "dotnet: .NET and Visual Studio Remote Code Execution Vulnerability",
+          "Description": ".NET and Visual Studio Remote Code Execution Vulnerability",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-122",
+            "CWE-190"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "bitnami": 3,
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "V3Score": 7.5
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "V3Score": 7.5
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "V3Score": 7.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2025:0382",
+            "https://access.redhat.com/security/cve/CVE-2025-21172",
+            "https://bugzilla.redhat.com/2337893",
+            "https://bugzilla.redhat.com/2337926",
+            "https://bugzilla.redhat.com/2337927",
+            "https://bugzilla.redhat.com/2337958",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2337893",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2337926",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2337927",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2337958",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-21171",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-21172",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-21173",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-21176",
+            "https://devblogs.microsoft.com/dotnet/net-and-net-framework-january-2025-servicing-releases-updates/",
+            "https://errata.almalinux.org/8/ALSA-2025-0382.html",
+            "https://errata.rockylinux.org/RLSA-2025:0382",
+            "https://github.com/dotnet/runtime",
+            "https://github.com/dotnet/runtime/security/advisories/GHSA-jjcv-wr2g-4rv4",
+            "https://linux.oracle.com/cve/CVE-2025-21172.html",
+            "https://linux.oracle.com/errata/ELSA-2025-0382.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-21172",
+            "https://nvd.nist.gov/vuln/detail/CVE-2025-21172",
+            "https://ubuntu.com/security/notices/USN-7210-1",
+            "https://www.cve.org/CVERecord?id=CVE-2025-21172",
+            "https://www.herodevs.com/vulnerability-directory/cve-2025-21172"
+          ],
+          "PublishedDate": "2025-01-14T18:15:30.3Z",
+          "LastModifiedDate": "2025-05-06T14:15:36.17Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2025-21176",
+          "VendorIDs": [
+            "GHSA-gjf6-3w4p-7xfh"
+          ],
+          "PkgID": "Microsoft.NETCore.App.Runtime.win-x64/8.0.5",
+          "PkgName": "Microsoft.NETCore.App.Runtime.win-x64",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.NETCore.App.Runtime.win-x64@8.0.5",
+            "UID": "9f2312b892d77507"
+          },
+          "InstalledVersion": "8.0.5",
+          "FixedVersion": "9.0.1, 8.0.12",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2025-21176",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:8ea27ac1634b5889c3e915aaebfb6beed67b38d05f073e8e6647bfe6f4f7ac15",
+          "Title": "dotnet: .NET, .NET Framework, and Visual Studio Remote Code Execution Vulnerability",
+          "Description": ".NET, .NET Framework, and Visual Studio Remote Code Execution Vulnerability",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-126"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "bitnami": 3,
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "V3Score": 8.8
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "V3Score": 8.8
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "V3Score": 8.8
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2025:0382",
+            "https://access.redhat.com/security/cve/CVE-2025-21176",
+            "https://bugzilla.redhat.com/2337893",
+            "https://bugzilla.redhat.com/2337926",
+            "https://bugzilla.redhat.com/2337927",
+            "https://bugzilla.redhat.com/2337958",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2337893",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2337926",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2337927",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2337958",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-21171",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-21172",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-21173",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-21176",
+            "https://devblogs.microsoft.com/dotnet/net-and-net-framework-january-2025-servicing-releases-updates/",
+            "https://errata.almalinux.org/8/ALSA-2025-0382.html",
+            "https://errata.rockylinux.org/RLSA-2025:0382",
+            "https://github.com/dotnet/runtime",
+            "https://github.com/dotnet/runtime/security/advisories/GHSA-gjf6-3w4p-7xfh",
+            "https://linux.oracle.com/cve/CVE-2025-21176.html",
+            "https://linux.oracle.com/errata/ELSA-2025-0382.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-21176",
+            "https://nvd.nist.gov/vuln/detail/CVE-2025-21176",
+            "https://ubuntu.com/security/notices/USN-7210-1",
+            "https://www.cve.org/CVERecord?id=CVE-2025-21176",
+            "https://www.herodevs.com/vulnerability-directory/cve-2025-21176"
+          ],
+          "PublishedDate": "2025-01-14T18:15:30.65Z",
+          "LastModifiedDate": "2025-05-06T15:16:00.953Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2025-30399",
+          "VendorIDs": [
+            "GHSA-266m-wp2v-x7mq"
+          ],
+          "PkgID": "Microsoft.NETCore.App.Runtime.win-x64/8.0.5",
+          "PkgName": "Microsoft.NETCore.App.Runtime.win-x64",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.NETCore.App.Runtime.win-x64@8.0.5",
+            "UID": "9f2312b892d77507"
+          },
+          "InstalledVersion": "8.0.5",
+          "FixedVersion": "9.0.6, 8.0.17",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2025-30399",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:05e5a14350454b5856a8609052a649c3fe1fa9e7adff4a59dcfd26566cc221d4",
+          "Title": "dotnet: .NET Remote Code Vulnerability",
+          "Description": "Untrusted search path in .NET and Visual Studio allows an unauthorized attacker to execute code over a network.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-426"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "bitnami": 3,
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "photon": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "V3Score": 7.5
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "V3Score": 7.5
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "V3Score": 7.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2025:8817",
+            "https://access.redhat.com/security/cve/CVE-2025-30399",
+            "https://bugzilla.redhat.com/2369701",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2369701",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-30399",
+            "https://errata.almalinux.org/9/ALSA-2025-8817.html",
+            "https://errata.rockylinux.org/RLSA-2025:8817",
+            "https://github.com/dotnet/runtime",
+            "https://github.com/dotnet/runtime/issues/116495",
+            "https://github.com/dotnet/runtime/security/advisories/GHSA-266m-wp2v-x7mq",
+            "https://linux.oracle.com/cve/CVE-2025-30399.html",
+            "https://linux.oracle.com/errata/ELSA-2025-8817.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-30399",
+            "https://nvd.nist.gov/vuln/detail/CVE-2025-30399",
+            "https://ubuntu.com/security/notices/USN-7563-1",
+            "https://www.cve.org/CVERecord?id=CVE-2025-30399"
+          ],
+          "PublishedDate": "2025-06-13T02:15:23.43Z",
+          "LastModifiedDate": "2025-07-10T14:25:37.313Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2024-38167",
+          "VendorIDs": [
+            "GHSA-3r34-r6w3-fqp6"
+          ],
+          "PkgID": "Microsoft.NETCore.App.Runtime.win-x64/8.0.5",
+          "PkgName": "Microsoft.NETCore.App.Runtime.win-x64",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.NETCore.App.Runtime.win-x64@8.0.5",
+            "UID": "9f2312b892d77507"
+          },
+          "InstalledVersion": "8.0.5",
+          "FixedVersion": "8.0.8",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-38167",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:dfbdaa81cde6e14b13e14a5128e75ffeeb0b6ec0ea66385b5cb54d964206784f",
+          "Title": "dotnet8.0: Information disclosure vulnerability in TlsStream",
+          "Description": ".NET and Visual Studio Information Disclosure Vulnerability",
+          "Severity": "MEDIUM",
+          "CweIDs": [
+            "CWE-319"
+          ],
+          "VendorSeverity": {
+            "alma": 2,
+            "bitnami": 2,
+            "ghsa": 2,
+            "oracle-oval": 2,
+            "redhat": 2,
+            "rocky": 2,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N",
+              "V3Score": 6.5
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N",
+              "V40Vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:A/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N",
+              "V3Score": 6.5,
+              "V40Score": 6.9
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N",
+              "V3Score": 6.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2024:5334",
+            "https://access.redhat.com/security/cve/CVE-2024-38167",
+            "https://bugzilla.redhat.com/2302428",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2302428",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-38167",
+            "https://devblogs.microsoft.com/dotnet/dotnet-and-dotnet-framework-august-2024-updates/",
+            "https://errata.almalinux.org/9/ALSA-2024-5334.html",
+            "https://errata.rockylinux.org/RLSA-2024:5337",
+            "https://github.com/dotnet/runtime",
+            "https://github.com/dotnet/runtime/issues/106359",
+            "https://github.com/dotnet/runtime/security/advisories/GHSA-3r34-r6w3-fqp6",
+            "https://linux.oracle.com/cve/CVE-2024-38167.html",
+            "https://linux.oracle.com/errata/ELSA-2024-5337.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-38167",
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-38167",
+            "https://ubuntu.com/security/notices/USN-6959-1",
+            "https://www.cve.org/CVERecord?id=CVE-2024-38167"
+          ],
+          "PublishedDate": "2024-08-13T18:15:24.37Z",
+          "LastModifiedDate": "2024-08-16T19:07:00.757Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2025-55248",
+          "VendorIDs": [
+            "GHSA-gwq6-fmvp-qp68"
+          ],
+          "PkgID": "Microsoft.NETCore.App.Runtime.win-x64/8.0.5",
+          "PkgName": "Microsoft.NETCore.App.Runtime.win-x64",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.NETCore.App.Runtime.win-x64@8.0.5",
+            "UID": "9f2312b892d77507"
+          },
+          "InstalledVersion": "8.0.5",
+          "FixedVersion": "9.0.10, 8.0.21",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2025-55248",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:d8847af8bad541296dfc94088b89cd40b1ac780a55555bd21d9677917f41d202",
+          "Title": "dotnet: .NET Information Disclosure Vulnerability",
+          "Description": "Inadequate encryption strength in .NET, .NET Framework, Visual Studio allows an authorized attacker to disclose information over a network.",
+          "Severity": "MEDIUM",
+          "CweIDs": [
+            "CWE-326"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 4,
+            "bitnami": 2,
+            "ghsa": 2,
+            "nvd": 2,
+            "oracle-oval": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:H/I:N/A:N",
+              "V3Score": 5.7
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:H/I:N/A:N",
+              "V3Score": 5.7
+            },
+            "nvd": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:H/I:N/A:N",
+              "V3Score": 5.7
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:L/A:N",
+              "V3Score": 8.2
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2025:18151",
+            "https://access.redhat.com/security/cve/CVE-2025-55248",
+            "https://bugzilla.redhat.com/2403083",
+            "https://bugzilla.redhat.com/2403085",
+            "https://bugzilla.redhat.com/2403086",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2403083",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2403085",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2403086",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-55247",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-55248",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-55315",
+            "https://errata.almalinux.org/9/ALSA-2025-18151.html",
+            "https://errata.rockylinux.org/RLSA-2025:18151",
+            "https://github.com/dotnet/announcements/issues/372",
+            "https://github.com/dotnet/runtime",
+            "https://github.com/dotnet/runtime/issues/120713",
+            "https://github.com/dotnet/runtime/security/advisories/GHSA-gwq6-fmvp-qp68",
+            "https://linux.oracle.com/cve/CVE-2025-55248.html",
+            "https://linux.oracle.com/errata/ELSA-2025-18153.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-55248",
+            "https://nvd.nist.gov/vuln/detail/CVE-2025-55248",
+            "https://ubuntu.com/security/notices/USN-7822-1",
+            "https://www.cve.org/CVERecord?id=CVE-2025-55248"
+          ],
+          "PublishedDate": "2025-10-14T17:15:44.787Z",
+          "LastModifiedDate": "2025-10-23T15:01:44.97Z"
+        }
+      ]
+    },
+    {
+      "Target": "Program Files/dotnet/shared/Microsoft.WindowsDesktop.App/8.0.21/Microsoft.WindowsDesktop.App.deps.json",
+      "Class": "lang-pkgs",
+      "Type": "dotnet-core",
+      "Packages": [
+        {
+          "ID": "Microsoft.WindowsDesktop.App.Runtime.win-x64/8.0.21",
+          "Name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.WindowsDesktop.App.Runtime.win-x64@8.0.21",
+            "UID": "6110f90610da34e7"
+          },
+          "Version": "8.0.21",
+          "Locations": [
+            {
+              "StartLine": 915,
+              "EndLine": 920
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        }
+      ]
+    },
+    {
+      "Target": "Users/Maestri/Desktop/Rel100326/SparePartsCatalogBuilderWeb.Server.deps.json",
+      "Class": "lang-pkgs",
+      "Type": "dotnet-core",
+      "Packages": [
+        {
+          "ID": "SparePartsCatalogBuilderWeb.Server/1.0.0",
+          "Name": "SparePartsCatalogBuilderWeb.Server",
+          "Identifier": {
+            "PURL": "pkg:nuget/SparePartsCatalogBuilderWeb.Server@1.0.0",
+            "UID": "3ea5c4c44bc12f62"
+          },
+          "Version": "1.0.0",
+          "Relationship": "root",
+          "DependsOn": [
+            "Microsoft.Extensions.Logging.Log4Net.AspNetCore/8.0.0",
+            "log4net/3.0.1",
+            "log4net.Ext.Json.Net/2.0.10.2",
+            "Microsoft.AspNetCore.SpaProxy/8.0.24"
+          ],
+          "Locations": [
+            {
+              "StartLine": 854,
+              "EndLine": 858
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.AspNetCore.SpaProxy/8.0.24",
+          "Name": "Microsoft.AspNetCore.SpaProxy",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNetCore.SpaProxy@8.0.24",
+            "UID": "5f2662a4a2eb6d4"
+          },
+          "Version": "8.0.24",
+          "Relationship": "direct",
+          "Locations": [
+            {
+              "StartLine": 950,
+              "EndLine": 956
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.Extensions.Logging.Log4Net.AspNetCore/8.0.0",
+          "Name": "Microsoft.Extensions.Logging.Log4Net.AspNetCore",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.Extensions.Logging.Log4Net.AspNetCore@8.0.0",
+            "UID": "a0e63de8e5b2a33b"
+          },
+          "Version": "8.0.0",
+          "Relationship": "direct",
+          "DependsOn": [
+            "log4net/3.0.1"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1062,
+              "EndLine": 1068
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "log4net/3.0.1",
+          "Name": "log4net",
+          "Identifier": {
+            "PURL": "pkg:nuget/log4net@3.0.1",
+            "UID": "7176b8bdf9fd25d4"
+          },
+          "Version": "3.0.1",
+          "Relationship": "direct",
+          "Locations": [
+            {
+              "StartLine": 894,
+              "EndLine": 900
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "log4net.Ext.Json.Net/2.0.10.2",
+          "Name": "log4net.Ext.Json.Net",
+          "Identifier": {
+            "PURL": "pkg:nuget/log4net.Ext.Json.Net@2.0.10.2",
+            "UID": "c247574af33ee3d9"
+          },
+          "Version": "2.0.10.2",
+          "Relationship": "direct",
+          "DependsOn": [
+            "Newtonsoft.Json/13.0.3",
+            "log4net.Ext.Json/2.0.10.1"
+          ],
+          "Locations": [
+            {
+              "StartLine": 908,
+              "EndLine": 914
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Azure.Core/1.35.0",
+          "Name": "Azure.Core",
+          "Identifier": {
+            "PURL": "pkg:nuget/Azure.Core@1.35.0",
+            "UID": "3351952b00d1857c"
+          },
+          "Version": "1.35.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.Bcl.AsyncInterfaces/6.0.0",
+            "System.Memory.Data/1.0.2"
+          ],
+          "Locations": [
+            {
+              "StartLine": 859,
+              "EndLine": 865
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Azure.Identity/1.10.3",
+          "Name": "Azure.Identity",
+          "Identifier": {
+            "PURL": "pkg:nuget/Azure.Identity@1.10.3",
+            "UID": "6382bae72e9dcd6a"
+          },
+          "Version": "1.10.3",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.Identity.Client/4.56.0",
+            "Microsoft.Identity.Client.Extensions.Msal/4.56.0",
+            "Azure.Core/1.35.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 866,
+              "EndLine": 872
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "BouncyCastle.Cryptography/2.4.0",
+          "Name": "BouncyCastle.Cryptography",
+          "Identifier": {
+            "PURL": "pkg:nuget/BouncyCastle.Cryptography@2.4.0",
+            "UID": "35a3d8c9c634969d"
+          },
+          "Version": "2.4.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 873,
+              "EndLine": 879
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Enums.NET/5.0.0",
+          "Name": "Enums.NET",
+          "Identifier": {
+            "PURL": "pkg:nuget/Enums.NET@5.0.0",
+            "UID": "a50ed700c5bdbc5e"
+          },
+          "Version": "5.0.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 880,
+              "EndLine": 886
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "ExtendedNumerics.BigDecimal/2025.1001.2.129",
+          "Name": "ExtendedNumerics.BigDecimal",
+          "Identifier": {
+            "PURL": "pkg:nuget/ExtendedNumerics.BigDecimal@2025.1001.2.129",
+            "UID": "4a055737eb6d0138"
+          },
+          "Version": "2025.1001.2.129",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 887,
+              "EndLine": 893
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "MathNet.Numerics.Signed/5.0.0",
+          "Name": "MathNet.Numerics.Signed",
+          "Identifier": {
+            "PURL": "pkg:nuget/MathNet.Numerics.Signed@5.0.0",
+            "UID": "d0750dcb59128bd6"
+          },
+          "Version": "5.0.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 915,
+              "EndLine": 921
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.Bcl.AsyncInterfaces/6.0.0",
+          "Name": "Microsoft.Bcl.AsyncInterfaces",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.Bcl.AsyncInterfaces@6.0.0",
+            "UID": "645d736822cfe14c"
+          },
+          "Version": "6.0.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 964,
+              "EndLine": 970
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.CodeAnalysis.CSharp/4.5.0",
+          "Name": "Microsoft.CodeAnalysis.CSharp",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.CodeAnalysis.CSharp@4.5.0",
+            "UID": "a78e7151460fe0da"
+          },
+          "Version": "4.5.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.CodeAnalysis.Common/4.5.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 978,
+              "EndLine": 984
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.CodeAnalysis.Common/4.5.0",
+          "Name": "Microsoft.CodeAnalysis.Common",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.CodeAnalysis.Common@4.5.0",
+            "UID": "b67a07130ff5fdce"
+          },
+          "Version": "4.5.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 971,
+              "EndLine": 977
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.Data.SqlClient/5.1.5",
+          "Name": "Microsoft.Data.SqlClient",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.Data.SqlClient@5.1.5",
+            "UID": "7a48618e3ce001e3"
+          },
+          "Version": "5.1.5",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.IdentityModel.JsonWebTokens/6.35.0",
+            "Microsoft.IdentityModel.Protocols.OpenIdConnect/6.35.0",
+            "Microsoft.SqlServer.Server/1.0.0",
+            "System.Runtime.Caching/6.0.0",
+            "Azure.Identity/1.10.3",
+            "Microsoft.Data.SqlClient.SNI.runtime/5.1.1",
+            "Microsoft.Identity.Client/4.56.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 985,
+              "EndLine": 991
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.Data.SqlClient.SNI.runtime/5.1.1",
+          "Name": "Microsoft.Data.SqlClient.SNI.runtime",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.Data.SqlClient.SNI.runtime@5.1.1",
+            "UID": "171cfa23c738d6ed"
+          },
+          "Version": "5.1.1",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 992,
+              "EndLine": 998
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.EntityFrameworkCore/8.0.8",
+          "Name": "Microsoft.EntityFrameworkCore",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.EntityFrameworkCore@8.0.8",
+            "UID": "4b9867f2f1031810"
+          },
+          "Version": "8.0.8",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.EntityFrameworkCore.Abstractions/8.0.8"
+          ],
+          "Locations": [
+            {
+              "StartLine": 999,
+              "EndLine": 1005
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.EntityFrameworkCore.Abstractions/8.0.8",
+          "Name": "Microsoft.EntityFrameworkCore.Abstractions",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.EntityFrameworkCore.Abstractions@8.0.8",
+            "UID": "ee0ab66e93a509c"
+          },
+          "Version": "8.0.8",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1006,
+              "EndLine": 1012
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.EntityFrameworkCore.Relational/8.0.8",
+          "Name": "Microsoft.EntityFrameworkCore.Relational",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.EntityFrameworkCore.Relational@8.0.8",
+            "UID": "38afe12f950095ad"
+          },
+          "Version": "8.0.8",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.EntityFrameworkCore/8.0.8"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1013,
+              "EndLine": 1019
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.EntityFrameworkCore.SqlServer/8.0.8",
+          "Name": "Microsoft.EntityFrameworkCore.SqlServer",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.EntityFrameworkCore.SqlServer@8.0.8",
+            "UID": "a05a5f8961579f4d"
+          },
+          "Version": "8.0.8",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.Data.SqlClient/5.1.5",
+            "Microsoft.EntityFrameworkCore.Relational/8.0.8"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1020,
+              "EndLine": 1026
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.2",
+          "Name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.Extensions.DependencyInjection.Abstractions@8.0.2",
+            "UID": "a48b27e38e7d8bed"
+          },
+          "Version": "8.0.2",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1027,
+              "EndLine": 1033
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.Extensions.DependencyModel/8.0.1",
+          "Name": "Microsoft.Extensions.DependencyModel",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.Extensions.DependencyModel@8.0.1",
+            "UID": "846f4aa6c6b6a889"
+          },
+          "Version": "8.0.1",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1034,
+              "EndLine": 1040
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.Extensions.Diagnostics.Abstractions/8.0.1",
+          "Name": "Microsoft.Extensions.Diagnostics.Abstractions",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.Extensions.Diagnostics.Abstractions@8.0.1",
+            "UID": "17508675a1c6a369"
+          },
+          "Version": "8.0.1",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.2",
+            "Microsoft.Extensions.Options/8.0.2"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1041,
+              "EndLine": 1047
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.Extensions.Hosting.Abstractions/8.0.1",
+          "Name": "Microsoft.Extensions.Hosting.Abstractions",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.Extensions.Hosting.Abstractions@8.0.1",
+            "UID": "ee58d49a1b471928"
+          },
+          "Version": "8.0.1",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.2",
+            "Microsoft.Extensions.Diagnostics.Abstractions/8.0.1",
+            "Microsoft.Extensions.Logging.Abstractions/8.0.2"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1048,
+              "EndLine": 1054
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.Extensions.Logging.Abstractions/8.0.2",
+          "Name": "Microsoft.Extensions.Logging.Abstractions",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.Extensions.Logging.Abstractions@8.0.2",
+            "UID": "d40c5a843764721d"
+          },
+          "Version": "8.0.2",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.2"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1055,
+              "EndLine": 1061
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.Extensions.ObjectPool/8.0.11",
+          "Name": "Microsoft.Extensions.ObjectPool",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.Extensions.ObjectPool@8.0.11",
+            "UID": "513b325736125663"
+          },
+          "Version": "8.0.11",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1069,
+              "EndLine": 1075
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.Extensions.Options/8.0.2",
+          "Name": "Microsoft.Extensions.Options",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.Extensions.Options@8.0.2",
+            "UID": "1fccfccb374467ca"
+          },
+          "Version": "8.0.2",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.2"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1076,
+              "EndLine": 1082
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.IO.RecyclableMemoryStream/3.0.1",
+          "Name": "Microsoft.IO.RecyclableMemoryStream",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.IO.RecyclableMemoryStream@3.0.1",
+            "UID": "44cc641360fc3e4"
+          },
+          "Version": "3.0.1",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1139,
+              "EndLine": 1145
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.Identity.Client/4.56.0",
+          "Name": "Microsoft.Identity.Client",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.Identity.Client@4.56.0",
+            "UID": "51d7fc933f6c01db"
+          },
+          "Version": "4.56.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.IdentityModel.Abstractions/6.35.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1083,
+              "EndLine": 1089
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.Identity.Client.Extensions.Msal/4.56.0",
+          "Name": "Microsoft.Identity.Client.Extensions.Msal",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.Identity.Client.Extensions.Msal@4.56.0",
+            "UID": "1e9ac12193188ef1"
+          },
+          "Version": "4.56.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.Identity.Client/4.56.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1090,
+              "EndLine": 1096
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.IdentityModel.Abstractions/6.35.0",
+          "Name": "Microsoft.IdentityModel.Abstractions",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.IdentityModel.Abstractions@6.35.0",
+            "UID": "72f582f0834c42d9"
+          },
+          "Version": "6.35.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1097,
+              "EndLine": 1103
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.IdentityModel.JsonWebTokens/6.35.0",
+          "Name": "Microsoft.IdentityModel.JsonWebTokens",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.IdentityModel.JsonWebTokens@6.35.0",
+            "UID": "fea46849a0cc5d19"
+          },
+          "Version": "6.35.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.IdentityModel.Tokens/6.35.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1104,
+              "EndLine": 1110
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.IdentityModel.Logging/6.35.0",
+          "Name": "Microsoft.IdentityModel.Logging",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.IdentityModel.Logging@6.35.0",
+            "UID": "e9e393e6cdfb54f7"
+          },
+          "Version": "6.35.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.IdentityModel.Abstractions/6.35.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1111,
+              "EndLine": 1117
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.IdentityModel.Protocols/6.35.0",
+          "Name": "Microsoft.IdentityModel.Protocols",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.IdentityModel.Protocols@6.35.0",
+            "UID": "70ba41edee80e33"
+          },
+          "Version": "6.35.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.IdentityModel.Logging/6.35.0",
+            "Microsoft.IdentityModel.Tokens/6.35.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1118,
+              "EndLine": 1124
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.IdentityModel.Protocols.OpenIdConnect/6.35.0",
+          "Name": "Microsoft.IdentityModel.Protocols.OpenIdConnect",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.IdentityModel.Protocols.OpenIdConnect@6.35.0",
+            "UID": "da5202908ad6db4b"
+          },
+          "Version": "6.35.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.IdentityModel.Protocols/6.35.0",
+            "System.IdentityModel.Tokens.Jwt/6.35.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1125,
+              "EndLine": 1131
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.IdentityModel.Tokens/6.35.0",
+          "Name": "Microsoft.IdentityModel.Tokens",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.IdentityModel.Tokens@6.35.0",
+            "UID": "3ee5517feab54177"
+          },
+          "Version": "6.35.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.IdentityModel.Logging/6.35.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1132,
+              "EndLine": 1138
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.OpenApi/1.6.14",
+          "Name": "Microsoft.OpenApi",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.OpenApi@1.6.14",
+            "UID": "3dda0b05c0033fd2"
+          },
+          "Version": "1.6.14",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1146,
+              "EndLine": 1152
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.SqlServer.Server/1.0.0",
+          "Name": "Microsoft.SqlServer.Server",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.SqlServer.Server@1.0.0",
+            "UID": "8c0fcc1e139feabe"
+          },
+          "Version": "1.0.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1153,
+              "EndLine": 1159
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "NPOI/2.7.5",
+          "Name": "NPOI",
+          "Identifier": {
+            "PURL": "pkg:nuget/NPOI@2.7.5",
+            "UID": "d893cf1a54cab6d3"
+          },
+          "Version": "2.7.5",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "BouncyCastle.Cryptography/2.4.0",
+            "ExtendedNumerics.BigDecimal/2025.1001.2.129",
+            "MathNet.Numerics.Signed/5.0.0",
+            "Microsoft.IO.RecyclableMemoryStream/3.0.1",
+            "NSax/1.0.2",
+            "SixLabors.Fonts/1.0.1",
+            "SixLabors.ImageSharp/2.1.11",
+            "ZString/2.6.0",
+            "Enums.NET/5.0.0",
+            "SharpZipLib/1.4.2",
+            "System.Security.Cryptography.Xml/8.0.2"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1167,
+              "EndLine": 1173
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "NSax/1.0.2",
+          "Name": "NSax",
+          "Identifier": {
+            "PURL": "pkg:nuget/NSax@1.0.2",
+            "UID": "1d7e8ef97c07666e"
+          },
+          "Version": "1.0.2",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1174,
+              "EndLine": 1180
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Newtonsoft.Json/13.0.3",
+          "Name": "Newtonsoft.Json",
+          "Identifier": {
+            "PURL": "pkg:nuget/Newtonsoft.Json@13.0.3",
+            "UID": "d2d9c53bfe7a2e97"
+          },
+          "Version": "13.0.3",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1160,
+              "EndLine": 1166
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "QPdfNet/1.4.3",
+          "Name": "QPdfNet",
+          "Identifier": {
+            "PURL": "pkg:nuget/QPdfNet@1.4.3",
+            "UID": "50d451f7b942957f"
+          },
+          "Version": "1.4.3",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Newtonsoft.Json/13.0.3"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1181,
+              "EndLine": 1187
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "RestSharp/112.1.0",
+          "Name": "RestSharp",
+          "Identifier": {
+            "PURL": "pkg:nuget/RestSharp@112.1.0",
+            "UID": "9ec52dff81208bf8"
+          },
+          "Version": "112.1.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1188,
+              "EndLine": 1194
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "SharpZipLib/1.4.2",
+          "Name": "SharpZipLib",
+          "Identifier": {
+            "PURL": "pkg:nuget/SharpZipLib@1.4.2",
+            "UID": "25477721a2795d0e"
+          },
+          "Version": "1.4.2",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1195,
+              "EndLine": 1201
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "SixLabors.Fonts/1.0.1",
+          "Name": "SixLabors.Fonts",
+          "Identifier": {
+            "PURL": "pkg:nuget/SixLabors.Fonts@1.0.1",
+            "UID": "923a70607345335a"
+          },
+          "Version": "1.0.1",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1202,
+              "EndLine": 1208
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "SixLabors.ImageSharp/2.1.11",
+          "Name": "SixLabors.ImageSharp",
+          "Identifier": {
+            "PURL": "pkg:nuget/SixLabors.ImageSharp@2.1.11",
+            "UID": "c8cdf405b503f5a4"
+          },
+          "Version": "2.1.11",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1209,
+              "EndLine": 1215
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Swashbuckle.AspNetCore.Swagger/6.8.1",
+          "Name": "Swashbuckle.AspNetCore.Swagger",
+          "Identifier": {
+            "PURL": "pkg:nuget/Swashbuckle.AspNetCore.Swagger@6.8.1",
+            "UID": "c946a7e75fdff2da"
+          },
+          "Version": "6.8.1",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.OpenApi/1.6.14"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1223,
+              "EndLine": 1229
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Swashbuckle.AspNetCore.SwaggerGen/6.8.1",
+          "Name": "Swashbuckle.AspNetCore.SwaggerGen",
+          "Identifier": {
+            "PURL": "pkg:nuget/Swashbuckle.AspNetCore.SwaggerGen@6.8.1",
+            "UID": "61b265f8690ba87d"
+          },
+          "Version": "6.8.1",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Swashbuckle.AspNetCore.Swagger/6.8.1"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1230,
+              "EndLine": 1236
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Swashbuckle.AspNetCore.SwaggerUI/6.8.1",
+          "Name": "Swashbuckle.AspNetCore.SwaggerUI",
+          "Identifier": {
+            "PURL": "pkg:nuget/Swashbuckle.AspNetCore.SwaggerUI@6.8.1",
+            "UID": "7877ea4a51f77fb5"
+          },
+          "Version": "6.8.1",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1237,
+              "EndLine": 1243
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "System.IdentityModel.Tokens.Jwt/6.35.0",
+          "Name": "System.IdentityModel.Tokens.Jwt",
+          "Identifier": {
+            "PURL": "pkg:nuget/System.IdentityModel.Tokens.Jwt@6.35.0",
+            "UID": "d19145e2a6bd2a05"
+          },
+          "Version": "6.35.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.IdentityModel.JsonWebTokens/6.35.0",
+            "Microsoft.IdentityModel.Tokens/6.35.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1244,
+              "EndLine": 1250
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "System.Memory.Data/1.0.2",
+          "Name": "System.Memory.Data",
+          "Identifier": {
+            "PURL": "pkg:nuget/System.Memory.Data@1.0.2",
+            "UID": "11daf02ee57264da"
+          },
+          "Version": "1.0.2",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1251,
+              "EndLine": 1257
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "System.Net.WebSockets.WebSocketProtocol/5.1.0",
+          "Name": "System.Net.WebSockets.WebSocketProtocol",
+          "Identifier": {
+            "PURL": "pkg:nuget/System.Net.WebSockets.WebSocketProtocol@5.1.0",
+            "UID": "850fbd99425f80d1"
+          },
+          "Version": "5.1.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1258,
+              "EndLine": 1264
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "System.Runtime.Caching/6.0.0",
+          "Name": "System.Runtime.Caching",
+          "Identifier": {
+            "PURL": "pkg:nuget/System.Runtime.Caching@6.0.0",
+            "UID": "59e5b767e1bc39dc"
+          },
+          "Version": "6.0.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1265,
+              "EndLine": 1271
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "System.Security.Cryptography.Pkcs/8.0.1",
+          "Name": "System.Security.Cryptography.Pkcs",
+          "Identifier": {
+            "PURL": "pkg:nuget/System.Security.Cryptography.Pkcs@8.0.1",
+            "UID": "48c8046ae63ba91c"
+          },
+          "Version": "8.0.1",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1272,
+              "EndLine": 1278
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "System.Security.Cryptography.Xml/8.0.2",
+          "Name": "System.Security.Cryptography.Xml",
+          "Identifier": {
+            "PURL": "pkg:nuget/System.Security.Cryptography.Xml@8.0.2",
+            "UID": "5460376ce475b14b"
+          },
+          "Version": "8.0.2",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "System.Security.Cryptography.Pkcs/8.0.1"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1279,
+              "EndLine": 1285
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "ZString/2.6.0",
+          "Name": "ZString",
+          "Identifier": {
+            "PURL": "pkg:nuget/ZString@2.6.0",
+            "UID": "8a7f74ce23a81b72"
+          },
+          "Version": "2.6.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1286,
+              "EndLine": 1292
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "log4net.Ext.Json/2.0.10.1",
+          "Name": "log4net.Ext.Json",
+          "Identifier": {
+            "PURL": "pkg:nuget/log4net.Ext.Json@2.0.10.1",
+            "UID": "4b45db83e5e326bd"
+          },
+          "Version": "2.0.10.1",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "log4net/3.0.1"
+          ],
+          "Locations": [
+            {
+              "StartLine": 901,
+              "EndLine": 907
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2024-29992",
+          "VendorIDs": [
+            "GHSA-wvxc-855f-jvrv"
+          ],
+          "PkgID": "Azure.Identity/1.10.3",
+          "PkgName": "Azure.Identity",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Azure.Identity@1.10.3",
+            "UID": "6382bae72e9dcd6a"
+          },
+          "InstalledVersion": "1.10.3",
+          "FixedVersion": "1.11.0",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-29992",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:fe8ebd79e7a852bf78c2db2014b876e566d28a7e8020170ffa0dd83c40d2f01a",
+          "Title": "Azure Identity Library for .NET Information Disclosure Vulnerability",
+          "Description": "Azure Identity Library for .NET Information Disclosure Vulnerability",
+          "Severity": "MEDIUM",
+          "CweIDs": [
+            "CWE-522"
+          ],
+          "VendorSeverity": {
+            "ghsa": 2
+          },
+          "CVSS": {
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+              "V3Score": 5.5
+            }
+          },
+          "References": [
+            "https://github.com/Azure/azure-sdk-for-net",
+            "https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/identity/Azure.Identity/CHANGELOG.md#1110-2024-04-09",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-29992",
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-29992"
+          ],
+          "PublishedDate": "2024-04-09T17:16:02.437Z",
+          "LastModifiedDate": "2025-01-09T14:45:52.75Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2024-35255",
+          "VendorIDs": [
+            "GHSA-m5vv-6r4h-3vj9"
+          ],
+          "PkgID": "Azure.Identity/1.10.3",
+          "PkgName": "Azure.Identity",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Azure.Identity@1.10.3",
+            "UID": "6382bae72e9dcd6a"
+          },
+          "InstalledVersion": "1.10.3",
+          "FixedVersion": "1.11.4",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-35255",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:68fd501efaf25b10835520a2418fe7b095a1a0b0da1abe4d64cca61f34d4aea0",
+          "Title": "azure-identity: Azure Identity Libraries Elevation of Privilege Vulnerability in github.com/Azure/azure-sdk-for-go/sdk/azidentity",
+          "Description": "Azure Identity Libraries and Microsoft Authentication Library Elevation of Privilege Vulnerability",
+          "Severity": "MEDIUM",
+          "CweIDs": [
+            "CWE-362"
+          ],
+          "VendorSeverity": {
+            "amazon": 3,
+            "azure": 2,
+            "cbl-mariner": 2,
+            "ghsa": 2,
+            "redhat": 2
+          },
+          "CVSS": {
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+              "V40Vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:L/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N",
+              "V3Score": 5.5,
+              "V40Score": 6.8
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+              "V3Score": 5.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2024-35255",
+            "https://github.com/Azure/azure-sdk-for-go/commit/50774cd9709905523136fb05e8c85a50e8984499",
+            "https://github.com/Azure/azure-sdk-for-java/commit/5bf020d6ea056de40e2738e3647a4e06f902c18d",
+            "https://github.com/Azure/azure-sdk-for-js/commit/c6aa75d312ae463e744163cedfd8fc480cc8d492",
+            "https://github.com/Azure/azure-sdk-for-net/commit/9279a4f38bf69b457cfb9b354f210e0a540a5c53",
+            "https://github.com/Azure/azure-sdk-for-python/commit/cb065acd7d0f957327dc4f02d1646d4e51a94178",
+            "https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/issues/4806#issuecomment-2178960340",
+            "https://github.com/advisories/GHSA-m5vv-6r4h-3vj9",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-35255",
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-35255",
+            "https://www.cve.org/CVERecord?id=CVE-2024-35255"
+          ],
+          "PublishedDate": "2024-06-11T17:16:03.55Z",
+          "LastModifiedDate": "2024-11-21T09:20:01.923Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2024-35255",
+          "VendorIDs": [
+            "GHSA-m5vv-6r4h-3vj9"
+          ],
+          "PkgID": "Microsoft.Identity.Client/4.56.0",
+          "PkgName": "Microsoft.Identity.Client",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.Identity.Client@4.56.0",
+            "UID": "51d7fc933f6c01db"
+          },
+          "InstalledVersion": "4.56.0",
+          "FixedVersion": "4.60.4, 4.61.3",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-35255",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:3e6bbeb35d14a98552492a2534a50277b4aa9e55c64958c86a66b742fe8a9591",
+          "Title": "azure-identity: Azure Identity Libraries Elevation of Privilege Vulnerability in github.com/Azure/azure-sdk-for-go/sdk/azidentity",
+          "Description": "Azure Identity Libraries and Microsoft Authentication Library Elevation of Privilege Vulnerability",
+          "Severity": "MEDIUM",
+          "CweIDs": [
+            "CWE-362"
+          ],
+          "VendorSeverity": {
+            "amazon": 3,
+            "azure": 2,
+            "cbl-mariner": 2,
+            "ghsa": 2,
+            "redhat": 2
+          },
+          "CVSS": {
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+              "V40Vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:L/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N",
+              "V3Score": 5.5,
+              "V40Score": 6.8
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+              "V3Score": 5.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2024-35255",
+            "https://github.com/Azure/azure-sdk-for-go/commit/50774cd9709905523136fb05e8c85a50e8984499",
+            "https://github.com/Azure/azure-sdk-for-java/commit/5bf020d6ea056de40e2738e3647a4e06f902c18d",
+            "https://github.com/Azure/azure-sdk-for-js/commit/c6aa75d312ae463e744163cedfd8fc480cc8d492",
+            "https://github.com/Azure/azure-sdk-for-net/commit/9279a4f38bf69b457cfb9b354f210e0a540a5c53",
+            "https://github.com/Azure/azure-sdk-for-python/commit/cb065acd7d0f957327dc4f02d1646d4e51a94178",
+            "https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/issues/4806#issuecomment-2178960340",
+            "https://github.com/advisories/GHSA-m5vv-6r4h-3vj9",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-35255",
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-35255",
+            "https://www.cve.org/CVERecord?id=CVE-2024-35255"
+          ],
+          "PublishedDate": "2024-06-11T17:16:03.55Z",
+          "LastModifiedDate": "2024-11-21T09:20:01.923Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2024-27086",
+          "VendorIDs": [
+            "GHSA-x674-v45j-fwxw"
+          ],
+          "PkgID": "Microsoft.Identity.Client/4.56.0",
+          "PkgName": "Microsoft.Identity.Client",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/Microsoft.Identity.Client@4.56.0",
+            "UID": "51d7fc933f6c01db"
+          },
+          "InstalledVersion": "4.56.0",
+          "FixedVersion": "4.59.1, 4.60.3",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-27086",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:e33b04967f910fbaf4faea4e62e1b23dc42e731744c0c89fc1f96b1c4b472c3c",
+          "Title": "MSAL.NET applications targeting Xamarin Android and .NET Android (MAUI) susceptible to local denial of service",
+          "Description": "The MSAL library enabled acquisition of security tokens to call protected APIs. MSAL.NET applications targeting Xamarin Android and .NET Android (e.g., MAUI) using the library from versions 4.48.0 to 4.60.0 are impacted by a low severity vulnerability.   \nA malicious application running on a customer Android device    can cause local denial of service against applications that were built using MSAL.NET for authentication on the same device (i.e., prevent the user of the legitimate application from logging in) due to incorrect activity export configuration. MSAL.NET version 4.60.1 includes the fix.  As a workaround, a developer may explicitly mark the MSAL.NET activity non-exported.",
+          "Severity": "LOW",
+          "CweIDs": [
+            "CWE-863",
+            "CWE-926"
+          ],
+          "VendorSeverity": {
+            "ghsa": 1
+          },
+          "CVSS": {
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:R/S:U/C:N/I:L/A:L",
+              "V3Score": 3.9
+            }
+          },
+          "References": [
+            "https://github.com/AzureAD/microsoft-authentication-library-for-dotnet",
+            "https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/commit/413e319472ccf48c86647f19fa2aa49ff6038488",
+            "https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/security/advisories/GHSA-x674-v45j-fwxw",
+            "https://learn.microsoft.com/en-us/entra/msal/dotnet",
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-27086",
+            "https://www.nuget.org/packages/Microsoft.Identity.Client"
+          ],
+          "PublishedDate": "2024-04-16T22:15:34.783Z",
+          "LastModifiedDate": "2024-11-21T09:03:49.83Z"
+        }
+      ]
+    },
+    {
+      "Target": "inetpub/wwwroot/ApiTestExe/ApiTestExe.deps.json",
+      "Class": "lang-pkgs",
+      "Type": "dotnet-core",
+      "Packages": [
+        {
+          "ID": "ApiTestExe/1.0.0",
+          "Name": "ApiTestExe",
+          "Identifier": {
+            "PURL": "pkg:nuget/ApiTestExe@1.0.0",
+            "UID": "30ecd3cd7c21526"
+          },
+          "Version": "1.0.0",
+          "Relationship": "root",
+          "DependsOn": [
+            "PDFTron.NET.x64/10.9.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 76,
+              "EndLine": 80
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "PDFTron.NET.x64/10.9.0",
+          "Name": "PDFTron.NET.x64",
+          "Identifier": {
+            "PURL": "pkg:nuget/PDFTron.NET.x64@10.9.0",
+            "UID": "71fa46a36871f8f9"
+          },
+          "Version": "10.9.0",
+          "Relationship": "direct",
+          "Locations": [
+            {
+              "StartLine": 95,
+              "EndLine": 101
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.OpenApi/1.2.3",
+          "Name": "Microsoft.OpenApi",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.OpenApi@1.2.3",
+            "UID": "b89c2506d3e13ea4"
+          },
+          "Version": "1.2.3",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 88,
+              "EndLine": 94
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Swashbuckle.AspNetCore.Swagger/6.4.0",
+          "Name": "Swashbuckle.AspNetCore.Swagger",
+          "Identifier": {
+            "PURL": "pkg:nuget/Swashbuckle.AspNetCore.Swagger@6.4.0",
+            "UID": "33041e6b1746049f"
+          },
+          "Version": "6.4.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.OpenApi/1.2.3"
+          ],
+          "Locations": [
+            {
+              "StartLine": 109,
+              "EndLine": 115
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Swashbuckle.AspNetCore.SwaggerGen/6.4.0",
+          "Name": "Swashbuckle.AspNetCore.SwaggerGen",
+          "Identifier": {
+            "PURL": "pkg:nuget/Swashbuckle.AspNetCore.SwaggerGen@6.4.0",
+            "UID": "2ccd27b9e867c306"
+          },
+          "Version": "6.4.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Swashbuckle.AspNetCore.Swagger/6.4.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 116,
+              "EndLine": 122
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Swashbuckle.AspNetCore.SwaggerUI/6.4.0",
+          "Name": "Swashbuckle.AspNetCore.SwaggerUI",
+          "Identifier": {
+            "PURL": "pkg:nuget/Swashbuckle.AspNetCore.SwaggerUI@6.4.0",
+            "UID": "71a7b6a41f0e5783"
+          },
+          "Version": "6.4.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 123,
+              "EndLine": 129
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        }
+      ]
+    },
+    {
+      "Target": "inetpub/wwwroot/AttiAA/AttiAmministrativiCsharp.deps.json",
+      "Class": "lang-pkgs",
+      "Type": "dotnet-core",
+      "Packages": [
+        {
+          "ID": "AttiAmministrativiCsharp/1.0.0",
+          "Name": "AttiAmministrativiCsharp",
+          "Identifier": {
+            "PURL": "pkg:nuget/AttiAmministrativiCsharp@1.0.0",
+            "UID": "e3e31be0c5b192cc"
+          },
+          "Version": "1.0.0",
+          "Relationship": "root",
+          "DependsOn": [
+            "Microsoft.Extensions.Logging.Abstractions/7.0.1",
+            "Microsoft.Extensions.Logging.Log4Net.AspNetCore/7.0.0",
+            "System.ServiceModel.Http/6.1.0",
+            "SoapCore/1.1.0.39",
+            "Microsoft.AspNet.WebApi.Core/5.3.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1270,
+              "EndLine": 1274
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.AspNet.WebApi.Core/5.3.0",
+          "Name": "Microsoft.AspNet.WebApi.Core",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNet.WebApi.Core@5.3.0",
+            "UID": "570013ce6226e1f1"
+          },
+          "Version": "5.3.0",
+          "Relationship": "direct",
+          "DependsOn": [
+            "Microsoft.AspNet.WebApi.Client/6.0.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1331,
+              "EndLine": 1337
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.Extensions.Logging.Abstractions/7.0.1",
+          "Name": "Microsoft.Extensions.Logging.Abstractions",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.Extensions.Logging.Abstractions@7.0.1",
+            "UID": "a1920cf228d2be8b"
+          },
+          "Version": "7.0.1",
+          "Relationship": "direct",
+          "Locations": [
+            {
+              "StartLine": 1506,
+              "EndLine": 1512
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.Extensions.Logging.Log4Net.AspNetCore/7.0.0",
+          "Name": "Microsoft.Extensions.Logging.Log4Net.AspNetCore",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.Extensions.Logging.Log4Net.AspNetCore@7.0.0",
+            "UID": "264880d9432a798"
+          },
+          "Version": "7.0.0",
+          "Relationship": "direct",
+          "DependsOn": [
+            "log4net/2.0.15"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1513,
+              "EndLine": 1519
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "SoapCore/1.1.0.39",
+          "Name": "SoapCore",
+          "Identifier": {
+            "PURL": "pkg:nuget/SoapCore@1.1.0.39",
+            "UID": "ca9b2eb10da755c7"
+          },
+          "Version": "1.1.0.39",
+          "Relationship": "direct",
+          "DependsOn": [
+            "System.CodeDom/6.0.0",
+            "System.ServiceModel.Http/6.1.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1716,
+              "EndLine": 1722
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "System.ServiceModel.Http/6.1.0",
+          "Name": "System.ServiceModel.Http",
+          "Identifier": {
+            "PURL": "pkg:nuget/System.ServiceModel.Http@6.1.0",
+            "UID": "c2248eff664eeef7"
+          },
+          "Version": "6.1.0",
+          "Relationship": "direct",
+          "DependsOn": [
+            "System.ServiceModel.Primitives/6.1.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 2108,
+              "EndLine": 2114
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "BouncyCastle.Cryptography/2.2.1",
+          "Name": "BouncyCastle.Cryptography",
+          "Identifier": {
+            "PURL": "pkg:nuget/BouncyCastle.Cryptography@2.2.1",
+            "UID": "4dc508d90a70852c"
+          },
+          "Version": "2.2.1",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1275,
+              "EndLine": 1281
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.AspNet.WebApi.Client/6.0.0",
+          "Name": "Microsoft.AspNet.WebApi.Client",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.AspNet.WebApi.Client@6.0.0",
+            "UID": "1ba2fa5406350b57"
+          },
+          "Version": "6.0.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Newtonsoft.Json/13.0.1",
+            "Newtonsoft.Json.Bson/1.0.2"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1324,
+              "EndLine": 1330
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.DotNet.PlatformAbstractions/1.1.0",
+          "Name": "Microsoft.DotNet.PlatformAbstractions",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.DotNet.PlatformAbstractions@1.1.0",
+            "UID": "56343ce5b0b78b02"
+          },
+          "Version": "1.1.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1429,
+              "EndLine": 1435
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.Extensions.DependencyModel/1.1.0",
+          "Name": "Microsoft.Extensions.DependencyModel",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.Extensions.DependencyModel@1.1.0",
+            "UID": "fa68cd590b2f0ea4"
+          },
+          "Version": "1.1.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.DotNet.PlatformAbstractions/1.1.0",
+            "Newtonsoft.Json/13.0.1"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1478,
+              "EndLine": 1484
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.Extensions.ObjectPool/6.0.16",
+          "Name": "Microsoft.Extensions.ObjectPool",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.Extensions.ObjectPool@6.0.16",
+            "UID": "56fd8fbc8a1ec862"
+          },
+          "Version": "6.0.16",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1520,
+              "EndLine": 1526
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.OpenApi/1.2.3",
+          "Name": "Microsoft.OpenApi",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.OpenApi@1.2.3",
+            "UID": "56dd779aec0a8cac"
+          },
+          "Version": "1.2.3",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1569,
+              "EndLine": 1575
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Microsoft.Win32.SystemEvents/7.0.0",
+          "Name": "Microsoft.Win32.SystemEvents",
+          "Identifier": {
+            "PURL": "pkg:nuget/Microsoft.Win32.SystemEvents@7.0.0",
+            "UID": "888ea461f3bebb8d"
+          },
+          "Version": "7.0.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1590,
+              "EndLine": 1596
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Newtonsoft.Json/13.0.1",
+          "Name": "Newtonsoft.Json",
+          "Identifier": {
+            "PURL": "pkg:nuget/Newtonsoft.Json@13.0.1",
+            "UID": "82f781ee1fb10edf"
+          },
+          "Version": "13.0.1",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1597,
+              "EndLine": 1603
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Newtonsoft.Json.Bson/1.0.2",
+          "Name": "Newtonsoft.Json.Bson",
+          "Identifier": {
+            "PURL": "pkg:nuget/Newtonsoft.Json.Bson@1.0.2",
+            "UID": "d879799c5d5be5bc"
+          },
+          "Version": "1.0.2",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Newtonsoft.Json/13.0.1"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1604,
+              "EndLine": 1610
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "PDFTron.NET.x64/10.5.0",
+          "Name": "PDFTron.NET.x64",
+          "Identifier": {
+            "PURL": "pkg:nuget/PDFTron.NET.x64@10.5.0",
+            "UID": "6ebcf91f8cfca5b2"
+          },
+          "Version": "10.5.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1611,
+              "EndLine": 1617
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Swashbuckle.AspNetCore.Swagger/6.5.0",
+          "Name": "Swashbuckle.AspNetCore.Swagger",
+          "Identifier": {
+            "PURL": "pkg:nuget/Swashbuckle.AspNetCore.Swagger@6.5.0",
+            "UID": "b590e1b73ae3022c"
+          },
+          "Version": "6.5.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.OpenApi/1.2.3"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1730,
+              "EndLine": 1736
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Swashbuckle.AspNetCore.SwaggerGen/6.5.0",
+          "Name": "Swashbuckle.AspNetCore.SwaggerGen",
+          "Identifier": {
+            "PURL": "pkg:nuget/Swashbuckle.AspNetCore.SwaggerGen@6.5.0",
+            "UID": "8d8d47f63c31795b"
+          },
+          "Version": "6.5.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Swashbuckle.AspNetCore.Swagger/6.5.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1737,
+              "EndLine": 1743
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "Swashbuckle.AspNetCore.SwaggerUI/6.5.0",
+          "Name": "Swashbuckle.AspNetCore.SwaggerUI",
+          "Identifier": {
+            "PURL": "pkg:nuget/Swashbuckle.AspNetCore.SwaggerUI@6.5.0",
+            "UID": "274a1c94f12ccf04"
+          },
+          "Version": "6.5.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1744,
+              "EndLine": 1750
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "System.CodeDom/6.0.0",
+          "Name": "System.CodeDom",
+          "Identifier": {
+            "PURL": "pkg:nuget/System.CodeDom@6.0.0",
+            "UID": "7071063f6f2c3b6b"
+          },
+          "Version": "6.0.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 1765,
+              "EndLine": 1771
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "System.Configuration.ConfigurationManager/7.0.0",
+          "Name": "System.Configuration.ConfigurationManager",
+          "Identifier": {
+            "PURL": "pkg:nuget/System.Configuration.ConfigurationManager@7.0.0",
+            "UID": "52fb3358cd10a63d"
+          },
+          "Version": "7.0.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "System.Security.Cryptography.ProtectedData/7.0.0",
+            "System.Security.Permissions/7.0.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1793,
+              "EndLine": 1799
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "System.Drawing.Common/7.0.0",
+          "Name": "System.Drawing.Common",
+          "Identifier": {
+            "PURL": "pkg:nuget/System.Drawing.Common@7.0.0",
+            "UID": "f3ec6e2625c55594"
+          },
+          "Version": "7.0.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.Win32.SystemEvents/7.0.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1828,
+              "EndLine": 1834
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "System.Security.Cryptography.Pkcs/6.0.1",
+          "Name": "System.Security.Cryptography.Pkcs",
+          "Identifier": {
+            "PURL": "pkg:nuget/System.Security.Cryptography.Pkcs@6.0.1",
+            "UID": "78226219323feb3"
+          },
+          "Version": "6.0.1",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 2066,
+              "EndLine": 2072
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "System.Security.Cryptography.ProtectedData/7.0.0",
+          "Name": "System.Security.Cryptography.ProtectedData",
+          "Identifier": {
+            "PURL": "pkg:nuget/System.Security.Cryptography.ProtectedData@7.0.0",
+            "UID": "618d8402cd692aad"
+          },
+          "Version": "7.0.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "Locations": [
+            {
+              "StartLine": 2080,
+              "EndLine": 2086
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "System.Security.Cryptography.Xml/6.0.1",
+          "Name": "System.Security.Cryptography.Xml",
+          "Identifier": {
+            "PURL": "pkg:nuget/System.Security.Cryptography.Xml@6.0.1",
+            "UID": "2c78433fb273d7c9"
+          },
+          "Version": "6.0.1",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "System.Security.Cryptography.Pkcs/6.0.1"
+          ],
+          "Locations": [
+            {
+              "StartLine": 2087,
+              "EndLine": 2093
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "System.Security.Permissions/7.0.0",
+          "Name": "System.Security.Permissions",
+          "Identifier": {
+            "PURL": "pkg:nuget/System.Security.Permissions@7.0.0",
+            "UID": "23bc3be7252b509b"
+          },
+          "Version": "7.0.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "System.Windows.Extensions/7.0.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 2094,
+              "EndLine": 2100
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "System.ServiceModel.Primitives/6.1.0",
+          "Name": "System.ServiceModel.Primitives",
+          "Identifier": {
+            "PURL": "pkg:nuget/System.ServiceModel.Primitives@6.1.0",
+            "UID": "fa603a78ccecb353"
+          },
+          "Version": "6.1.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.Extensions.ObjectPool/6.0.16",
+            "System.Security.Cryptography.Xml/6.0.1"
+          ],
+          "Locations": [
+            {
+              "StartLine": 2115,
+              "EndLine": 2121
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "System.Windows.Extensions/7.0.0",
+          "Name": "System.Windows.Extensions",
+          "Identifier": {
+            "PURL": "pkg:nuget/System.Windows.Extensions@7.0.0",
+            "UID": "13b0b0b8933fe55a"
+          },
+          "Version": "7.0.0",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "System.Drawing.Common/7.0.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 2192,
+              "EndLine": 2198
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "itext/8.0.2",
+          "Name": "itext",
+          "Identifier": {
+            "PURL": "pkg:nuget/itext@8.0.2",
+            "UID": "aa755a0b91b905ff"
+          },
+          "Version": "8.0.2",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Microsoft.Extensions.DependencyModel/1.1.0",
+            "itext.commons/8.0.2",
+            "Microsoft.DotNet.PlatformAbstractions/1.1.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1282,
+              "EndLine": 1288
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "itext.bouncy-castle-adapter/8.0.2",
+          "Name": "itext.bouncy-castle-adapter",
+          "Identifier": {
+            "PURL": "pkg:nuget/itext.bouncy-castle-adapter@8.0.2",
+            "UID": "53e9099aa21c019a"
+          },
+          "Version": "8.0.2",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "BouncyCastle.Cryptography/2.2.1",
+            "itext.commons/8.0.2"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1289,
+              "EndLine": 1295
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "itext.commons/8.0.2",
+          "Name": "itext.commons",
+          "Identifier": {
+            "PURL": "pkg:nuget/itext.commons@8.0.2",
+            "UID": "e650d0d4de1434bd"
+          },
+          "Version": "8.0.2",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "Newtonsoft.Json/13.0.1"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1296,
+              "EndLine": 1302
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        },
+        {
+          "ID": "log4net/2.0.15",
+          "Name": "log4net",
+          "Identifier": {
+            "PURL": "pkg:nuget/log4net@2.0.15",
+            "UID": "314ee13358048d1c"
+          },
+          "Version": "2.0.15",
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "System.Configuration.ConfigurationManager/7.0.0"
+          ],
+          "Locations": [
+            {
+              "StartLine": 1317,
+              "EndLine": 1323
+            }
+          ],
+          "AnalyzedBy": "dotnet-core"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2024-29857",
+          "VendorIDs": [
+            "GHSA-8xfc-gm6g-vgpv"
+          ],
+          "PkgID": "BouncyCastle.Cryptography/2.2.1",
+          "PkgName": "BouncyCastle.Cryptography",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/BouncyCastle.Cryptography@2.2.1",
+            "UID": "4dc508d90a70852c"
+          },
+          "InstalledVersion": "2.2.1",
+          "FixedVersion": "2.3.1",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-29857",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:0594e927d55fdf118227a3c8e076a975e2d205b2600fd76f1b0f1a1d8afd85cb",
+          "Title": "org.bouncycastle: Importing an EC certificate with crafted F2m parameters may lead to Denial of Service",
+          "Description": "An issue was discovered in ECCurve.java and ECCurve.cs in Bouncy Castle Java (BC Java) before 1.78, BC Java LTS before 2.73.6, BC-FJA before 1.0.2.5, and BC C# .Net before 2.3.1. Importing an EC certificate with crafted F2m parameters can lead to excessive CPU consumption during the evaluation of the curve parameters.",
+          "Severity": "MEDIUM",
+          "CweIDs": [
+            "CWE-125"
+          ],
+          "VendorSeverity": {
+            "amazon": 2,
+            "ghsa": 2,
+            "redhat": 2,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+              "V3Score": 5.3
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+              "V3Score": 6.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2024-29857",
+            "https://github.com/bcgit/bc-csharp/commit/56daa6eac526f165416d17f661422d60de0dfd63",
+            "https://github.com/bcgit/bc-csharp/wiki/CVE%E2%80%902024%E2%80%9029857",
+            "https://github.com/bcgit/bc-java/commit/efc498ca4caa340ac2fe11f2efee06c1a294501f",
+            "https://github.com/bcgit/bc-java/commit/fee80dd230e7fba132d03a34f1dd1d6aae0d0281",
+            "https://github.com/bcgit/bc-java/issues/1635",
+            "https://github.com/bcgit/bc-java/wiki/CVE%E2%80%902024%E2%80%9029857",
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-29857",
+            "https://security.netapp.com/advisory/ntap-20241206-0008",
+            "https://security.netapp.com/advisory/ntap-20241206-0008/",
+            "https://www.bouncycastle.org/latest_releases.html",
+            "https://www.cve.org/CVERecord?id=CVE-2024-29857"
+          ],
+          "PublishedDate": "2024-05-14T15:17:02.97Z",
+          "LastModifiedDate": "2024-12-06T14:15:20.263Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2024-30171",
+          "VendorIDs": [
+            "GHSA-v435-xc8x-wvr9"
+          ],
+          "PkgID": "BouncyCastle.Cryptography/2.2.1",
+          "PkgName": "BouncyCastle.Cryptography",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/BouncyCastle.Cryptography@2.2.1",
+            "UID": "4dc508d90a70852c"
+          },
+          "InstalledVersion": "2.2.1",
+          "FixedVersion": "2.3.1",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-30171",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:d90d1f498dd896071c97b437958b697e12054d6a5cf01b11196112bf201b706e",
+          "Title": "bc-java: BouncyCastle vulnerable to a timing variant of Bleichenbacher (Marvin Attack)",
+          "Description": "An issue was discovered in Bouncy Castle Java TLS API and JSSE Provider before 1.78. Timing-based leakage may occur in RSA based handshakes because of exception processing.",
+          "Severity": "MEDIUM",
+          "CweIDs": [
+            "CWE-203"
+          ],
+          "VendorSeverity": {
+            "ghsa": 2,
+            "redhat": 2,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+              "V3Score": 5.9
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+              "V3Score": 5.9
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2024-30171",
+            "https://github.com/bcgit/bc-csharp/commit/c984b8bfd8544dfc55dba91a02cbbbb9c580c217",
+            "https://github.com/bcgit/bc-csharp/wiki/CVE%E2%80%902024%E2%80%9030171",
+            "https://github.com/bcgit/bc-java/commit/d7d5e735abd64bf0f413f54fd9e495fc02400fb0",
+            "https://github.com/bcgit/bc-java/commit/e0569dcb1dea9d421d84fc4c5c5688fe101afa2d",
+            "https://github.com/bcgit/bc-java/issues/1528",
+            "https://github.com/bcgit/bc-java/wiki/CVE%E2%80%902024%E2%80%9030171",
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-30171",
+            "https://people.redhat.com/~hkario/marvin/",
+            "https://security.netapp.com/advisory/ntap-20240614-0008",
+            "https://security.netapp.com/advisory/ntap-20240614-0008/",
+            "https://www.bouncycastle.org/latest_releases.html",
+            "https://www.cve.org/CVERecord?id=CVE-2024-30171"
+          ],
+          "PublishedDate": "2024-05-14T15:21:52.69Z",
+          "LastModifiedDate": "2024-11-21T09:11:21.59Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2024-30172",
+          "VendorIDs": [
+            "GHSA-m44j-cfrm-g8qc"
+          ],
+          "PkgID": "BouncyCastle.Cryptography/2.2.1",
+          "PkgName": "BouncyCastle.Cryptography",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/BouncyCastle.Cryptography@2.2.1",
+            "UID": "4dc508d90a70852c"
+          },
+          "InstalledVersion": "2.2.1",
+          "FixedVersion": "2.3.1",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-30172",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:7734bf95f0304d6a447e759204e7644af758f94982dcb872c70cd93d2a13f858",
+          "Title": "org.bouncycastle:bcprov-jdk18on: Infinite loop in ED25519 verification in the ScalarUtil class",
+          "Description": "An issue was discovered in Bouncy Castle Java Cryptography APIs before 1.78. An Ed25519 verification code infinite loop can occur via a crafted signature and public key.",
+          "Severity": "MEDIUM",
+          "VendorSeverity": {
+            "ghsa": 2,
+            "redhat": 2,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+              "V40Vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N",
+              "V3Score": 5.3,
+              "V40Score": 6.9
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2024-30172",
+            "https://github.com/bcgit/bc-csharp/wiki/CVE%E2%80%902024%E2%80%9030172",
+            "https://github.com/bcgit/bc-java/commit/1b9fd9b545e691bfb3941a9f6a797660c8860f02",
+            "https://github.com/bcgit/bc-java/commit/9c165791b68a204678b48ec11e4e579754c2ea49",
+            "https://github.com/bcgit/bc-java/commit/9c165791b68a204678b48ec11e4e579754c2ea49 (r1rv78v1)",
+            "https://github.com/bcgit/bc-java/commit/ebe1c75579170072dc59b8dee2b55ce31663178f",
+            "https://github.com/bcgit/bc-java/issues/1599",
+            "https://github.com/bcgit/bc-java/wiki/CVE%E2%80%902024%E2%80%9030172",
+            "https://nvd.nist.gov/vuln/detail/CVE-2024-30172",
+            "https://security.netapp.com/advisory/ntap-20240614-0007",
+            "https://security.netapp.com/advisory/ntap-20240614-0007/",
+            "https://www.bouncycastle.org/latest_releases.html",
+            "https://www.cve.org/CVERecord?id=CVE-2024-30172"
+          ],
+          "PublishedDate": "2024-05-14T15:21:53.02Z",
+          "LastModifiedDate": "2024-11-21T09:11:21.817Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2023-29331",
+          "VendorIDs": [
+            "GHSA-555c-2p6r-68mm"
+          ],
+          "PkgID": "System.Security.Cryptography.Pkcs/6.0.1",
+          "PkgName": "System.Security.Cryptography.Pkcs",
+          "PkgIdentifier": {
+            "PURL": "pkg:nuget/System.Security.Cryptography.Pkcs@6.0.1",
+            "UID": "78226219323feb3"
+          },
+          "InstalledVersion": "6.0.1",
+          "FixedVersion": "7.0.2, 6.0.3",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2023-29331",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory NuGet",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Anuget"
+          },
+          "Fingerprint": "sha256:c7c1ff1c3b020370280f26ecb160d10e6300f6698cd156452321b1fd7ed28f38",
+          "Title": "dotnet: .NET Kestrel: Denial of Service processing X509 Certificates",
+          "Description": ".NET, .NET Framework, and Visual Studio Denial of Service Vulnerability",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-400"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "bitnami": 3,
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "photon": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2023:3592",
+            "https://access.redhat.com/security/cve/CVE-2023-29331",
+            "https://bugzilla.redhat.com/2192438",
+            "https://bugzilla.redhat.com/2212615",
+            "https://bugzilla.redhat.com/2212617",
+            "https://bugzilla.redhat.com/2212618",
+            "https://bugzilla.redhat.com/2213703",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2192438",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2212615",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2212617",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2212618",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2213703",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-24936",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-29331",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-29337",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-32032",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-33128",
+            "https://devblogs.microsoft.com/dotnet/dotnet-framework-june-2023-security-and-quality-rollup/",
+            "https://devblogs.microsoft.com/dotnet/june-2023-updates/",
+            "https://errata.almalinux.org/9/ALSA-2023-3592.html",
+            "https://errata.rockylinux.org/RLSA-2023:3593",
+            "https://github.com/dotnet/announcements/issues/257",
+            "https://github.com/dotnet/core/blob/c73158b8ef08db362585f9ed16b97c1d1372c666/release-notes/6.0/6.0.18/6.0.18.md",
+            "https://github.com/dotnet/core/blob/c73158b8ef08db362585f9ed16b97c1d1372c666/release-notes/7.0/7.0.7/7.0.7.md",
+            "https://github.com/dotnet/runtime",
+            "https://github.com/dotnet/runtime/security/advisories/GHSA-555c-2p6r-68mm",
+            "https://linux.oracle.com/cve/CVE-2023-29331.html",
+            "https://linux.oracle.com/errata/ELSA-2023-3593.html",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2023-29331",
+            "https://nvd.nist.gov/vuln/detail/CVE-2023-29331",
+            "https://support.microsoft.com/kb/5025823",
+            "https://ubuntu.com/security/notices/USN-6161-1",
+            "https://www.cve.org/CVERecord?id=CVE-2023-29331"
+          ],
+          "PublishedDate": "2023-06-14T15:15:09.763Z",
+          "LastModifiedDate": "2024-11-21T07:56:52.667Z"
+        }
+      ]
+    }
+  ]
+}
