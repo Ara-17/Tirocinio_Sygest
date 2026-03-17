@@ -18,7 +18,7 @@ def visualizza_vulnerabilita():
         connection = pymysql.connect(**DB_CONFIG)
         with connection.cursor() as cursor:
             
-            # Faccio una query JOIN per prendere le vulnerabilita solo dei target accesi
+            # Faccio una query JOIN per prendere le vulnerabilità dei target accesi
             # Ordino i risultati prima per nome dell host e poi per ID del CVE
             query = """
                 SELECT 
@@ -70,7 +70,7 @@ def visualizza_vulnerabilita():
                 print(f"  - Versione Attuale  {row['current_version']}")
                 print(f"  - Aggiornamenti     {patch}")
                 print(f"  - Link Patch/Info   {link}")
-                print(f"  - Descrizione       {row['description']}...")
+                print(f"  - Descrizione       {row['description']}")
                 print("-" * 80)
 
     except Exception as e:

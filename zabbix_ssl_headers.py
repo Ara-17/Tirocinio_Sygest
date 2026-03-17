@@ -41,11 +41,11 @@ def get_ssl_details(hostname):
                     # ottengo il certificato presentato dal server
                     cert = ssock.getpeercert()
                     
-                    # Calcolo il thumbprint e prendo il certificato in formato binario,
+                    # Calcolo il thumbprint ricavano il certificato in formato binario,
                     # lo passo all'algoritmo di hashing SHA-256 e lo converto in stringa esadecimale
                     thumbprint = hashlib.sha256(ssock.getpeercert(binary_form=True)).hexdigest().upper()
                     
-                    # Estraggo la data di scadenza (chiave 'notAfter') e la converto in un oggetto datetime
+                    # Estraggo la data di scadenza e la converto in un oggetto datetime
                     # dicendo a Python il formato in cui è scritta ("Mese Giorno Ora Anno Fuso")
                     expire_date = datetime.strptime(cert['notAfter'], "%b %d %H:%M:%S %Y %Z")
                     
@@ -74,7 +74,9 @@ def get_headers_with_shcheck(hostname):
                 sys.executable,          # Uso lo stesso Python che sta eseguendo questo script
                 "-m", "shcheck.shcheck", # Richiamo il modulo shcheck installato tramite pip
                 "-j",                    # -j dico a shcheck di restituirmi i risultati in formato JSON
-                "-g", "-x", "-i",        # Disabilito alcuni controlli marginali per velocizzare l'esecuzione
+                # -g: Costringo lo strumento a usare una richiesta GET perché di default userebbe HEAD
+                # -i e -x: Dico a shcheck di includere nel suo report anche gli header informativi (es. la versione del server) e quelli di caching
+                "-g", "-x", "-i",        
                 f"https://{hostname}"    # Il target da analizzare
             ],
             capture_output=True,         # non stampo a video l'output

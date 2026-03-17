@@ -18,16 +18,19 @@ ZABBIX_PWD = "zabbix"
 def configure_zabbix_alerts(api):
     print("Inizio la configurazione di Zabbix e delle mail")
     
-    # Cerco il tipo di media Email presente di default su Zabbix
+    # CONFIGURAZIONE DEL CANALE EMAIL
+    # Parto cercando il canale di comunicazione che si chiama "Email"
     media_types = api.mediatype.get(search={"name": "Email"})
     
+    # Se lo trovo, prendo il suo ID e lo modifico
     if media_types:
         media_id = media_types[0]['mediatypeid']
         
-        # Inserisco i dati del server SMTP di Google per far partire i messaggi
+        # Inserisco i parametri del server SMTP di Google. 
+        # In questo modo Zabbix saprà che account usare per spedire le mail
         api.mediatype.update(
             mediatypeid=media_id, 
-            status=0, 
+            status=0, # 0 significa che il canale è "Attivo"
             smtp_server="smtp.gmail.com", 
             smtp_port="587",
             smtp_helo="gmail.com", 
@@ -35,27 +38,33 @@ def configure_zabbix_alerts(api):
             smtp_security=1, 
             smtp_authentication=1, 
             username="arashpreetsingh177@gmail.com",
-            passwd="vpfx vhwc wcdp uyau"
+            passwd="vpfx vhwc wcdp uyau" # Password per le app di Google
         )
     
-    # Prendo l utente Admin e gli associo la casella di posta configurata sopra
+    # CONFIGURAZIONE DELL'UTENTE
+    # Cerco l'utente "Admin" nel sistema che sarà l'utente che riceverà tutte le mail
     users = api.user.get(filter={"username": "Admin"})
     
     if users and media_types:
         admin_id = users[0]['userid']
         
+        # Preparo le regole di spedizione per l'admin definendo a quale indirizzo inviare gli avvisi      
         user_media = {
             "mediatypeid": media_id, 
             "sendto": ["arashpreet.singh@studenti.unipr.it"], 
-            "active": 0, 
-            "severity": 63, 
+            "active": 0, # tenere sempre acceso (active: 0)
+            "severity": 63, # mandare tutti i livelli di alalrme
             "period": "1-7,00:00-24:00"
         }
         
+        # Salvo queste impostazioni sul profilo dell'amministratore
         api.user.update(userid=admin_id, medias=[user_media])
 
 
-    # Funzione di supporto per generare il corpo della mail con la formattazione esatta richiesta
+    # CREAZIONE DEL TESTO DELLA MAIL
+    # Questa funzione interna serve per non dover riscrivere a mano la struttura della mail 
+    # per ogni tipo di allarme. Prende in ingresso solo il titolo e formatta il resto usando 
+    # le variabili interne di Zabbix (come {HOST.NAME} o {EVENT.NAME})
     def genera_corpo_mail(titolo_header):
         return (
             f"{titolo_header}\n\n"
@@ -71,36 +80,47 @@ def configure_zabbix_alerts(api):
             "Per visualizzare lo storico completo o gestire l'allarme, accedi alla dashboard di Zabbix."
         )
 
-    # Ora creo azioni separate in base alla severita del trigger usando il nuovo layout
+    # CREAZIONE DELLE REGOLE ACTIONS
+    # Ora diciamo a Zabbix quando deve mandare le mail, dividendo i problemi in 3 categorie di gravità
     
-    # AZIONE 1 - AVVISI INFORMATIVI Prima lettura o Miglioramenti
+    # --- Categoria INFO E MIGLIORAMENTI ---
     azione_info = "Invia Notifiche Informative e Prima Scansione"
+    # Controllo se questa azione esiste già, per evitare di crearne due uguali se lancio lo script due volte
     if not api.action.get(filter={"name": azione_info}):
         corpo_info = genera_corpo_mail("INFO DI SISTEMA - SYGEST")
         
-        # Filtro conditiontype 4 indica la Severity
-        # operator 0 significa Equal
-        # value 1 significa Information
+        # Il filtro dice a Zabbix di far scattare questa mail solo se la gravità 
+        # (conditiontype: 4) è esattamente uguale (operator: 0) a "Information" (value: 1)
         filtro = {
             "evaltype": 0,
             "conditions": [{"conditiontype": 4, "operator": 0, "value": "1"}]
         }
         
+        # preparo l operazione pratica che zabbix dovra eseguire quando scatta il problema
         operazione = {
+            # il tipo zero significa "invia un messaggio"
             "operationtype": 0, 
+            
+            # indico che il destinatario è l amministratore passandogli il suo id esatto
             "opmessage_usr": [{"userid": admin_id}],
+            
+            # spengo il messaggio preimpostato di zabbix mettendo zero su default_msg
+            # in questo modo mi fa usare il mio corpo mail personalizzato e l oggetto che decido io
+            # infine gli dico esplicitamente di usare il canale email che ho configurato prima
             "opmessage": {"default_msg": 0, "subject": "INFO {EVENT.NAME}", "message": corpo_info, "mediatypeid": media_id}
         }
         
+        # lo status zero serve per accendere la regola immediatamente
+        # esc_period definisce la durata degli step di allarme che in questo caso imposto a un ora, non ho impostato altri step ma zabbix mi oblbiga a definire il campo
+        # infine gli collego il filtro di gravita e l operazione di invio mail appena scritte
         api.action.create(name=azione_info, eventsource=0, status=0, esc_period="1h", filter=filtro, operations=[operazione])
 
-
-    # AZIONE 2 - VULNERABILITA CON PATCH
+    # --- Categoria AVVISI MEDI (Patch disponibili) ---
     azione_patch = "Invia Avviso Nuove Patch Disponibili"
     if not api.action.get(filter={"name": azione_patch}):
         corpo_patch = genera_corpo_mail("AVVISO AGGIORNAMENTO - SYGEST")
         
-        # value 3 significa Warning
+        # Qui il filtro intercetta solo gli eventi di livello 3 (Warning)
         filtro = {
             "evaltype": 0,
             "conditions": [{"conditiontype": 4, "operator": 0, "value": "3"}]
@@ -115,12 +135,13 @@ def configure_zabbix_alerts(api):
         api.action.create(name=azione_patch, eventsource=0, status=0, esc_period="1h", filter=filtro, operations=[operazione])
 
 
-    # AZIONE 3 - VULNERABILITA SENZA PATCH O DEGRADO WEB
+    # --- Categoria PROBLEMI CRITICI (Vulnerabilità gravi o siti non sicuri) ---
     azione_grave = "Invia Allarme Critico Sicurezza"
     if not api.action.get(filter={"name": azione_grave}):
         corpo_grave = genera_corpo_mail("ALLARME CRITICO - SYGEST")
         
-        # value 4 e 5 indicano High e Disaster
+        # Qui il filtro è doppio: perché la mail parte sia per gli eventi di livello 4 (High) 
+        # sia per quelli di livello 5 (Disaster)
         filtro = {
             "evaltype": 0,
             "conditions": [
@@ -137,21 +158,22 @@ def configure_zabbix_alerts(api):
         
         api.action.create(name=azione_grave, eventsource=0, status=0, esc_period="1h", filter=filtro, operations=[operazione])
 
-
 def sync_hosts(api, db_targets):
-    # Controllo se il gruppo host esiste gia
+    # chiedo a zabbix se esiste già la cartella principale per raggruppare i nostri server
     groups = api.hostgroup.get(filter={"name": "Sygest Targets"})
     
     if groups:
+        # se c'è mi salvo il suo numero id
         group_id = groups[0]['groupid']
     else:
-        # Lo creo da zero
+        # se non c'è la creo e mi salvo l'id
         nuovo_gruppo = api.hostgroup.create(name="Sygest Targets")
         group_id = nuovo_gruppo['groupids'][0]
         
-    # Mi scarico tutti gli host che ci sono in questo momento per fare il confronto
+    # mi scarico dalla memoria di zabbix tutti i server presenti in questo momento
     zabbix_hosts = api.host.get(groupids=group_id, output=["hostid", "host", "status"])
     
+    # metto i server di zabbix in un dizionario per trovarli subito dopo quando faro i confronti
     zbx_host_dict = {}
     for h in zabbix_hosts:
         zbx_host_dict[h['host']] = h
@@ -160,12 +182,15 @@ def sync_hosts(api, db_targets):
 
     print("Sincronizzo gli host e creo le regole")
     
+    # inizio a scorrere uno a uno i server che ho salvato nel mio database mariadb
     for target in db_targets:
         hostname = target['hostname']
         db_hostnames.append(hostname)
         
         try:
-            # Inverto lo stato logico perche su Zabbix 0 e acceso e 1 e spento
+            # zabbix ragiona al contrario rispetto al mio database
+            # 1 è acceso e 0 è spento mentre per zabbix 0 è monitorato e 1 è disabilitato
+            # quindi inverto i numeri per allinearmi alle sue regole
             if target['active']:
                 desired_status = 0
             else:
@@ -173,191 +198,395 @@ def sync_hosts(api, db_targets):
                 
             host_id = None
 
-            # Creo l host sul server monitor se e la prima volta che lo vedo
+            # controllo se il server del database è una novità o se c'è già su zabbix
             if hostname not in zbx_host_dict:
+                # Zabbix è stato programmato per interrogare attivamente i server. Per questo motivo 
+                # la sua API ci obbliga sempre a fornire un indirizzo di rete, altrimenti va in errore 
+                # e si rifiuta di creare l'host.
+                # Visto che nel progetto uso i Trapper (cioè siamo noi che mandiamo i dati a Zabbix), 
+                # non serve conoscere l'IP reale della macchina.
+                # Per superare questo blocco obbligatorio compiliamo i campi con un'interfaccia default
                 interfaccia = {
-                    "type": 1, 
-                    "main": 1, 
-                    "useip": 1, 
-                    "ip": "127.0.0.1", 
+                    "type": 1,         # 1 significa che stiamo creando un'interfaccia Zabbix Agent
+                    "main": 1,         # 1 la imposta come interfaccia principale per questo host
+                    "useip": 1,        # Diciamo al sistema di leggere l'IP e di ignorare il DNS
+                    "ip": "127.0.0.1", # Uso l'indirizzo base del localhost
                     "dns": "", 
-                    "port": "10050"
+                    "port": "10050"    # Inserisco la porta standard di Zabbix per completare il modulo
                 }
                 
+                # Ora assemblo i pezzi e mando il comando di creazione a Zabbix, passandogli il nome 
+                # del server, lo stato di accensione, il gruppo e la nostra interfaccia
                 new_host = api.host.create(
                     host=hostname, 
                     status=desired_status, 
                     groups=[{"groupid": group_id}],
                     interfaces=[interfaccia]
                 )
+                
+                # Zabbix crea il server nel suo database e risponde con un pacchetto dati.
+                # Da questo pacchetto ricavo l'ID numerico del server appena creato 
+                # e me lo salvo nella variabile host_id perché servirà dopo per creare gli item.
                 host_id = new_host['hostids'][0]
                 
             else:
-                # Lo aggiorno se esiste gia ma ha lo stato sbagliato rispetto al mio db
+                # se il server esisteva già controllo se per caso l utente lo ha spento o acceso
+                # se lo stato è diverso gli mando il comando per aggiornarlo
                 host_id = zbx_host_dict[hostname]['hostid']
                 if int(zbx_host_dict[hostname]['status']) != desired_status:
                     api.host.update(hostid=host_id, status=desired_status)
 
-            # Funzione interna di supporto per creare o aggiornare gli item in maniera sicura
+            # Definisco questa funzione interna per creare o modificare gli item su Zabbix.
+            # L'ho messa qui dentro così legge in automatico la variabile host_id del ciclo in cui mi trovo
+            # e mi evita di scrivere decine di righe di codice ripetitivo per ogni singolo sensore che devo creare.
             def create_or_update_item(name, key_, item_type, val_type, master_id=None, prep=None):
+                
+                # Interrogo Zabbix per vedere se questo host ha già un item con questa chiave
                 existing = api.item.get(filter={"key_": key_}, hostids=host_id)
                 
+                # Preparo un dizionario con i tre parametri: 
+                # il nome visibile, il tipo di item (es. Trapper) e il tipo di dato che riceverà (es. testo o numero)
                 params = {
                     "name": name, 
                     "type": item_type, 
                     "value_type": val_type
                 }
                 
-                # Inserisco i campi opzionali nel dizionario solo se ci sono davvero
+                # Gestisco i parametri opzionali. Se sto creando un "dependent item" aggiungo l'ID dell'item padre.
+                # Se ho delle regole di formattazione (come le query JSONPath), aggiungo il blocco preprocessing.
                 if master_id is not None: 
                     params["master_itemid"] = master_id
                 if prep is not None: 
                     params["preprocessing"] = prep
 
+                # Se il sensore c'è già, prendo il suo ID e mando un comando di update.
+                # Se in futuro voglio modificare il nome di un sensore direttamente da questo script, 
+                # Zabbix andrà ad aggiornare quello vecchio in automatico senza creare duplicati sulla dashboard.
                 if existing:
                     params["itemid"] = existing[0]['itemid']
+                    
+                    # I due asterischi ** servono per spacchettare il dizionario 'params' e passarlo all'API
                     api.item.update(**params)
                     return existing[0]['itemid']
+                
+                # Se invece la ricerca iniziale era vuota, significa che è un item nuovo.
+                # Aggiungo al pacchetto l'ID dell'host e la chiave univoca per riconoscerlo, poi lo creo da zero.
                 else:
                     params["hostid"] = host_id
                     params["key_"] = key_
                     nuovo_item = api.item.create(**params)
+                    
+                    # Sia che l'abbia aggiornato o creato, alla fine mi faccio sempre restituire il suo ID numerico,
+                    # così posso usarlo nel resto del codice per collegarci altri dipendent item o regole di alert
                     return nuovo_item['itemids'][0]
 
-            # Creo i due Trapper principali che accolgono l intero payload Json
+            # Creo i due Master Item principali che riceveranno i payload JSON completi dagli script
+            # Il parametro type=2 imposta l'item come "Zabbix trapper", mentre value_type=4 lo imposta come tipo di dato "Text"
             i_vuln_id = create_or_update_item("JSON Vuln", "sygest.vuln", 2, 4)
             i_ssl_id = create_or_update_item("JSON SSL", "sygest.ssl_headers", 2, 4)
             
-            # Genero i dependent item che estraggono solo i numeri per fare i calcoli
+            # Funzione interna per creare i Dependent Item collegati ai Master Item definiti sopra.
+            # Questi item servono a leggere il JSON ricevuto per isolare le metriche numeriche da usare poi nei grafici e nei trigger.
             def crea_dipendente_numerico(nome, chiave, json_path, master):
-                regola = [{"type": 12, "params": json_path, "error_handler": 0, "error_handler_params": ""}]
+                regola = [
+                    {
+                        # Il type 12 indica a Zabbix di applicare uno step di preprocessing usando JSONPath.
+                        "type": 12, 
+                        
+                        # Gli passo la variabile json_path con le coordinate esatte. È il percorso che Zabbix deve seguire tra le parentesi graffe
+                        "params": json_path, 
+                        
+                        # Imposto lo zero per dirgli di usare la gestione degli errori di default. 
+                        # Se il campo che cerco non esiste nel JSON, Zabbix smette di leggere e mi segnala l'errore sulla dashboard.
+                        "error_handler": 0, 
+                        
+                        # Siccome ho scelto il comportamento standard, non mi serve dargli 
+                        # nessuna istruzione di riserva o valore di fallback, quindi lascio il campo vuoto.
+                        "error_handler_params": ""
+                    }
+                ]
+                # Richiamo la funzione di base passando type=18 per creare formalmente un "Dependent item" 
+                # e value_type=3 per indicare che il valore estratto sarà di tipo "Numeric (unsigned)"
                 return create_or_update_item(nome, chiave, 18, 3, master, regola)
                 
-            crea_dipendente_numerico("Vuln First Read Flag", "vuln.is_first_read", "$.metrics.is_first_read", i_vuln_id)
-            crea_dipendente_numerico("Vuln Totale CVE attivi", "vuln.total_active", "$.metrics.total_active", i_vuln_id)
-            crea_dipendente_numerico("Vuln Totale CVE CON Patch", "vuln.total_with_patch", "$.metrics.total_with_patch", i_vuln_id)
-            crea_dipendente_numerico("Vuln Totale CVE SENZA Patch", "vuln.total_without_patch", "$.metrics.total_without_patch", i_vuln_id)
-            crea_dipendente_numerico("Vuln NUOVI CVE CON Patch", "vuln.new_with_patch_count", "$.metrics.new_with_patch_count", i_vuln_id)
-            crea_dipendente_numerico("Vuln NUOVI CVE SENZA Patch", "vuln.new_without_patch_count", "$.metrics.new_without_patch_count", i_vuln_id)
+            # Creo Dependent Item numerici che si agganciano al Master Item
+            # Ognuno di questi item usa una query JSONPath specifica per estrarre un singolo contatore 
+            # dal payload JSON inviato da Trivy, ignorando tutto il resto del file.
 
-            # Genero i dependent item che estraggono i testi pre formattati
+            # Estraggo il flag (0 o 1) che mi dice se questa è la prima scansione fatta su questo host
+            crea_dipendente_numerico(
+                "Vuln First Read Flag", 
+                "vuln.is_first_read", 
+                "$.metrics.is_first_read", 
+                i_vuln_id
+            )
+
+            # Estraggo il numero totale delle vulnerabilità attualmente attive e presenti sul server
+            crea_dipendente_numerico(
+                "Vuln Totale CVE attivi", 
+                "vuln.total_active", 
+                "$.metrics.total_active", 
+                i_vuln_id
+            )
+
+            # Estraggo il conteggio delle vulnerabilità per cui esiste già un aggiornamento software (Patch) pronto da installare
+            crea_dipendente_numerico(
+                "Vuln Totale CVE CON Patch", 
+                "vuln.total_with_patch", 
+                "$.metrics.total_with_patch", 
+                i_vuln_id
+            )
+
+            # Estraggo il conteggio delle vulnerabilità più fastidiose, quelle per cui i produttori non hanno ancora rilasciato soluzioni
+            crea_dipendente_numerico(
+                "Vuln Totale CVE SENZA Patch", 
+                "vuln.total_without_patch", 
+                "$.metrics.total_without_patch", 
+                i_vuln_id
+            )
+
+            # Estraggo il numero dei soli CVE appena scoperti nell'ultima scansione e che possono essere già sistemati
+            crea_dipendente_numerico(
+                "Vuln NUOVI CVE CON Patch", 
+                "vuln.new_with_patch_count", 
+                "$.metrics.new_with_patch_count", 
+                i_vuln_id
+            )
+
+            # Estraggo il numero dei soli CVE appena scoperti nell'ultima scansione che purtroppo non hanno ancora una patch
+            crea_dipendente_numerico(
+                "Vuln NUOVI CVE SENZA Patch", 
+                "vuln.new_without_patch_count", 
+                "$.metrics.new_without_patch_count", 
+                i_vuln_id
+            )
+
+            # Definisco un'altra funzione interna che serve per estrarre blocchi di testo lunghi come i messaggi pre-formattati per gli allarmi 
             def crea_dipendente_testo(nome, chiave, json_path, master):
-                regola = [{"type": 12, "params": json_path, "error_handler": 0, "error_handler_params": ""}]
+                # Preparo la regola di Preprocessing. Come prima, uso il type=12 per dire a Zabbix 
+                # di usare la query JSONPath e ritagliare la stringa esatta dentro il payload JSON.
+                regola = [
+                    {
+                        "type": 12, 
+                        "params": json_path, 
+                        "error_handler": 0, 
+                        "error_handler_params": ""
+                    }
+                ]
+                
+                # Richiamo la funzione principale per creare il Dependent Item (type=18) e agganciarlo al Master Item.
+                # Il parametro value_type=4, che in Zabbix significa "Text" e permette al database di salvare stringhe molto lunghe
                 return create_or_update_item(nome, chiave, 18, 4, master, regola)
 
-            crea_dipendente_testo("Vuln Testo Prima Lettura", "vuln.first_read_text", "$.texts.first_read_text", i_vuln_id)
-            crea_dipendente_testo("Vuln Testo Nuovi CON Patch", "vuln.new_with_patch_text", "$.texts.new_with_patch_text", i_vuln_id)
-            crea_dipendente_testo("Vuln Testo Nuovi SENZA Patch", "vuln.new_without_patch_text", "$.texts.new_without_patch_text", i_vuln_id)
+            # Creo i Dependent Item di tipo testo agganciati al Master Item delle vulnerabilità (i_vuln_id).
+            # Tramite JSONPath estraggo le stringhe già pre-formattate dal mio script Python, così Zabbix dovrà
+            # semplicemente prenderle e scriverle dentro le mail di alert senza dover fare ulteriori elaborazioni.
+            
+            # Estraggo il blocco di testo che riassume i risultati della prima scansione del server
+            crea_dipendente_testo(
+                "Vuln Testo Prima Lettura", 
+                "vuln.first_read_text", 
+                "$.texts.first_read_text", 
+                i_vuln_id
+            )
+            
+            # Estraggo il blocco di testo che elenca i dettagli delle nuove vulnerabilità che hanno già una patch disponibile.
+            crea_dipendente_testo(
+                "Vuln Testo Nuovi CON Patch", 
+                "vuln.new_with_patch_text", 
+                "$.texts.new_with_patch_text", 
+                i_vuln_id
+            )
+            
+            # Estraggo il blocco di testo critico con l'elenco delle vulnerabilità scoperte ma senza ancora una patch.
+            crea_dipendente_testo(
+                "Vuln Testo Nuovi SENZA Patch", 
+                "vuln.new_without_patch_text", 
+                "$.texts.new_without_patch_text", 
+                i_vuln_id
+            )
 
-            # Genero i dependent item per SSL e Web Security 
-            crea_dipendente_numerico("SSL Giorni scadenza CA", "ssl.days_left", "$.ssl.days_left", i_ssl_id)
-            crea_dipendente_testo("SSL Thumbprint", "ssl.thumbprint", "$.ssl.thumbprint", i_ssl_id)
-            crea_dipendente_numerico("Sicurezza Web Totale Header mancanti", "headers.missing_count", "$.headers.missing_count", i_ssl_id)
-            crea_dipendente_testo("Sicurezza Web Lista Header mancanti", "headers.missing_list", "$.headers.missing_list", i_ssl_id)
+            # Passo ai controlli di sicurezza web e creo i Dependent Item agganciandoli al secondo Master Item (i_ssl_id).
+            # Questo Master Item riceve il payload JSON specifico per i certificati SSL e gli HTTP Header.
+            
+            # Estraggo come valore numerico i giorni rimanenti prima che il certificato SSL del sito scada.
+            crea_dipendente_numerico(
+                "SSL Giorni scadenza CA", 
+                "ssl.days_left", 
+                "$.ssl.days_left", 
+                i_ssl_id
+            )
+            
+            # Estraggo come stringa di testo l'impronta digitale (Thumbprint) del certificato, 
+            crea_dipendente_testo(
+                "SSL Thumbprint", 
+                "ssl.thumbprint", 
+                "$.ssl.thumbprint", 
+                i_ssl_id
+            )
+            
+            # Estraggo il contatore numerico che mi dice quanti header di sicurezza mancano sulla pagina web.
+            crea_dipendente_numerico(
+                "Sicurezza Web Totale Header mancanti", 
+                "headers.missing_count", 
+                "$.headers.missing_count", 
+                i_ssl_id
+            )
+            
+            # Estraggo la stringa di testo con l'elenco effettivo dei nomi degli header mancanti per poterli stampare in chiaro nella notifica inviata da Zabbix
+            crea_dipendente_testo(
+                "Sicurezza Web Lista Header mancanti", 
+                "headers.missing_list", 
+                "$.headers.missing_list", 
+                i_ssl_id
+            )
 
-
-            # Funzione per inserire in sicurezza i trigger logici
+            # Definisco un'altra funzione interna, per gestire la creazione dei Trigger.
+            # Riceve in ingresso il nome del trigger (desc), l'espressione logica/matematica per farlo scattare (expr) 
+            # e il livello di gravità dell'evento (prio).
             def create_or_update_trigger(desc, expr, prio):
+                
+                # Interrogo l'API per verificare se su questo specifico host esiste già un Trigger con lo stesso nome.
                 existing = api.trigger.get(filter={"description": desc}, hostids=host_id)
                 
+                # Se il Trigger esiste già, provo ad aggiornarlo andando a sovrascrivere l'espressione e la priorità.
                 if existing:
                     try: 
-                        api.trigger.update(triggerid=existing[0]['triggerid'], expression=expr, priority=prio)
+                        api.trigger.update(
+                            triggerid=existing[0]['triggerid'], 
+                            expression=expr, 
+                            priority=prio
+                        )
+                    # Inserisco tutto in un blocco try-except perché L'API di Zabbix va in crash se riceve 
+                    # una richiesta di update con dei parametri che sono identici a quelli che ha già 
                     except Exception: 
                         pass 
+                
+                # Se il controllo non trova nulla creo il Trigger partendo da zero
                 else:
                     api.trigger.create(description=desc, expression=expr, priority=prio)
 
-            # Inserisco tutti i trigger necessari al funzionamento
+            # CREAZIONE DEI TRIGGER
+            # Uso la funzione appena definita per inserire le regole matematiche che faranno scattare gli alert.
+            # Per ogni Trigger passo 3 parametri: il nome (con la macro {HOST.NAME} che Zabbix compila da solo), 
+            # l'espressione e il livello di Severity (da 1 a 5).
             
-            # TRIGGERS VULNERABILITA TRIVY
+            # --- TRIGGER VULNERABILITÀ ---
             
-            # Prima Lettura Info
+            # Livello 1 (Information)
+            # L'espressione controlla due cose con la funzione 'last': che il testo della mail non sia vuoto (length>0) 
+            # e che il flag numerico 'is_first_read' sia uguale a 1.
             create_or_update_trigger(
                 f"Info Prima lettura massiva Trivy completata su {{HOST.NAME}}", 
                 f"length(last(/{hostname}/vuln.first_read_text))>0 and last(/{hostname}/vuln.is_first_read)=1", 
                 1 
             )
 
-            # Nuovi CVE SENZA Patch Disaster
+            # Livello 5 (Disaster)
+            # Scatta se Trivy trova vulnerabilità nuove. Verifico che ci sia il testo per la mail e che il contatore dei nuovi CVE senza di patch sia maggiore di zero.
             create_or_update_trigger(
                 f"CRITICO Rilevati Nuovi CVE SENZA PATCH su {{HOST.NAME}}", 
                 f"length(last(/{hostname}/vuln.new_without_patch_text))>0 and last(/{hostname}/vuln.new_without_patch_count)>0", 
                 5 
             )
 
-            # Nuovi CVE CON Patch Warning
+            # Livello 3 (Warning)
+            # Ci sono vulnerabilità nuove, ma i produttori hanno già la patch.
             create_or_update_trigger(
                 f"Avviso Rilevati Nuovi CVE o nuove patch disponibili su {{HOST.NAME}}", 
                 f"length(last(/{hostname}/vuln.new_with_patch_text))>0 and last(/{hostname}/vuln.new_with_patch_count)>0", 
                 3 
             )
 
-            # TRIGGERS WEB SECURITY E HEADER
-            
-            # Prima Lettura Header
+            # --- TRIGGER SICUREZZA WEB ---          
+            # Livello 1 (Information)
+            # L'espressione count(...,#2)=1 dice a Zabbix di controllare quanti dati storici ho salvato. Se ne ho solo uno in totale, 
+            # significa che è la prima scansione che faccio
             create_or_update_trigger(
                 f"Prima scansione Web per {{HOST.NAME}}. Header attualmente mancanti", 
                 f"length(last(/{hostname}/headers.missing_list))>=0 and count(/{hostname}/headers.missing_count,#2)=1", 
                 1
             )
 
-            # Peggioramento Header Sono spariti header di sicurezza che prima c erano scatta dal secondo invio in poi
+            # Livello 4 (High)
+            # Uso la sintassi last(...,#2) che in Zabbix prende il penultimo valore letto e non l'ultimo.
             create_or_update_trigger(
                 f"Peggioramento Web Aumentati gli header mancanti su {{HOST.NAME}}", 
                 f"length(last(/{hostname}/headers.missing_list))>=0 and last(/{hostname}/headers.missing_count)>last(/{hostname}/headers.missing_count,#2) and count(/{hostname}/headers.missing_count,#2)=2", 
                 4
             )
 
-            # Miglioramento Header Il sistemista ha aggiunto delle policy corrette
+            # Livello 1 (Information)
             create_or_update_trigger(
                 f"Miglioramento Web Ridotti gli header mancanti su {{HOST.NAME}}", 
                 f"length(last(/{hostname}/headers.missing_list))>=0 and last(/{hostname}/headers.missing_count)<last(/{hostname}/headers.missing_count,#2) and count(/{hostname}/headers.missing_count,#2)=2", 
                 1
             )
 
-            # TRIGGERS SSL
+            # --- TRIGGER CERTIFICATI SSL ---      
+            # Livello 4 (High)
             create_or_update_trigger(f"Allarme Certificato SSL in scadenza per {{HOST.NAME}}", f"last(/{hostname}/ssl.days_left)<30", 4)
+            
+            # Livello 1 (Information)
+            # Uso l'operatore matematico <> (che in Zabbix significa diverso da) per controllare se il Thumbprint attuale 
+            # è diverso dal Thumbprint del penultimo controllo (#2)
             create_or_update_trigger(f"Info Thumbprint SSL cambiato per {{HOST.NAME}}", f"last(/{hostname}/ssl.thumbprint)<>last(/{hostname}/ssl.thumbprint,#2)", 1)
 
         except Exception as e:
+            # Stampo a video l'eccezione (e) per capire il problema e uso il comando 'continue' 
+            # per dire al ciclo di non fermarsi e passare a configurare il prossimo server della lista
             print(f"Ho riscontrato un errore durante l allineamento del server {hostname} con eccezione {e}")
             continue
 
-    # Ultimo passaggio pulisco Zabbix eliminando gli host che l utente ha rimosso dal db
+    # Prendo il dizionario (zbx_host_dict) che avevo riempito all'inizio dello script 
+    # e che contiene tutti i server attualmente presenti su Zabbix. Li scorro uno per uno.
     for zbx_hostname, zbx_data in zbx_host_dict.items():
+        
+        # Faccio una fase di pulizia dove elimino da zabbix gli host che sono presenti solo nel DB di zabbix ma non nel mio
         if zbx_hostname not in db_hostnames:
             try:
+                # Zabbix lo eliminerà definitivamente con tutti gli Item, i Trigger dipendenti e lo storico dei dati associati.
                 api.host.delete(zbx_data['hostid'])
+                
             except Exception as e:
                 pass
-
 def main():
     connection = None
     zapi = None
-    
     try:
-        # Mi collego per pescare l intera lista dei server registrati
+        # Mi collego al mio database MariaDB spacchettando il dizionario di configurazione (DB_CONFIG) con i due asterischi (**).
         connection = pymysql.connect(**DB_CONFIG)
+        
+        # Ricavo tutti i server sul DB, prendendo ID, nome e status
         with connection.cursor() as cursor:
             cursor.execute("SELECT id, hostname, active FROM targets")
+            
+            # Salvo tutto il blocco di risultati dentro la variabile db_targets.
             db_targets = cursor.fetchall()
 
         print("\nAVVIO PROCEDURA DI SINCRONIZZAZIONE ZABBIX")
+        
+        # Inizializzo la connessione passando l'URL e faccio il login per ottenere il token di sessione.
         zapi = ZabbixAPI(url=ZABBIX_URL)
         zapi.login(user=ZABBIX_USER, password=ZABBIX_PWD)
-        
+                
+        # Chiamo la funzione per configurare il server SMTP, le email e le regole generali di notifica.
         configure_zabbix_alerts(zapi)
+        
+        # Passo l'api di Zabbix e la lista dei server estratti dal mio DB (db_targets) 
         sync_hosts(zapi, db_targets)
         
         print("Allineamento Zabbix terminato con successo")
 
     except Exception as e:
-        print(f"\nCe stato un errore nella sincronizzazione generale {e}")
+        print(f"\nC'è stato un errore nella sincronizzazione generale: {e}")
         
     finally:
+        # Libero risorse chiudendo la connessione SQL
         if connection: 
             connection.close()
+            
+        # Faccio lo stesso con zabbix
         if zapi: 
             zapi.logout()
 

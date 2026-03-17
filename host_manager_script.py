@@ -20,8 +20,7 @@ def host_manager():
     try:
         connection = pymysql.connect(**DB_CONFIG)
         
-        # Apro un ciclo che serve per mantenere il menu attivo a schermo finché 
-        # non digito '0'
+        # Apro un ciclo che serve per mantenere il menu attivo a schermo finché non digito '0'
         while True:
             with connection.cursor() as cursor:
                 # Eseguo la query per leggere tutti i miei target salvati

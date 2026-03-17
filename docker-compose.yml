@@ -60,7 +60,7 @@ services:
       # Sincronizza i file della cartella locale con quelli nel container
       - ./:/app 
     ports:
-      - 5000:5000
+      - 5001:5000
 
 volumes:
   zabbix-db-data:
