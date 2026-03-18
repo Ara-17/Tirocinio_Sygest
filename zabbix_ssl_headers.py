@@ -115,8 +115,34 @@ def run_monitoring():
                             missing_headers = value.get("missing", [])
                             break
 
-                # Formatto la lista in una stringa di testo pulita per Zabbix e per le email
-                missing_text = ", ".join(missing_headers) if missing_headers else "Tutti gli header di sicurezza sono presenti."
+                # Dizionario per assegnare in automatico le Label di GitLab agli header mancanti
+                HEADER_LABELS = {
+                    "X-Frame-Options": '~"criticità::alta"',
+                    "X-Content-Type-Options": '~"criticità::alta"',
+                    "Strict-Transport-Security": '~"criticità::media"',
+                    "Content-Security-Policy": '~"criticità::bassa"',
+                    "Referrer-Policy": '~"criticità::bassa"',
+                    "Permissions-Policy": '~"criticità::bassa"',
+                    "Cross-Origin-Embedder-Policy": '~"criticità::media"',
+                    "Cross-Origin-Resource-Policy": '~"criticità::media"',
+                    "Cross-Origin-Opener-Policy": '~"criticità::media"'
+                }
+
+                # Formatto la lista come Checkbox Markdown per GitLab
+                if missing_headers:
+                    formatted_lines = []
+                    for h in missing_headers:
+                        lbl = HEADER_LABELS.get(h, "")
+                        # Assicurati che ci sia uno spazio tra {h} e {lbl}
+                        # E che lbl non contenga spazi extra prima della tilde
+                        riga = f"- [ ] {h} {lbl.strip()}"
+                        formatted_lines.append(riga)
+                    
+                    missing_text = "\n".join(formatted_lines)
+                else:
+                    missing_text = "Tutti gli header di sicurezza sono presenti."
+
+                # Unisco le informazioni dell'SSL e quelle degli Header
 
                 # Unisco le informazioni dell'SSL e quelle degli Header
                 # Creo la chiave "headers" in modo che corrisponda al JSONPath $.headers.x di Zabbix

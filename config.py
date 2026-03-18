@@ -7,22 +7,22 @@ load_dotenv()
 
 # Dizionario per la connessione al database
 DB_CONFIG = {
-    'host': os.getenv('DB_HOST', 'sygest-db'),
-    'user': os.getenv('DB_USER', 'root'),
-    'password': os.getenv('DB_PASSWORD', 'root_pwd_sygest'),
-    'database': os.getenv('DB_NAME', 'progetto_sygest'),
+    'host': os.getenv('DB_HOST', 'sygest-db').strip(),
+    'user': os.getenv('DB_USER', 'root').strip(),
+    'password': os.getenv('DB_PASSWORD', 'root_pwd_sygest').strip(),
+    'database': os.getenv('DB_NAME', 'progetto_sygest').strip(),
     'charset': 'utf8mb4',
     'cursorclass': pymysql.cursors.DictCursor
 }
 
 # Credenziali Zabbix Frontend
-ZABBIX_URL = os.getenv('ZABBIX_URL', 'http://zabbix-frontend:8080')
-ZABBIX_USER = os.getenv('ZABBIX_USER', 'Admin')
-ZABBIX_PWD = os.getenv('ZABBIX_PWD', 'zabbix')
+ZABBIX_URL = os.getenv('ZABBIX_URL', 'http://zabbix-frontend:8080').strip()
+ZABBIX_USER = os.getenv('ZABBIX_USER', 'Admin').strip()
+ZABBIX_PASSWORD = os.getenv('ZABBIX_PASSWORD', 'zabbix').strip()
 
 # Dati Zabbix Trapper
-ZABBIX_SERVER = os.getenv('ZABBIX_SERVER', 'zabbix-server')
-ZABBIX_PORT = int(os.getenv('ZABBIX_PORT', 10051))
+ZABBIX_SERVER = os.getenv('ZABBIX_SERVER', 'zabbix-server').strip()
+ZABBIX_PORT = int(os.getenv('ZABBIX_PORT', 10051).strip())
 
 # Sicurezza API
-SYGEST_API_KEY = os.getenv('SYGEST_API_KEY', '')
+SYGEST_API_KEY = os.getenv('SYGEST_API_KEY', '').strip()

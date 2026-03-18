@@ -1,5 +1,5 @@
 $headers = @{
-    "X-API-Key" = "LaTuaPasswordSuperSegretaSygest2026"
+    "X-API-Key" = "TEST"
 }
 Invoke-RestMethod -Uri "http://<IP_DEL_TUO_SERVER>:5000/api/v1/trivy" `
                   -Method Post `

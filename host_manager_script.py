@@ -46,7 +46,7 @@ def host_manager():
                 # OPZIONE 0: ESCI
                 if user_input == '0':
                     # Ricordo all'utente che il DB è aggiornato ma Zabbix no
-                    print("\nRicordati di lanciare 'zabbix_sync.py' per applicare le modifiche a Zabbix!\n")
+                    print("-----------------------------------\nRicordati di lanciare 'zabbix_sync.py' per applicare le modifiche a Zabbix!")
                     break 
                 
                 # OPZIONE A: AGGIUNGI HOST

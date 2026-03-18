@@ -153,26 +153,36 @@ def receive_trivy_report():
             all_no_patch_list = []
             
             # Inizio a confrontare i dati nuovi (scanned_cves) con quelli già presenti nel DB (db_cves).
+            # Dizionario per tradurre la severità di Trivy nelle label di GitLab
+            label_cve = {
+                "CRITICAL": '~"criticità::critica"',
+                "HIGH": '~"criticità::alta"',
+                "MEDIUM": '~"criticità::media"',
+                "LOW": '~"criticità::bassa"',
+                "UNKNOWN": ""
+            }
+
+            # Inizio a confrontare i dati nuovi (scanned_cves) con quelli già presenti nel DB (db_cves).
             for key, data in scanned_cves.items():
                 cve_id = key[0]
                 software = key[1]
                 
-                # Controllo per sapere se esiste un aggiornamento software risolutivo
-                if data['fixed_version']:
-                    has_patch = True
-                else:
-                    has_patch = False
+                has_patch = bool(data['fixed_version'])
                 
-                # Formatto il testo per il singolo alert
-                text_block = f"[{cve_id}] {software} v{data['current_version']}\n"
+                # Prendo la label corrispondente (se non c'è, stringa vuota)
+                lbl = label_cve.get(data['severity'].upper(), "")
                 
+                # Formatto il testo come Checkbox Markdown
+                text_block = f"- [ ] **[{cve_id}]** {software} v{data['current_version']} {lbl}\n"
+                
+                # Aggiungo uno spazio iniziale per indentare i dettagli sotto la checkbox su GitLab
                 if has_patch:
-                    text_block += f"Gravità {data['severity']} | Patch {data['fixed_version']}\n"
+                    text_block += f"  - Gravità: {data['severity']} | Patch: {data['fixed_version']}\n"
                 else:
-                    text_block += f"Gravità {data['severity']} | Patch NESSUNA\n"
+                    text_block += f"  - Gravità: {data['severity']} | Patch: NESSUNA\n"
                     
-                text_block += f"Link {data['link_patch']}\n"
-                text_block += f"Info {data['description'][:150]}...\n\n"
+                text_block += f"  - Link: {data['link_patch']}\n"
+                text_block += f"  - Info: {data['description'][:150]}...\n\n"
 
                 # Inserisco il blocco di testo nel conteggio totale per tenere traccia dello stato attuale del server
                 if has_patch:
@@ -230,22 +240,24 @@ def receive_trivy_report():
             # che Zabbix userà come corpo delle email.
             
             first_read_msg = ""
-            # Se è la prima scansione in assoluto, preparo un messaggio di riepilogo generale
-            # che indica semplicemente quante vulnerabilità totali abbiamo trovato sul server.
+            # Se è la prima scansione, assemblo il messaggio usando la lista completa delle checkbox
             if is_first_read:
                 totale_cve_trovati = len(all_with_patch_list) + len(all_no_patch_list)
-                first_read_msg = f"Scansione per {hostname} completata e trovati {totale_cve_trovati} CVE totali"
+                first_read_msg = f"Scansione iniziale completata. Trovati **{totale_cve_trovati}** CVE totali da analizzare:\n\n"
+                
+                if all_no_patch_list:
+                    first_read_msg += "#### VULNERABILITÀ SENZA PATCH\n" + "".join(all_no_patch_list) + "\n"
+                    
+                if all_with_patch_list:
+                    first_read_msg += "#### VULNERABILITÀ CON PATCH DISPONIBILE\n" + "".join(all_with_patch_list) + "\n"
 
             new_with_patch_msg = ""
-            # Se ci sono nuovi CVE con patch disponibile, creo il blocco di testo dedicato.
-            # Uso il comando "".join() per incollare insieme tutti i singoli blocchi di testo delle vulnerabilità.
             if new_with_patch_list:
-                new_with_patch_msg = "NUOVE VULNERABILITÀ O PATCH DISPONIBILI\n========================================\n" + "".join(new_with_patch_list)
+                new_with_patch_msg = "#### NUOVE VULNERABILITÀ O PATCH DISPONIBILI\n\n" + "".join(new_with_patch_list)
 
             new_no_patch_msg = ""
-            # Faccio lo stesso per i nuovi CVE critici senza patch
             if new_no_patch_list:
-                new_no_patch_msg = "ALLARME NUOVE VULNERABILITÀ SENZA PATCH\n========================================\n" + "".join(new_no_patch_list)
+                new_no_patch_msg = "#### ALLARME NUOVE VULNERABILITÀ SENZA PATCH\n\n" + "".join(new_no_patch_list)
 
             # Preparo i contatori numerici 
             # Imposto i contatori dei NUOVI problemi a zero perché altrimenti, al primo avvio, Zabbix 
