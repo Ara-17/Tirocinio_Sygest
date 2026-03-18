@@ -1,6 +1,38 @@
-Per far partire il docker, bisogna posizionarsi nella cartella del progetto e usare il comando: Docker compose up -d
-Una volta che saranno pariti i container, possiamo visualizzare la dashbord di zabbix andando sul browser digitando "localhost:8080". Le credenziali per l'accessono sono USER = admin e PASSWORD = zabbix. 
-Per far partire gli script bisogna digitare il comando: docker exec -it sygest-script-runner python [nome_script.py]. Il primo script da usare è "zabbix_sync.py" che permette di allineare i dati del DB con zabbix. 
-Il file "host_manager_script.py" permette di attivare o disattivare un host nel controllo, aggiungere e/o rimuovere un host. Per ogni modifica fatta bisogna sempre far partire lo script "zabbix_sync.py" per allineare le modifche del DB.
-Il file "zabbix_ssl_headers.py" permette di fare la lettura delle scadenze SSL come il CA e il thumbprint
-Il file "zabbix_vuln_checker.py" permette di fare la rilevazione dei CVE di un host attraverso nmap e poi i risultati venivano interrogati sul DB di NVD
+# Progetto Sygest - Security & Vulnerability Monitoring
+
+Sistema automatizzato per il monitoraggio continuo della sicurezza dei server aziendali. 
+Il progetto sfrutta un'architettura a microservizi (Docker) per raccogliere passivamente report di vulnerabilità (modello Push tramite Aqua Trivy), analizzare la validità dei certificati SSL/HTTP Headers, e orchestrare gli allarmi tramite Zabbix con apertura automatica di Issue su GitLab.
+
+## Requisiti Preliminari
+- Docker e Docker Compose installati sul server host.
+
+## Installazione e Setup
+
+**1. Clonare il repository**
+Scarica i file del progetto sul tuo server.
+
+**2. Configurare le variabili d'ambiente (IMPORTANTE)**
+Per motivi di sicurezza, le password e i token non sono inclusi nel codice. 
+Devi creare un file chiamato esattamente `.env` nella root del progetto e compilarlo con i tuoi dati:
+
+```env
+# Database
+DB_HOST=sygest-db
+DB_USER=root
+DB_PASSWORD=la_tua_password_db
+DB_NAME=progetto_sygest
+
+# Zabbix
+ZABBIX_URL=http://zabbix-frontend:8080
+ZABBIX_USER=Admin
+ZABBIX_PWD=zabbix
+ZABBIX_SERVER=zabbix-server
+ZABBIX_PORT=10051
+
+# Sicurezza API Sygest
+SYGEST_API_KEY=la_tua_api_key_segreta
+
+# Integrazione GitLab
+GITLAB_URL=[https://gitlab.com](https://gitlab.com)
+GITLAB_TOKEN=tuo_token_gitlab
+GITLAB_PROJECT_ID=12345678

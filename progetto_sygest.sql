@@ -49,6 +49,6 @@ INSERT INTO `targets` (`id`, `hostname`, `active`) VALUES
 (6, 'Packinglist-cft.sys-suite.com', 0),
 (7, 'Packinglistmmtest-fortna.sygest.it', 0),
 (8, 'plextendedtest.sygest.it', 0),
-(9, 'spcb.sys-suite.com', 1);
+(9, 'spcbweb.sys-suite.com', 1);
 
 COMMIT;

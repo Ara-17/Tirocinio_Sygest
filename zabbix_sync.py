@@ -1,44 +1,36 @@
 import pymysql
 from zabbix_utils import ZabbixAPI
-
-# Imposto i dati per il collegamento al database locale
-DB_CONFIG = {
-    'host': 'sygest-db', 
-    'user': 'root', 
-    'password': 'root_pwd_sygest',
-    'database': 'progetto_sygest', 
-    'charset': 'utf8mb4',
-    'cursorclass': pymysql.cursors.DictCursor
-}
-
-ZABBIX_URL = "http://zabbix-frontend:8080"
-ZABBIX_USER = "Admin"
-ZABBIX_PWD = "zabbix"
+from config import DB_CONFIG, ZABBIX_URL, ZABBIX_USER, ZABBIX_PWD
 
 def configure_zabbix_alerts(api):
     print("Inizio la configurazione di Zabbix e delle mail")
     
-    # CONFIGURAZIONE DEL CANALE EMAIL
-    # Parto cercando il canale di comunicazione che si chiama "Email"
-    media_types = api.mediatype.get(search={"name": "Email"})
+    # CONFIGURAZIONE DEL CANALE GITLAB (WEBHOOK)
+    gitlab_url = os.getenv('GITLAB_URL', 'https://gitlab.com')
+    gitlab_token = os.getenv('GITLAB_TOKEN', '')
+    gitlab_project_id = os.getenv('GITLAB_PROJECT_ID', '')
+    # Parto cercando il canale di comunicazione che si chiama "Gitlab"
+    media_types = api.mediatype.get(search={"name": "GitLab"}, selectParameters="extend")
     
-    # Se lo trovo, prendo il suo ID e lo modifico
+    # Se lo trovo, prendo il suo ID e aggiorno i suoi parametri interni
     if media_types:
         media_id = media_types[0]['mediatypeid']
+        current_params = media_types[0].get('parameters', [])
         
-        # Inserisco i parametri del server SMTP di Google. 
-        # In questo modo Zabbix saprà che account usare per spedire le mail
+        # Scorro i parametri del Webhook di default di Zabbix e inserisco i miei token
+        for p in current_params:
+            if p['name'] == 'gitlab_url':
+                p['value'] = gitlab_url
+            elif p['name'] == 'gitlab_token':
+                p['value'] = gitlab_token
+            elif p['name'] == 'project_id': # Parametro standard del Webhook Zabbix
+                p['value'] = gitlab_project_id
+
+        # Salvo le modifiche sul Webhook
         api.mediatype.update(
             mediatypeid=media_id, 
-            status=0, # 0 significa che il canale è "Attivo"
-            smtp_server="smtp.gmail.com", 
-            smtp_port="587",
-            smtp_helo="gmail.com", 
-            smtp_email="arashpreetsingh177@gmail.com",
-            smtp_security=1, 
-            smtp_authentication=1, 
-            username="arashpreetsingh177@gmail.com",
-            passwd="vpfx vhwc wcdp uyau" # Password per le app di Google
+            status=0, # 0 significa "Attivo"
+            parameters=current_params
         )
     
     # CONFIGURAZIONE DELL'UTENTE
@@ -48,46 +40,46 @@ def configure_zabbix_alerts(api):
     if users and media_types:
         admin_id = users[0]['userid']
         
-        # Preparo le regole di spedizione per l'admin definendo a quale indirizzo inviare gli avvisi      
+        # Preparo le regole di spedizione associando il profilo Admin a GitLab
         user_media = {
             "mediatypeid": media_id, 
-            "sendto": ["arashpreet.singh@studenti.unipr.it"], 
-            "active": 0, # tenere sempre acceso (active: 0)
-            "severity": 63, # mandare tutti i livelli di alalrme
+            "sendto": ["Zabbix_Sygest_Bot"], # Nei Webhook questo campo spesso fa solo da placeholder
+            "active": 0, 
+            "severity": 63, # Mandare tutti i livelli di allarme
             "period": "1-7,00:00-24:00"
         }
         
-        # Salvo queste impostazioni sul profilo dell'amministratore
         api.user.update(userid=admin_id, medias=[user_media])
 
 
-    # CREAZIONE DEL TESTO DELLA MAIL
-    # Questa funzione interna serve per non dover riscrivere a mano la struttura della mail 
+    # CREAZIONE DEL TESTO DELLA ISSUE
+    # Questa funzione interna serve per non dover riscrivere a mano la struttura della issue 
     # per ogni tipo di allarme. Prende in ingresso solo il titolo e formatta il resto usando 
     # le variabili interne di Zabbix (come {HOST.NAME} o {EVENT.NAME})
-    def genera_corpo_mail(titolo_header):
+    def genera_corpo_issue(titolo_header):
         return (
-            f"{titolo_header}\n\n"
-            "Il sistema di monitoraggio ha rilevato una variazione per il seguente target:\n"
-            "Host: {HOST.NAME}\n\n"
-            "{EVENT.NAME}\n"
-            "Gravità: {EVENT.SEVERITY}\n"
-            "Rilevato il: {EVENT.DATE} alle {EVENT.TIME}\n\n"
-            "--------------------------------------------------\n"
-            "DATI RILEVATI DALLO SCRIPT:\n\n"
-            "{ITEM.VALUE1}\n" 
-            "--------------------------------------------------\n\n"
-            "Per visualizzare lo storico completo o gestire l'allarme, accedi alla dashboard di Zabbix."
+            f"## {titolo_header}\n\n"
+            f"**Host Analizzato:** `{'{HOST.NAME}'}`\n\n"
+            f"**Evento:** {'{EVENT.NAME}'}\n"
+            f"**Gravità:** `{'{EVENT.SEVERITY}'}`\n"
+            f"**Rilevato il:** {'{EVENT.DATE}'} alle {'{EVENT.TIME}'}\n\n"
+            f"---\n"
+            f"### Dettagli dei Dati Rilevati:\n"
+            f"```text\n"
+            f"{'{ITEM.VALUE1}'}\n"
+            f"```\n\n"
+            f"---\n"
+            f"*Issue aperta automaticamente dal monitoraggio di sicurezza Sygest/Zabbix.*"
         )
 
     # CREAZIONE DELLE REGOLE ACTIONS
     # Ora diciamo a Zabbix quando deve mandare le mail, dividendo i problemi in 3 categorie di gravità
     
     # --- Categoria INFO E MIGLIORAMENTI ---
-    azione_info = "Invia Notifiche Informative e Prima Scansione"
+    azione_info = "Apri Issue Informativa (GitLab)"
     # Controllo se questa azione esiste già, per evitare di crearne due uguali se lancio lo script due volte
     if not api.action.get(filter={"name": azione_info}):
-        corpo_info = genera_corpo_mail("INFO DI SISTEMA - SYGEST")
+        corpo_info = genera_corpo_issue("INFO DI SISTEMA - SYGEST")
         
         # Il filtro dice a Zabbix di far scattare questa mail solo se la gravità 
         # (conditiontype: 4) è esattamente uguale (operator: 0) a "Information" (value: 1)
@@ -116,9 +108,9 @@ def configure_zabbix_alerts(api):
         api.action.create(name=azione_info, eventsource=0, status=0, esc_period="1h", filter=filtro, operations=[operazione])
 
     # --- Categoria AVVISI MEDI (Patch disponibili) ---
-    azione_patch = "Invia Avviso Nuove Patch Disponibili"
+    azione_patch = "Apri Issue Avviso Patch (GitLab)"
     if not api.action.get(filter={"name": azione_patch}):
-        corpo_patch = genera_corpo_mail("AVVISO AGGIORNAMENTO - SYGEST")
+        corpo_patch = genera_corpo_issue("AVVISO AGGIORNAMENTO - SYGEST")
         
         # Qui il filtro intercetta solo gli eventi di livello 3 (Warning)
         filtro = {
@@ -136,9 +128,9 @@ def configure_zabbix_alerts(api):
 
 
     # --- Categoria PROBLEMI CRITICI (Vulnerabilità gravi o siti non sicuri) ---
-    azione_grave = "Invia Allarme Critico Sicurezza"
+    azione_grave = "Apri Issue Critica Sicurezza (GitLab)"
     if not api.action.get(filter={"name": azione_grave}):
-        corpo_grave = genera_corpo_mail("ALLARME CRITICO - SYGEST")
+        corpo_grave = genera_corpo_issue("ALLARME CRITICO - SYGEST")
         
         # Qui il filtro è doppio: perché la mail parte sia per gli eventi di livello 4 (High) 
         # sia per quelli di livello 5 (Disaster)
@@ -564,7 +556,7 @@ def main():
             # Salvo tutto il blocco di risultati dentro la variabile db_targets.
             db_targets = cursor.fetchall()
 
-        print("\nAVVIO PROCEDURA DI SINCRONIZZAZIONE ZABBIX")
+        print("\nAVVIO PROCEDURA DI SINCRONIZZAZIONE ZABBIX E GITLAB")
         
         # Inizializzo la connessione passando l'URL e faccio il login per ottenere il token di sessione.
         zapi = ZabbixAPI(url=ZABBIX_URL)

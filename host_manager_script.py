@@ -1,16 +1,6 @@
 # Permettere al mio script Python di comunicare con il database nel container 'sygest-db'
 import pymysql
-
-# Creo un dizionario di configurazione
-DB_CONFIG = {
-    'host': 'sygest-db',           # Nome del container Docker che fa da database
-    'user': 'root',                # Utente amministratore del database
-    'password': 'root_pwd_sygest', # Password che ho impostato nel docker-compose
-    'database': 'progetto_sygest', # Il nome del mio database
-    'charset': 'utf8mb4',          # Uso utf8mb4 per supportare tutti i caratteri speciali
-    # Chiedo a pymysql di restituirmi i risultati delle query sotto forma di dizionari 
-    'cursorclass': pymysql.cursors.DictCursor
-}
+from config import DB_CONFIG
 
 # Definisco la funzione principale che si occuperà di gestire l'interfaccia a riga di comando
 def host_manager():

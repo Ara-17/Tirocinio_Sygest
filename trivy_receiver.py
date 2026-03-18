@@ -3,6 +3,7 @@ from flasgger import Swagger
 import pymysql
 import json
 from zabbix_utils import Sender, ItemValue
+from config import DB_CONFIG, ZABBIX_SERVER, ZABBIX_PORT, SYGEST_API_KEY
 
 # Inizializzo l'app Flask che farà da server in ascolto per ricevere i dati
 app = Flask(__name__)
@@ -16,20 +17,6 @@ swagger = Swagger(app, template={
     }
 })
 
-# Preparo i parametri per collegarmi al database MariaDB
-DB_CONFIG = {
-    'host': 'sygest-db',
-    'user': 'root',
-    'password': 'root_pwd_sygest',
-    'database': 'progetto_sygest',
-    'charset': 'utf8mb4',
-    # Chiedo a pymysql di restituirmi i risultati delle query come dizionari 
-    'cursorclass': pymysql.cursors.DictCursor
-}
-
-ZABBIX_SERVER = 'zabbix-server'
-ZABBIX_PORT = 10051
-
 # Creo l'endpoint che aspetterà i dati inviati dai server
 @app.route('/api/v1/trivy', methods=['POST'])
 def receive_trivy_report():
@@ -42,6 +29,11 @@ def receive_trivy_report():
     consumes:
       - multipart/form-data
     parameters:
+      - name: X-API-Key
+        in: header
+        type: string
+        required: true
+        description: Chiave di sicurezza per autorizzare l'invio
       - name: hostname
         in: formData
         type: string
@@ -57,11 +49,19 @@ def receive_trivy_report():
         description: File ricevuto, processato e inviato a Zabbix senza problemi
       400:
         description: Mancano dei parametri obbligatori nella richiesta
+      401:
+        description: Accesso negato (API Key errata)
       404:
         description: Il server non è registrato nel nostro database
       500:
         description: Errore interno del server o del database
     """
+    # Controllo che chi fa la richiesta conosca la password segreta
+    api_key_ricevuta = request.headers.get('X-API-Key')
+    
+    if not api_key_ricevuta or api_key_ricevuta != SYGEST_API_KEY:
+        print(f"Tentativo di accesso bloccato. API Key non valida.")
+        return jsonify({"status": "error", "message": "Accesso negato. API Key mancante o errata."}), 401
     
     # Prendo il nome del server (hostname) dalla richiesta web.
     hostname = request.form.get('hostname')

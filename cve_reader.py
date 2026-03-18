@@ -1,15 +1,5 @@
 import pymysql
-
-# Imposto i parametri per collegarmi al database locale
-DB_CONFIG = {
-    'host': 'sygest-db',
-    'user': 'root',
-    'password': 'root_pwd_sygest',
-    'database': 'progetto_sygest',
-    'charset': 'utf8mb4',
-    # Uso i dizionari per poter chiamare le colonne col loro nome
-    'cursorclass': pymysql.cursors.DictCursor
-}
+from config import DB_CONFIG
 
 def visualizza_vulnerabilita():
     connection = None

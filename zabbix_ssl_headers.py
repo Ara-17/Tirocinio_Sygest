@@ -10,22 +10,7 @@ from datetime import datetime
 # Importo le classi ufficiali della libreria Zabbix per inviare dati in modalità passiva
 from zabbix_utils import Sender, ItemValue
 
-# Configuro i parametri di connessione al database locale.
-# Uso 'sygest-db' come host perché, trovandoci dentro una rete Docker, 
-# il nome del container funge automaticamente da indirizzo IP (Risoluzione DNS interna).
-DB_CONFIG = {
-    'host': 'sygest-db',
-    'user': 'root',
-    'password': 'root_pwd_sygest',
-    'database': 'progetto_sygest',
-    'charset': 'utf8mb4',
-    # Chiedo a pymysql di restituirmi i risultati come dizionari per poter usare i nomi delle colonne
-    'cursorclass': pymysql.cursors.DictCursor 
-}
-
-# Configuro i parametri del server Zabbix verso cui passare i dati.
-ZABBIX_SERVER = 'zabbix-server'
-ZABBIX_PORT = 10051 # È la porta standard usata da Zabbix per ricevere i dati dai Trapper
+from config import DB_CONFIG, ZABBIX_SERVER, ZABBIX_PORT
 
 # Definisco una funzione per estrarre tutti i dettagli del certificato SSL di un dominio
 def get_ssl_details(hostname):

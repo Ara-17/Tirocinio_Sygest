@@ -5,3 +5,4 @@ zabbix-utils
 Flask==3.0.3
 gunicorn==21.2.0
 flasgger==0.9.7.1
+python-dotenv==1.0.1
