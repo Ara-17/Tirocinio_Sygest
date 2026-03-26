@@ -25,8 +25,10 @@ def configure_zabbix_alerts(api):
         
         var baseUrl = params.url + '/api/v4/projects/' + params.project_id + '/issues';
         
-        // Controllo se esiste già una Issue aperta con questo titolo
-        var searchUrl = baseUrl + '?state=opened&search=' + encodeURIComponent(params.title) + '&in=title';
+        // Cerco se esiste già una Issue aperta che contiene l'hostname nel titolo.
+        // Usando il nome dell'host invece del titolo esatto, posso riutilizzare la stessa Issue 
+        // cambiandole il titolo dinamicamente (es. da "Report" a "Peggioramento")
+        var searchUrl = baseUrl + '?state=opened&search=' + encodeURIComponent(params.host) + '&in=title';
         var getResp = req.get(searchUrl);
         
         if (req.getStatus() != 200) { throw 'Ricerca issue fallita. HTTP: ' + req.getStatus(); }
@@ -34,28 +36,90 @@ def configure_zabbix_alerts(api):
         var issues = JSON.parse(getResp);
         var existingIid = null;
         
-        // Verifico che il titolo sia esattamente uguale (per evitare falsi positivi)
+        // Controllo che il titolo contenga davvero l'host per evitare falsi positivi
         for (var i = 0; i < issues.length; i++) {
-            if (issues[i].title === params.title) {
+            if (issues[i].title.indexOf(params.host) !== -1) {
                 existingIid = issues[i].iid;
                 break;
             }
         }
         
-        var payload = JSON.stringify({
+        // Capisco se questa chiamata è solo una "Sincronizzazione" silenziosa (Routine)
+        var isRoutine = (params.title.indexOf('Routine') !== -1);
+        
+        var payload = {
             title: params.title,
-            description: params.description,
             labels: params.labels
-        });
+        };
+        
+        // ESTRAZIONE VOTI PER ETICHETTE SCOPED ---
+        // Il webhook legge il proprio Markdown riga per riga per cercare la tabella dei voti
+        var hdrsGrade = "";
+        var sslGrade = "";
+        var lines = params.description.split('\\n');
+        
+        for (var j = 0; j < lines.length; j++) {
+            if (lines[j].indexOf('| Headers Grade |') !== -1) {
+                var parts = lines[j].split('|');
+                if (parts.length >= 3) {
+                    // Prende il testo della colonna, toglie gli spazi e isola solo la prima parola (es. "A+")
+                    hdrsGrade = parts[2].trim().split(' ')[0]; 
+                }
+            }
+            if (lines[j].indexOf('| SSL Grade |') !== -1) {
+                var parts = lines[j].split('|');
+                if (parts.length >= 3) {
+                    sslGrade = parts[2].trim();
+                }
+            }
+        }
+
+        // Creo un array temporaneo per le nuove etichette dinamiche
+        var customLabels = [];
+        if (hdrsGrade && hdrsGrade !== 'N/A') { 
+            customLabels.push("headers-grade::" + hdrsGrade); 
+        }
+        if (sslGrade && sslGrade !== 'N/A') { 
+            customLabels.push("ssl-grade::" + sslGrade); 
+        }
+
+        // Le unisco alle etichette di base (alert, sygest, zabbix) separate da virgola
+        if (customLabels.length > 0) {
+            payload.labels = params.labels + "," + customLabels.join(",");
+        }
+        
+        // Sovrascrivo il corpo della Issue SOLO se Zabbix mi ha passato il Markdown completo.
+        if (params.description.indexOf('Report Summary') !== -1 || !existingIid) {
+            payload.description = params.description;
+        }
         
         if (existingIid !== null) {
-            // Se esiste già faccio un PUT per aggiornarla (così aggiorno le checkbox coi nuovi dati)
-            req.put(baseUrl + '/' + existingIid, payload);
-            if (req.getStatus() != 200) { throw 'Aggiornamento fallito. HTTP: ' + req.getStatus(); }
-            return 'Aggiornata Issue #' + existingIid;
+            // L'ISSUE ESISTE
+            if (isRoutine) {
+                // Se è un controllo di routine e l'issue c'è già, NON faccio aggiornamenti a vuoto!
+                return 'Issue presente, nessun aggiornamento necessario (Routine)';
+            } else {
+                // Se c'è un VERO cambiamento (Peggioramento/Miglioramento/ecc), faccio un PUT per aggiornarla
+                req.put(baseUrl + '/' + existingIid, JSON.stringify(payload));
+                if (req.getStatus() != 200) { throw 'Aggiornamento fallito. HTTP: ' + req.getStatus(); }
+                
+                // Faccio un POST per aggiungere un commento, così GitLab manda la notifica email al team!
+                var notePayload = JSON.stringify({ body: "Notifica di sistema:\\nZabbix ha rilevato un evento: **" + params.title + "**" });
+                var reqNote = new HttpRequest();
+                reqNote.addHeader('PRIVATE-TOKEN: ' + params.token);
+                reqNote.addHeader('Content-Type: application/json');
+                reqNote.post(baseUrl + '/' + existingIid + '/notes', notePayload);
+                
+                return 'Aggiornata Issue #' + existingIid + ' e aggiunto commento';
+            }
         } else {
-            // Se non esiste faccio un POST per crearla da zero
-            req.post(baseUrl, payload);
+            // L'ISSUE NON ESISTE (Cancellata per sbaglio o è la primissima scansione)
+            if (!payload.description) { payload.description = params.description; }
+            
+            // Se la creiamo durante una routine, le diamo un titolo pulito "Report su host"
+            if (isRoutine) { payload.title = "Report su " + params.host; }
+            
+            req.post(baseUrl, JSON.stringify(payload));
             if (req.getStatus() != 201) { throw 'Creazione issue fallita. HTTP: ' + req.getStatus(); }
             return 'Nuova Issue creata';
         }
@@ -72,6 +136,7 @@ def configure_zabbix_alerts(api):
         {"name": "url", "value": gitlab_url},
         {"name": "token", "value": gitlab_token},
         {"name": "project_id", "value": gitlab_project_id},
+        {"name": "host", "value": "{HOST.NAME}"}, # Aggiunto per il trucco della ricerca per host
         {"name": "title", "value": "{ALERT.SUBJECT}"},
         {"name": "description", "value": "{ALERT.MESSAGE}"},
         {"name": "labels", "value": "zabbix,alert,sygest"}
@@ -127,22 +192,10 @@ def configure_zabbix_alerts(api):
 
 
     # CREAZIONE DEL TESTO DELLA ISSUE
-    # Questa funzione interna serve per non dover riscrivere a mano la struttura della issue 
-    # per ogni tipo di allarme. Prende in ingresso solo il titolo e formatta il resto usando 
-    # le variabili interne di Zabbix (come {HOST.NAME} o {EVENT.NAME})
+    # Questa funzione interna serve per non dover riscrivere a mano la struttura della issue.
+    # Ora inietterà semplicemente tutto il Markdown preparato dal nostro script Python!
     def genera_corpo_issue(titolo_header):
-        return (
-            f"## {titolo_header}\n\n"
-            f"- **Host Analizzato:** `{'{HOST.NAME}'}`\n"
-            f"- **Evento:** {'{EVENT.NAME}'}\n"
-            f"- **Gravità:** `{'{EVENT.SEVERITY}'}`\n"
-            f"- **Rilevato il:** {'{EVENT.DATE}'} alle {'{EVENT.TIME}'}\n\n"
-            f"---\n"
-            f"### Dettagli dei Dati Rilevati:\n"
-            f"{'{ITEM.VALUE1}'}\n"
-            f"---\n"
-            f"*Issue aperta automaticamente dal monitoraggio di sicurezza Sygest/Zabbix.*"
-        )
+        return f"{'{ITEM.VALUE1}'}\n"
 
     # CREAZIONE DELLE REGOLE ACTIONS
     # Ora diciamo a Zabbix quando deve mandare le mail, dividendo i problemi in 3 categorie di gravità
@@ -174,7 +227,7 @@ def configure_zabbix_alerts(api):
             # spengo il messaggio preimpostato di zabbix mettendo zero su default_msg
             # in questo modo mi fa usare il mio corpo mail personalizzato e l oggetto che decido io
             # infine gli dico esplicitamente di usare il canale email che ho configurato prima
-            "opmessage": {"default_msg": 0, "subject": "INFO {EVENT.NAME}", "message": corpo_info, "mediatypeid": media_id}
+            "opmessage": {"default_msg": 0, "subject": "{EVENT.NAME}", "message": corpo_info, "mediatypeid": media_id}
         }
         
         # lo status zero serve per accendere la regola immediatamente
@@ -199,35 +252,35 @@ def configure_zabbix_alerts(api):
         operazione = {
             "operationtype": 0, 
             "opmessage_usr": [{"userid": admin_id}],
-            "opmessage": {"default_msg": 0, "subject": "AVVISO Patch Disponibili", "message": corpo_patch, "mediatypeid": media_id}
+            "opmessage": {"default_msg": 0, "subject": "{EVENT.NAME}", "message": corpo_patch, "mediatypeid": media_id}
         }
         
         api.action.create(name=azione_patch, eventsource=0, status=0, esc_period="1h", filter=filtro, operations=[operazione])
 
 
     # --- Categoria PROBLEMI CRITICI (Vulnerabilità gravi o siti non sicuri) ---
-        azione_grave = "Apri Issue Critica Sicurezza (GitLab)"
-        if not api.action.get(filter={"name": azione_grave}):
-            corpo_grave = genera_corpo_issue("ALLARME CRITICO - SYGEST")
-            
-            # Modifica il filtro in questo modo:
-            filtro = {
-                "evaltype": 3,  # Modificato da 2 a 3 (Custom expression)
-                "conditions": [
-                    {"formulaid": "A", "conditiontype": 4, "operator": 0, "value": "4"}, 
-                    {"formulaid": "B", "conditiontype": 4, "operator": 0, "value": "5"}, 
-                    {"formulaid": "C", "conditiontype": 0, "operator": 0, "value": sygest_group_id} 
-                ],
-                "formula": "(A or B) and C"  # Rinominato da eval_formula a formula
-            }
-            
-            operazione = {
-                "operationtype": 0, 
-                "opmessage_usr": [{"userid": admin_id}],
-                "opmessage": {"default_msg": 0, "subject": "CRITICO {EVENT.NAME}", "message": corpo_grave, "mediatypeid": media_id}
-            }
-            
-            api.action.create(name=azione_grave, eventsource=0, status=0, esc_period="1h", filter=filtro, operations=[operazione])
+    azione_grave = "Apri Issue Critica Sicurezza (GitLab)"
+    if not api.action.get(filter={"name": azione_grave}):
+        corpo_grave = genera_corpo_issue("ALLARME CRITICO - SYGEST")
+        
+        # Modifica il filtro in questo modo:
+        filtro = {
+            "evaltype": 3,  # Custom expression
+            "conditions": [
+                {"formulaid": "A", "conditiontype": 4, "operator": 0, "value": "4"}, 
+                {"formulaid": "B", "conditiontype": 4, "operator": 0, "value": "5"}, 
+                {"formulaid": "C", "conditiontype": 0, "operator": 0, "value": sygest_group_id} 
+            ],
+            "formula": "(A or B) and C"  
+        }
+        
+        operazione = {
+            "operationtype": 0, 
+            "opmessage_usr": [{"userid": admin_id}],
+            "opmessage": {"default_msg": 0, "subject": "{EVENT.NAME}", "message": corpo_grave, "mediatypeid": media_id}
+        }
+        
+        api.action.create(name=azione_grave, eventsource=0, status=0, esc_period="1h", filter=filtro, operations=[operazione])
 
 def sync_hosts(api, db_targets):
     # chiedo a zabbix se esiste già la cartella principale per raggruppare i nostri server
@@ -351,10 +404,14 @@ def sync_hosts(api, db_targets):
                     # così posso usarlo nel resto del codice per collegarci altri dipendent item o regole di alert
                     return nuovo_item['itemids'][0]
 
-            # Creo i due Master Item principali che riceveranno i payload JSON completi dagli script
+            # Creo i Master Item principali che riceveranno i payload JSON completi dagli script
             # Il parametro type=2 imposta l'item come "Zabbix trapper", mentre value_type=4 lo imposta come tipo di dato "Text"
             i_vuln_id = create_or_update_item("JSON Vuln", "sygest.vuln", 2, 4)
             i_ssl_id = create_or_update_item("JSON SSL", "sygest.ssl_headers", 2, 4)
+            
+            # CREO L'INTERRUTTORE DI STATO (Riceverà 1 quando python parte e 0 quando finisce)
+            # Servirà per fare la scansione a impulsi di Zabbix, evitando controlli infiniti e spam
+            create_or_update_item("Scan Status Ping", "sygest.scan_status", 2, 3)
             
             # Funzione interna per creare i Dependent Item collegati ai Master Item definiti sopra.
             # Questi item servono a leggere il JSON ricevuto per isolare le metriche numeriche da usare poi nei grafici e nei trigger.
@@ -380,7 +437,24 @@ def sync_hosts(api, db_targets):
                 # e value_type=3 per indicare che il valore estratto sarà di tipo "Numeric (unsigned)"
                 return create_or_update_item(nome, chiave, 18, 3, master, regola)
                 
-            # Creo Dependent Item numerici che si agganciano al Master Item
+            # Definisco un'altra funzione interna che serve per estrarre blocchi di testo lunghi come i messaggi pre-formattati per gli allarmi 
+            def crea_dipendente_testo(nome, chiave, json_path, master):
+                # Preparo la regola di Preprocessing. Come prima, uso il type=12 per dire a Zabbix 
+                # di usare la query JSONPath e ritagliare la stringa esatta dentro il payload JSON.
+                regola = [
+                    {
+                        "type": 12, 
+                        "params": json_path, 
+                        "error_handler": 0, 
+                        "error_handler_params": ""
+                    }
+                ]
+                
+                # Richiamo la funzione principale per creare il Dependent Item (type=18) e agganciarlo al Master Item.
+                # Il parametro value_type=4, che in Zabbix significa "Text" e permette al database di salvare stringhe molto lunghe
+                return create_or_update_item(nome, chiave, 18, 4, master, regola)
+                
+            # Creo Dependent Item numerici che si agganciano al Master Item TRIVY
             # Ognuno di questi item usa una query JSONPath specifica per estrarre un singolo contatore 
             # dal payload JSON inviato da Trivy, ignorando tutto il resto del file.
 
@@ -432,23 +506,6 @@ def sync_hosts(api, db_targets):
                 i_vuln_id
             )
 
-            # Definisco un'altra funzione interna che serve per estrarre blocchi di testo lunghi come i messaggi pre-formattati per gli allarmi 
-            def crea_dipendente_testo(nome, chiave, json_path, master):
-                # Preparo la regola di Preprocessing. Come prima, uso il type=12 per dire a Zabbix 
-                # di usare la query JSONPath e ritagliare la stringa esatta dentro il payload JSON.
-                regola = [
-                    {
-                        "type": 12, 
-                        "params": json_path, 
-                        "error_handler": 0, 
-                        "error_handler_params": ""
-                    }
-                ]
-                
-                # Richiamo la funzione principale per creare il Dependent Item (type=18) e agganciarlo al Master Item.
-                # Il parametro value_type=4, che in Zabbix significa "Text" e permette al database di salvare stringhe molto lunghe
-                return create_or_update_item(nome, chiave, 18, 4, master, regola)
-
             # Creo i Dependent Item di tipo testo agganciati al Master Item delle vulnerabilità (i_vuln_id).
             # Tramite JSONPath estraggo le stringhe già pre-formattate dal mio script Python, così Zabbix dovrà
             # semplicemente prenderle e scriverle dentro le mail di alert senza dover fare ulteriori elaborazioni.
@@ -480,35 +537,60 @@ def sync_hosts(api, db_targets):
             # Passo ai controlli di sicurezza web e creo i Dependent Item agganciandoli al secondo Master Item (i_ssl_id).
             # Questo Master Item riceve il payload JSON specifico per i certificati SSL e gli HTTP Header.
             
-            # Estraggo come valore numerico i giorni rimanenti prima che il certificato SSL del sito scada.
+            # Estraggo il punteggio numerico della sicurezza web per poter disegnare i grafici su Zabbix
+            crea_dipendente_numerico(
+                "Sicurezza Web Score", 
+                "headers.score", 
+                "$.score", 
+                i_ssl_id
+            )
+            
+            # Estraggo il voto in lettere (A, B, C, ecc.) per mostrarlo in modo facile sulla dashboard
+            crea_dipendente_testo(
+                "Sicurezza Web Grade Headers", 
+                "headers.grade", 
+                "$.headers_grade", 
+                i_ssl_id
+            )
+            
+            # Estraggo il voto in lettere del certificato SSL generato da testssl.sh
+            crea_dipendente_testo(
+                "Sicurezza Web Grade SSL", 
+                "ssl.grade", 
+                "$.ssl_grade", 
+                i_ssl_id
+            )
+            
+            # Estraggo come valore numerico i giorni rimanenti prima che il certificato SSL del sito scada
             crea_dipendente_numerico(
                 "SSL Giorni scadenza CA", 
                 "ssl.days_left", 
-                "$.ssl.days_left", 
+                "$.days_left", 
                 i_ssl_id
             )
             
-            # Estraggo come stringa di testo l'impronta digitale (Thumbprint) del certificato, 
+            # Estraggo come stringa di testo l'impronta digitale (Thumbprint) del certificato
             crea_dipendente_testo(
                 "SSL Thumbprint", 
                 "ssl.thumbprint", 
-                "$.ssl.thumbprint", 
+                "$.thumbprint", 
                 i_ssl_id
             )
             
-            # Estraggo il contatore numerico che mi dice quanti header di sicurezza mancano sulla pagina web.
-            crea_dipendente_numerico(
-                "Sicurezza Web Totale Header mancanti", 
-                "headers.missing_count", 
-                "$.headers.missing_count", 
-                i_ssl_id
-            )
-            
-            # Estraggo la stringa di testo con l'elenco effettivo dei nomi degli header mancanti per poterli stampare in chiaro nella notifica inviata da Zabbix
+            # Estraggo l'elenco testuale di vulnerabilità e warning estrapolati da Python
             crea_dipendente_testo(
-                "Sicurezza Web Lista Header mancanti", 
-                "headers.missing_list", 
-                "$.headers.missing_list", 
+                "Sicurezza Web Warnings", 
+                "headers.warnings_text", 
+                "$.warnings_text", 
+                i_ssl_id
+            )
+            
+            # Estraggo l'INTERO report Markdown. Questo è l'Item più importante perché è quello 
+            # che verrà inviato a GitLab per compilare il corpo della Issue.
+            crea_dipendente_testo(
+                "Sicurezza Web Full Report Markdown", 
+                "headers.full_report", 
+                "$.full_markdown_report", 
                 i_ssl_id
             )
 
@@ -542,11 +624,12 @@ def sync_hosts(api, db_targets):
             # Per ogni Trigger passo 3 parametri: il nome (con la macro {HOST.NAME} che Zabbix compila da solo), 
             # l'espressione e il livello di Severity (da 1 a 5).
             
-            # --- TRIGGER VULNERABILITÀ ---
+            # --- TRIGGER VULNERABILITÀ TRIVY ---
             
             # Livello 1 (Information)
             # L'espressione controlla due cose con la funzione 'last': che il testo della mail non sia vuoto (length>0) 
             # e che il flag numerico 'is_first_read' sia uguale a 1.
+            # NOTA BENE: l'item di testo è sempre il primo nell'espressione così {ITEM.VALUE1} stampa il markdown!
             create_or_update_trigger(
                 f"Info Prima lettura massiva Trivy completata su {{HOST.NAME}}", 
                 f"length(last(/{hostname}/vuln.first_read_text))>0 and last(/{hostname}/vuln.is_first_read)=1", 
@@ -569,39 +652,44 @@ def sync_hosts(api, db_targets):
                 3 
             )
 
-            # --- TRIGGER SICUREZZA WEB ---          
-            # Livello 1 (Information)
-            # L'espressione count(...,#2)=1 dice a Zabbix di controllare quanti dati storici ho salvato. Se ne ho solo uno in totale, 
-            # significa che è la prima scansione che faccio
+            # --- TRIGGER SICUREZZA WEB E HEADERS (Logica ad Impulsi per non spammare) ---          
+            
+            # 1. Prima scansione in assoluto (Livello 1 - Information)
+            # Mettendo "headers.full_report" al primo posto, Zabbix assegnerà il Markdown alla variabile {ITEM.VALUE1} 
             create_or_update_trigger(
-                f"Prima scansione Web per {{HOST.NAME}}. Header attualmente mancanti", 
-                f"length(last(/{hostname}/headers.missing_list))>=0 and count(/{hostname}/headers.missing_count,#2)=1", 
+                f"Report su {{HOST.NAME}}", 
+                f"length(last(/{hostname}/headers.full_report))>0 and last(/{hostname}/sygest.scan_status)=1 and count(/{hostname}/headers.score,#2)=1", 
                 1
             )
 
-            # Livello 4 (High)
-            # Uso la sintassi last(...,#2) che in Zabbix prende il penultimo valore letto e non l'ultimo.
+            # 2. Peggioramento (Livello 4 - High)
             create_or_update_trigger(
-                f"Peggioramento Web Aumentati gli header mancanti su {{HOST.NAME}}", 
-                f"length(last(/{hostname}/headers.missing_list))>=0 and last(/{hostname}/headers.missing_count)>last(/{hostname}/headers.missing_count,#2) and count(/{hostname}/headers.missing_count,#2)=2", 
+                f"Peggioramento su {{HOST.NAME}}", 
+                f"length(last(/{hostname}/headers.full_report))>0 and last(/{hostname}/sygest.scan_status)=1 and last(/{hostname}/headers.score)<last(/{hostname}/headers.score,#2) and count(/{hostname}/headers.score,#2)>=2", 
                 4
             )
 
-            # Livello 1 (Information)
+            # 3. Miglioramento (Livello 1 - Information)
             create_or_update_trigger(
-                f"Miglioramento Web Ridotti gli header mancanti su {{HOST.NAME}}", 
-                f"length(last(/{hostname}/headers.missing_list))>=0 and last(/{hostname}/headers.missing_count)<last(/{hostname}/headers.missing_count,#2) and count(/{hostname}/headers.missing_count,#2)=2", 
+                f"Miglioramento su {{HOST.NAME}}", 
+                f"length(last(/{hostname}/headers.full_report))>0 and last(/{hostname}/sygest.scan_status)=1 and last(/{hostname}/headers.score)>last(/{hostname}/headers.score,#2) and count(/{hostname}/headers.score,#2)>=2", 
+                1
+            )
+
+            # 4. Sincronizzazione di Routine (Livello 1 - Information)
+            # Questo è il Trigger intelligente! Scatta quando Python finisce la scansione e vede che NON ci sono stati cambiamenti.
+            create_or_update_trigger(
+                f"Routine Sync su {{HOST.NAME}}", 
+                f"length(last(/{hostname}/headers.full_report))>0 and last(/{hostname}/sygest.scan_status)=1 and last(/{hostname}/headers.score)=last(/{hostname}/headers.score,#2) and count(/{hostname}/headers.score,#2)>=2", 
                 1
             )
 
             # --- TRIGGER CERTIFICATI SSL ---      
             # Livello 4 (High)
-            create_or_update_trigger(f"Allarme Certificato SSL in scadenza per {{HOST.NAME}}", f"last(/{hostname}/ssl.days_left)<30", 4)
+            create_or_update_trigger(f"Allarme Certificato SSL in scadenza per {{HOST.NAME}}", f"length(last(/{hostname}/headers.full_report))>0 and last(/{hostname}/sygest.scan_status)=1 and last(/{hostname}/ssl.days_left)<30 and last(/{hostname}/ssl.days_left)>=0", 4)
             
             # Livello 1 (Information)
-            # Uso l'operatore matematico <> (che in Zabbix significa diverso da) per controllare se il Thumbprint attuale 
-            # è diverso dal Thumbprint del penultimo controllo (#2)
-            create_or_update_trigger(f"Info Thumbprint SSL cambiato per {{HOST.NAME}}", f"last(/{hostname}/ssl.thumbprint)<>last(/{hostname}/ssl.thumbprint,#2)", 1)
+            create_or_update_trigger(f"Info Thumbprint SSL cambiato per {{HOST.NAME}}", f"length(last(/{hostname}/headers.full_report))>0 and last(/{hostname}/sygest.scan_status)=1 and last(/{hostname}/ssl.thumbprint)<>last(/{hostname}/ssl.thumbprint,#2) and length(last(/{hostname}/ssl.thumbprint))>5", 1)
 
         except Exception as e:
             # Stampo a video l'eccezione (e) per capire il problema e uso il comando 'continue' 
@@ -621,6 +709,7 @@ def sync_hosts(api, db_targets):
                 
             except Exception as e:
                 pass
+
 def main():
     connection = None
     zapi = None

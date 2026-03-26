@@ -1,6 +1,5 @@
 pymysql
 requests
-shcheck
 zabbix-utils
 Flask==3.0.3
 gunicorn==21.2.0
