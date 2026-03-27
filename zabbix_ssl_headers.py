@@ -102,7 +102,7 @@ def analizza_ssl(hostname):
 
 # Funzione per analizzare gli Header HTTPS sfruttando Nuclei e regole personalizzate (Linting)
 def analizza_headers(hostname):
-    print(f"-> [{hostname}] Esecuzione Nuclei + Linting in corso...")
+    print(f"-> [{hostname}] Esecuzione Nuclei in corso...")
     json_path = f"/tmp/{hostname}_headers.json"
     
     # Elimino il file vecchio se esiste per non avere dati sporchi
@@ -347,8 +347,8 @@ def run_monitoring():
         # Mi collego al database passando i parametri del DB_CONFIG tramite **
         connection = pymysql.connect(**DB_CONFIG)
         with connection.cursor() as cursor:
-            # Chiedo al database l'elenco dei soli target attivi recuperando anche il loro ID
-            cursor.execute("SELECT id, hostname FROM targets WHERE active = 1")
+            # Chiedo al database l'elenco dei soli target attivi E di tipo WEB, recuperando anche il loro ID
+            cursor.execute("SELECT id, hostname FROM targets WHERE active = 1 AND target_type = 'WEB'")
             targets = cursor.fetchall()
             
             # Inizializzo l'oggetto 'Sender' che si occuperà di spedire i dati a Zabbix

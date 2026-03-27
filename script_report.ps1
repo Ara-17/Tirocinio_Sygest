@@ -9,11 +9,11 @@
 #>
 
 # - CONFIGURAZIONE VARIABILI -
-# Inserire manulamente il nome dell'host come presente su ZABBIX/API
-$TargetHostname = "nome_host.com"
+# Il nome dell'host viene ora letto dinamicamente dal sistema operativo (es. SRV-WIN-01)
+$TargetHostname = $env:COMPUTERNAME
 
-# Configurazione API
-$ApiUrl = "http://<IP_SERVER>:5000/api/v1/trivy"
+# Configurazione API (NOTA: la porta esterna di Docker è la 5001)
+$ApiUrl = "http://192.168.110.60:5001/api/v1/trivy"
 $ApiKey = "TEST"
 
 # Trova in automatico la cartella temporanea di sistema sicura

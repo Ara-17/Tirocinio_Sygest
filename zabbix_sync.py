@@ -13,6 +13,9 @@ def configure_zabbix_alerts(api):
     gitlab_token = os.getenv('GITLAB_TOKEN', '')
     gitlab_project_id = os.getenv('GITLAB_PROJECT_ID', '')
     
+    # Aggiunta configurazione dinamica delle etichette (richiesta CTO)
+    gitlab_default_labels = os.getenv('GITLAB_DEFAULT_LABELS', '')
+    
     media_name = "GitLab"
     
     # Script JavaScript che Zabbix usa per fare la chiamata API a GitLab
@@ -48,8 +51,7 @@ def configure_zabbix_alerts(api):
         var isRoutine = (params.title.indexOf('Routine') !== -1);
         
         var payload = {
-            title: params.title,
-            labels: params.labels
+            title: params.title
         };
         
         // ESTRAZIONE VOTI PER ETICHETTE SCOPED ---
@@ -83,9 +85,17 @@ def configure_zabbix_alerts(api):
             customLabels.push("ssl-grade::" + sslGrade); 
         }
 
-        // Le unisco alle etichette di base (alert, sygest, zabbix) separate da virgola
+        // Unisco le etichette di base (dal .env) con quelle dinamiche
+        var finalLabels = [];
+        if (params.labels && params.labels.trim() !== '') {
+            finalLabels.push(params.labels);
+        }
         if (customLabels.length > 0) {
-            payload.labels = params.labels + "," + customLabels.join(",");
+            finalLabels.push(customLabels.join(","));
+        }
+        
+        if (finalLabels.length > 0) {
+            payload.labels = finalLabels.join(",");
         }
         
         // Sovrascrivo il corpo della Issue SOLO se Zabbix mi ha passato il Markdown completo.
@@ -139,7 +149,7 @@ def configure_zabbix_alerts(api):
         {"name": "host", "value": "{HOST.NAME}"}, # Aggiunto per il trucco della ricerca per host
         {"name": "title", "value": "{ALERT.SUBJECT}"},
         {"name": "description", "value": "{ALERT.MESSAGE}"},
-        {"name": "labels", "value": "zabbix,alert,sygest"}
+        {"name": "labels", "value": gitlab_default_labels} # Ora prende il valore dinamico dall'ambiente
     ]
 
     if not media_types:
@@ -309,6 +319,7 @@ def sync_hosts(api, db_targets):
     # inizio a scorrere uno a uno i server che ho salvato nel mio database mariadb
     for target in db_targets:
         hostname = target['hostname']
+        target_type = target['target_type']
         db_hostnames.append(hostname)
         
         try:
@@ -406,13 +417,16 @@ def sync_hosts(api, db_targets):
 
             # Creo i Master Item principali che riceveranno i payload JSON completi dagli script
             # Il parametro type=2 imposta l'item come "Zabbix trapper", mentre value_type=4 lo imposta come tipo di dato "Text"
-            i_vuln_id = create_or_update_item("JSON Vuln", "sygest.vuln", 2, 4)
-            i_ssl_id = create_or_update_item("JSON SSL", "sygest.ssl_headers", 2, 4)
             
             # CREO L'INTERRUTTORE DI STATO (Riceverà 1 quando python parte e 0 quando finisce)
             # Servirà per fare la scansione a impulsi di Zabbix, evitando controlli infiniti e spam
             create_or_update_item("Scan Status Ping", "sygest.scan_status", 2, 3)
-            
+
+            if target_type == 'SERVER':
+                i_vuln_id = create_or_update_item("JSON Vuln", "sygest.vuln", 2, 4)
+            elif target_type == 'WEB':
+                i_ssl_id = create_or_update_item("JSON SSL", "sygest.ssl_headers", 2, 4)
+
             # Funzione interna per creare i Dependent Item collegati ai Master Item definiti sopra.
             # Questi item servono a leggere il JSON ricevuto per isolare le metriche numeriche da usare poi nei grafici e nei trigger.
             def crea_dipendente_numerico(nome, chiave, json_path, master):
@@ -454,145 +468,147 @@ def sync_hosts(api, db_targets):
                 # Il parametro value_type=4, che in Zabbix significa "Text" e permette al database di salvare stringhe molto lunghe
                 return create_or_update_item(nome, chiave, 18, 4, master, regola)
                 
-            # Creo Dependent Item numerici che si agganciano al Master Item TRIVY
-            # Ognuno di questi item usa una query JSONPath specifica per estrarre un singolo contatore 
-            # dal payload JSON inviato da Trivy, ignorando tutto il resto del file.
+            if target_type == 'SERVER':
+                # Creo Dependent Item numerici che si agganciano al Master Item TRIVY
+                # Ognuno di questi item usa una query JSONPath specifica per estrarre un singolo contatore 
+                # dal payload JSON inviato da Trivy, ignorando tutto il resto del file.
 
-            # Estraggo il flag (0 o 1) che mi dice se questa è la prima scansione fatta su questo host
-            crea_dipendente_numerico(
-                "Vuln First Read Flag", 
-                "vuln.is_first_read", 
-                "$.metrics.is_first_read", 
-                i_vuln_id
-            )
+                # Estraggo il flag (0 o 1) che mi dice se questa è la prima scansione fatta su questo host
+                crea_dipendente_numerico(
+                    "Vuln First Read Flag", 
+                    "vuln.is_first_read", 
+                    "$.metrics.is_first_read", 
+                    i_vuln_id
+                )
 
-            # Estraggo il numero totale delle vulnerabilità attualmente attive e presenti sul server
-            crea_dipendente_numerico(
-                "Vuln Totale CVE attivi", 
-                "vuln.total_active", 
-                "$.metrics.total_active", 
-                i_vuln_id
-            )
+                # Estraggo il numero totale delle vulnerabilità attualmente attive e presenti sul server
+                crea_dipendente_numerico(
+                    "Vuln Totale CVE attivi", 
+                    "vuln.total_active", 
+                    "$.metrics.total_active", 
+                    i_vuln_id
+                )
 
-            # Estraggo il conteggio delle vulnerabilità per cui esiste già un aggiornamento software (Patch) pronto da installare
-            crea_dipendente_numerico(
-                "Vuln Totale CVE CON Patch", 
-                "vuln.total_with_patch", 
-                "$.metrics.total_with_patch", 
-                i_vuln_id
-            )
+                # Estraggo il conteggio delle vulnerabilità per cui esiste già un aggiornamento software (Patch) pronto da installare
+                crea_dipendente_numerico(
+                    "Vuln Totale CVE CON Patch", 
+                    "vuln.total_with_patch", 
+                    "$.metrics.total_with_patch", 
+                    i_vuln_id
+                )
 
-            # Estraggo il conteggio delle vulnerabilità più fastidiose, quelle per cui i produttori non hanno ancora rilasciato soluzioni
-            crea_dipendente_numerico(
-                "Vuln Totale CVE SENZA Patch", 
-                "vuln.total_without_patch", 
-                "$.metrics.total_without_patch", 
-                i_vuln_id
-            )
+                # Estraggo il conteggio delle vulnerabilità più fastidiose, quelle per cui i produttori non hanno ancora rilasciato soluzioni
+                crea_dipendente_numerico(
+                    "Vuln Totale CVE SENZA Patch", 
+                    "vuln.total_without_patch", 
+                    "$.metrics.total_without_patch", 
+                    i_vuln_id
+                )
 
-            # Estraggo il numero dei soli CVE appena scoperti nell'ultima scansione e che possono essere già sistemati
-            crea_dipendente_numerico(
-                "Vuln NUOVI CVE CON Patch", 
-                "vuln.new_with_patch_count", 
-                "$.metrics.new_with_patch_count", 
-                i_vuln_id
-            )
+                # Estraggo il numero dei soli CVE appena scoperti nell'ultima scansione e che possono essere già sistemati
+                crea_dipendente_numerico(
+                    "Vuln NUOVI CVE CON Patch", 
+                    "vuln.new_with_patch_count", 
+                    "$.metrics.new_with_patch_count", 
+                    i_vuln_id
+                )
 
-            # Estraggo il numero dei soli CVE appena scoperti nell'ultima scansione che purtroppo non hanno ancora una patch
-            crea_dipendente_numerico(
-                "Vuln NUOVI CVE SENZA Patch", 
-                "vuln.new_without_patch_count", 
-                "$.metrics.new_without_patch_count", 
-                i_vuln_id
-            )
+                # Estraggo il numero dei soli CVE appena scoperti nell'ultima scansione che purtroppo non hanno ancora una patch
+                crea_dipendente_numerico(
+                    "Vuln NUOVI CVE SENZA Patch", 
+                    "vuln.new_without_patch_count", 
+                    "$.metrics.new_without_patch_count", 
+                    i_vuln_id
+                )
 
-            # Creo i Dependent Item di tipo testo agganciati al Master Item delle vulnerabilità (i_vuln_id).
-            # Tramite JSONPath estraggo le stringhe già pre-formattate dal mio script Python, così Zabbix dovrà
-            # semplicemente prenderle e scriverle dentro le mail di alert senza dover fare ulteriori elaborazioni.
-            
-            # Estraggo il blocco di testo che riassume i risultati della prima scansione del server
-            crea_dipendente_testo(
-                "Vuln Testo Prima Lettura", 
-                "vuln.first_read_text", 
-                "$.texts.first_read_text", 
-                i_vuln_id
-            )
-            
-            # Estraggo il blocco di testo che elenca i dettagli delle nuove vulnerabilità che hanno già una patch disponibile.
-            crea_dipendente_testo(
-                "Vuln Testo Nuovi CON Patch", 
-                "vuln.new_with_patch_text", 
-                "$.texts.new_with_patch_text", 
-                i_vuln_id
-            )
-            
-            # Estraggo il blocco di testo critico con l'elenco delle vulnerabilità scoperte ma senza ancora una patch.
-            crea_dipendente_testo(
-                "Vuln Testo Nuovi SENZA Patch", 
-                "vuln.new_without_patch_text", 
-                "$.texts.new_without_patch_text", 
-                i_vuln_id
-            )
+                # Creo i Dependent Item di tipo testo agganciati al Master Item delle vulnerabilità (i_vuln_id).
+                # Tramite JSONPath estraggo le stringhe già pre-formattate dal mio script Python, così Zabbix dovrà
+                # semplicemente prenderle e scriverle dentro le mail di alert senza dover fare ulteriori elaborazioni.
+                
+                # Estraggo il blocco di testo che riassume i risultati della prima scansione del server
+                crea_dipendente_testo(
+                    "Vuln Testo Prima Lettura", 
+                    "vuln.first_read_text", 
+                    "$.texts.first_read_text", 
+                    i_vuln_id
+                )
+                
+                # Estraggo il blocco di testo che elenca i dettagli delle nuove vulnerabilità che hanno già una patch disponibile.
+                crea_dipendente_testo(
+                    "Vuln Testo Nuovi CON Patch", 
+                    "vuln.new_with_patch_text", 
+                    "$.texts.new_with_patch_text", 
+                    i_vuln_id
+                )
+                
+                # Estraggo il blocco di testo critico con l'elenco delle vulnerabilità scoperte ma senza ancora una patch.
+                crea_dipendente_testo(
+                    "Vuln Testo Nuovi SENZA Patch", 
+                    "vuln.new_without_patch_text", 
+                    "$.texts.new_without_patch_text", 
+                    i_vuln_id
+                )
 
-            # Passo ai controlli di sicurezza web e creo i Dependent Item agganciandoli al secondo Master Item (i_ssl_id).
-            # Questo Master Item riceve il payload JSON specifico per i certificati SSL e gli HTTP Header.
-            
-            # Estraggo il punteggio numerico della sicurezza web per poter disegnare i grafici su Zabbix
-            crea_dipendente_numerico(
-                "Sicurezza Web Score", 
-                "headers.score", 
-                "$.score", 
-                i_ssl_id
-            )
-            
-            # Estraggo il voto in lettere (A, B, C, ecc.) per mostrarlo in modo facile sulla dashboard
-            crea_dipendente_testo(
-                "Sicurezza Web Grade Headers", 
-                "headers.grade", 
-                "$.headers_grade", 
-                i_ssl_id
-            )
-            
-            # Estraggo il voto in lettere del certificato SSL generato da testssl.sh
-            crea_dipendente_testo(
-                "Sicurezza Web Grade SSL", 
-                "ssl.grade", 
-                "$.ssl_grade", 
-                i_ssl_id
-            )
-            
-            # Estraggo come valore numerico i giorni rimanenti prima che il certificato SSL del sito scada
-            crea_dipendente_numerico(
-                "SSL Giorni scadenza CA", 
-                "ssl.days_left", 
-                "$.days_left", 
-                i_ssl_id
-            )
-            
-            # Estraggo come stringa di testo l'impronta digitale (Thumbprint) del certificato
-            crea_dipendente_testo(
-                "SSL Thumbprint", 
-                "ssl.thumbprint", 
-                "$.thumbprint", 
-                i_ssl_id
-            )
-            
-            # Estraggo l'elenco testuale di vulnerabilità e warning estrapolati da Python
-            crea_dipendente_testo(
-                "Sicurezza Web Warnings", 
-                "headers.warnings_text", 
-                "$.warnings_text", 
-                i_ssl_id
-            )
-            
-            # Estraggo l'INTERO report Markdown. Questo è l'Item più importante perché è quello 
-            # che verrà inviato a GitLab per compilare il corpo della Issue.
-            crea_dipendente_testo(
-                "Sicurezza Web Full Report Markdown", 
-                "headers.full_report", 
-                "$.full_markdown_report", 
-                i_ssl_id
-            )
+            elif target_type == 'WEB':
+                # Passo ai controlli di sicurezza web e creo i Dependent Item agganciandoli al secondo Master Item (i_ssl_id).
+                # Questo Master Item riceve il payload JSON specifico per i certificati SSL e gli HTTP Header.
+                
+                # Estraggo il punteggio numerico della sicurezza web per poter disegnare i grafici su Zabbix
+                crea_dipendente_numerico(
+                    "Sicurezza Web Score", 
+                    "headers.score", 
+                    "$.score", 
+                    i_ssl_id
+                )
+                
+                # Estraggo il voto in lettere (A, B, C, ecc.) per mostrarlo in modo facile sulla dashboard
+                crea_dipendente_testo(
+                    "Sicurezza Web Grade Headers", 
+                    "headers.grade", 
+                    "$.headers_grade", 
+                    i_ssl_id
+                )
+                
+                # Estraggo il voto in lettere del certificato SSL generato da testssl.sh
+                crea_dipendente_testo(
+                    "Sicurezza Web Grade SSL", 
+                    "ssl.grade", 
+                    "$.ssl_grade", 
+                    i_ssl_id
+                )
+                
+                # Estraggo come valore numerico i giorni rimanenti prima che il certificato SSL del sito scada
+                crea_dipendente_numerico(
+                    "SSL Giorni scadenza CA", 
+                    "ssl.days_left", 
+                    "$.days_left", 
+                    i_ssl_id
+                )
+                
+                # Estraggo come stringa di testo l'impronta digitale (Thumbprint) del certificato
+                crea_dipendente_testo(
+                    "SSL Thumbprint", 
+                    "ssl.thumbprint", 
+                    "$.thumbprint", 
+                    i_ssl_id
+                )
+                
+                # Estraggo l'elenco testuale di vulnerabilità e warning estrapolati da Python
+                crea_dipendente_testo(
+                    "Sicurezza Web Warnings", 
+                    "headers.warnings_text", 
+                    "$.warnings_text", 
+                    i_ssl_id
+                )
+                
+                # Estraggo l'INTERO report Markdown. Questo è l'Item più importante perché è quello 
+                # che verrà inviato a GitLab per compilare il corpo della Issue.
+                crea_dipendente_testo(
+                    "Sicurezza Web Full Report Markdown", 
+                    "headers.full_report", 
+                    "$.full_markdown_report", 
+                    i_ssl_id
+                )
 
             # Definisco un'altra funzione interna, per gestire la creazione dei Trigger.
             # Riceve in ingresso il nome del trigger (desc), l'espressione logica/matematica per farlo scattare (expr) 
@@ -624,72 +640,74 @@ def sync_hosts(api, db_targets):
             # Per ogni Trigger passo 3 parametri: il nome (con la macro {HOST.NAME} che Zabbix compila da solo), 
             # l'espressione e il livello di Severity (da 1 a 5).
             
-            # --- TRIGGER VULNERABILITÀ TRIVY ---
-            
-            # Livello 1 (Information)
-            # L'espressione controlla due cose con la funzione 'last': che il testo della mail non sia vuoto (length>0) 
-            # e che il flag numerico 'is_first_read' sia uguale a 1.
-            # NOTA BENE: l'item di testo è sempre il primo nell'espressione così {ITEM.VALUE1} stampa il markdown!
-            create_or_update_trigger(
-                f"Info Prima lettura massiva Trivy completata su {{HOST.NAME}}", 
-                f"length(last(/{hostname}/vuln.first_read_text))>0 and last(/{hostname}/vuln.is_first_read)=1", 
-                1 
-            )
+            if target_type == 'SERVER':
+                # --- TRIGGER VULNERABILITÀ TRIVY ---
+                
+                # Livello 1 (Information)
+                # L'espressione controlla due cose con la funzione 'last': che il testo della mail non sia vuoto (length>0) 
+                # e che il flag numerico 'is_first_read' sia uguale a 1.
+                # NOTA BENE: l'item di testo è sempre il primo nell'espressione così {ITEM.VALUE1} stampa il markdown!
+                create_or_update_trigger(
+                    f"Info Prima lettura massiva Trivy completata su {{HOST.NAME}}", 
+                    f"length(last(/{hostname}/vuln.first_read_text))>0 and last(/{hostname}/vuln.is_first_read)=1", 
+                    1 
+                )
 
-            # Livello 5 (Disaster)
-            # Scatta se Trivy trova vulnerabilità nuove. Verifico che ci sia il testo per la mail e che il contatore dei nuovi CVE senza di patch sia maggiore di zero.
-            create_or_update_trigger(
-                f"CRITICO Rilevati Nuovi CVE SENZA PATCH su {{HOST.NAME}}", 
-                f"length(last(/{hostname}/vuln.new_without_patch_text))>0 and last(/{hostname}/vuln.new_without_patch_count)>0", 
-                5 
-            )
+                # Livello 5 (Disaster)
+                # Scatta se Trivy trova vulnerabilità nuove. Verifico che ci sia il testo per la mail e che il contatore dei nuovi CVE senza di patch sia maggiore di zero.
+                create_or_update_trigger(
+                    f"CRITICO Rilevati Nuovi CVE SENZA PATCH su {{HOST.NAME}}", 
+                    f"length(last(/{hostname}/vuln.new_without_patch_text))>0 and last(/{hostname}/vuln.new_without_patch_count)>0", 
+                    5 
+                )
 
-            # Livello 3 (Warning)
-            # Ci sono vulnerabilità nuove, ma i produttori hanno già la patch.
-            create_or_update_trigger(
-                f"Avviso Rilevati Nuovi CVE o nuove patch disponibili su {{HOST.NAME}}", 
-                f"length(last(/{hostname}/vuln.new_with_patch_text))>0 and last(/{hostname}/vuln.new_with_patch_count)>0", 
-                3 
-            )
+                # Livello 3 (Warning)
+                # Ci sono vulnerabilità nuove, ma i produttori hanno già la patch.
+                create_or_update_trigger(
+                    f"Avviso Rilevati Nuovi CVE o nuove patch disponibili su {{HOST.NAME}}", 
+                    f"length(last(/{hostname}/vuln.new_with_patch_text))>0 and last(/{hostname}/vuln.new_with_patch_count)>0", 
+                    3 
+                )
 
-            # --- TRIGGER SICUREZZA WEB E HEADERS (Logica ad Impulsi per non spammare) ---          
-            
-            # 1. Prima scansione in assoluto (Livello 1 - Information)
-            # Mettendo "headers.full_report" al primo posto, Zabbix assegnerà il Markdown alla variabile {ITEM.VALUE1} 
-            create_or_update_trigger(
-                f"Report su {{HOST.NAME}}", 
-                f"length(last(/{hostname}/headers.full_report))>0 and last(/{hostname}/sygest.scan_status)=1 and count(/{hostname}/headers.score,#2)=1", 
-                1
-            )
+            elif target_type == 'WEB':
+                # --- TRIGGER SICUREZZA WEB E HEADERS (Logica ad Impulsi per non spammare) ---          
+                
+                # 1. Prima scansione in assoluto (Livello 1 - Information)
+                # Mettendo "headers.full_report" al primo posto, Zabbix assegnerà il Markdown alla variabile {ITEM.VALUE1} 
+                create_or_update_trigger(
+                    f"Report su {{HOST.NAME}}", 
+                    f"length(last(/{hostname}/headers.full_report))>0 and last(/{hostname}/sygest.scan_status)=1 and count(/{hostname}/headers.score,#2)=1", 
+                    1
+                )
 
-            # 2. Peggioramento (Livello 4 - High)
-            create_or_update_trigger(
-                f"Peggioramento su {{HOST.NAME}}", 
-                f"length(last(/{hostname}/headers.full_report))>0 and last(/{hostname}/sygest.scan_status)=1 and last(/{hostname}/headers.score)<last(/{hostname}/headers.score,#2) and count(/{hostname}/headers.score,#2)>=2", 
-                4
-            )
+                # 2. Peggioramento (Livello 4 - High)
+                create_or_update_trigger(
+                    f"Peggioramento su {{HOST.NAME}}", 
+                    f"length(last(/{hostname}/headers.full_report))>0 and last(/{hostname}/sygest.scan_status)=1 and last(/{hostname}/headers.score)<last(/{hostname}/headers.score,#2) and count(/{hostname}/headers.score,#2)>=2", 
+                    4
+                )
 
-            # 3. Miglioramento (Livello 1 - Information)
-            create_or_update_trigger(
-                f"Miglioramento su {{HOST.NAME}}", 
-                f"length(last(/{hostname}/headers.full_report))>0 and last(/{hostname}/sygest.scan_status)=1 and last(/{hostname}/headers.score)>last(/{hostname}/headers.score,#2) and count(/{hostname}/headers.score,#2)>=2", 
-                1
-            )
+                # 3. Miglioramento (Livello 1 - Information)
+                create_or_update_trigger(
+                    f"Miglioramento su {{HOST.NAME}}", 
+                    f"length(last(/{hostname}/headers.full_report))>0 and last(/{hostname}/sygest.scan_status)=1 and last(/{hostname}/headers.score)>last(/{hostname}/headers.score,#2) and count(/{hostname}/headers.score,#2)>=2", 
+                    1
+                )
 
-            # 4. Sincronizzazione di Routine (Livello 1 - Information)
-            # Questo è il Trigger intelligente! Scatta quando Python finisce la scansione e vede che NON ci sono stati cambiamenti.
-            create_or_update_trigger(
-                f"Routine Sync su {{HOST.NAME}}", 
-                f"length(last(/{hostname}/headers.full_report))>0 and last(/{hostname}/sygest.scan_status)=1 and last(/{hostname}/headers.score)=last(/{hostname}/headers.score,#2) and count(/{hostname}/headers.score,#2)>=2", 
-                1
-            )
+                # 4. Sincronizzazione di Routine (Livello 1 - Information)
+                # Questo è il Trigger intelligente! Scatta quando Python finisce la scansione e vede che NON ci sono stati cambiamenti.
+                create_or_update_trigger(
+                    f"Routine Sync su {{HOST.NAME}}", 
+                    f"length(last(/{hostname}/headers.full_report))>0 and last(/{hostname}/sygest.scan_status)=1 and last(/{hostname}/headers.score)=last(/{hostname}/headers.score,#2) and count(/{hostname}/headers.score,#2)>=2", 
+                    1
+                )
 
-            # --- TRIGGER CERTIFICATI SSL ---      
-            # Livello 4 (High)
-            create_or_update_trigger(f"Allarme Certificato SSL in scadenza per {{HOST.NAME}}", f"length(last(/{hostname}/headers.full_report))>0 and last(/{hostname}/sygest.scan_status)=1 and last(/{hostname}/ssl.days_left)<30 and last(/{hostname}/ssl.days_left)>=0", 4)
-            
-            # Livello 1 (Information)
-            create_or_update_trigger(f"Info Thumbprint SSL cambiato per {{HOST.NAME}}", f"length(last(/{hostname}/headers.full_report))>0 and last(/{hostname}/sygest.scan_status)=1 and last(/{hostname}/ssl.thumbprint)<>last(/{hostname}/ssl.thumbprint,#2) and length(last(/{hostname}/ssl.thumbprint))>5", 1)
+                # --- TRIGGER CERTIFICATI SSL ---      
+                # Livello 4 (High)
+                create_or_update_trigger(f"Allarme Certificato SSL in scadenza per {{HOST.NAME}}", f"length(last(/{hostname}/headers.full_report))>0 and last(/{hostname}/sygest.scan_status)=1 and last(/{hostname}/ssl.days_left)<30 and last(/{hostname}/ssl.days_left)>=0", 4)
+                
+                # Livello 1 (Information)
+                create_or_update_trigger(f"Info Thumbprint SSL cambiato per {{HOST.NAME}}", f"length(last(/{hostname}/headers.full_report))>0 and last(/{hostname}/sygest.scan_status)=1 and last(/{hostname}/ssl.thumbprint)<>last(/{hostname}/ssl.thumbprint,#2) and length(last(/{hostname}/ssl.thumbprint))>5", 1)
 
         except Exception as e:
             # Stampo a video l'eccezione (e) per capire il problema e uso il comando 'continue' 
@@ -717,9 +735,9 @@ def main():
         # Mi collego al mio database MariaDB spacchettando il dizionario di configurazione (DB_CONFIG) con i due asterischi (**).
         connection = pymysql.connect(**DB_CONFIG)
         
-        # Ricavo tutti i server sul DB, prendendo ID, nome e status
+        # Ricavo tutti i server sul DB, prendendo ID, nome, status e target_type
         with connection.cursor() as cursor:
-            cursor.execute("SELECT id, hostname, active FROM targets")
+            cursor.execute("SELECT id, hostname, active, target_type FROM targets")
             
             # Salvo tutto il blocco di risultati dentro la variabile db_targets.
             db_targets = cursor.fetchall()

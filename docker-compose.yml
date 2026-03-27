@@ -59,10 +59,9 @@ services:
     env_file:
       - .env
     volumes:
-      # Sincronizza i file della cartella locale con quelli nel container
       - ./:/app 
     ports:
-      - 5001:5000
+      - "5001:5000"
 
 volumes:
   zabbix-db-data:

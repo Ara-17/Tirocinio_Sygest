@@ -84,21 +84,20 @@ def receive_trivy_report():
         # Uso la libreria json per convertire il file in arrivo in un dizionario Python.
         trivy_data = json.load(file)
         
-        # Creo un dizionario temporaneo dove andrò a salvare solo le vulnerabilità estratte da questa scansione,
-        # ignorando altre informazioni che Trivy metterà nel report
+        # Creo un dizionario temporaneo dove andrò a salvare solo le vulnerabilità estratte da questa scansione
         scanned_cves = {}
         
         # Inizio a navigare la struttura del JSON
         for result in trivy_data.get('Results', []):
+            # ESTRAGGO IL PERCORSO (TARGET) PER CAPIRE A QUALE SITO/CARTELLA APPARTIENE
+            target_path = result.get('Target', 'Sistema Base')
+            
             for vuln in result.get('Vulnerabilities', []):
                 cve_id = vuln.get('VulnerabilityID', 'Sconosciuto')
                 software = vuln.get('PkgName', 'Sconosciuto')
                 
                 # Cerco il link ufficiale per scaricare l'aggiornamento
                 link_patch = vuln.get('PrimaryURL')
-                
-                # Se Trivy non mi ha fornito il link principale, provo a controllare la lista dei link 
-                # di "reference". Se non c'è neanche lì, inserisco "Non disponibile".
                 if not link_patch:
                     refs = vuln.get('References', [])
                     if refs:
@@ -106,29 +105,35 @@ def receive_trivy_report():
                     else:
                         link_patch = "Non disponibile"
                 
-                # Uso una "tupla" come chiave doppia (ID vulnerabilità + Nome Software).
-                # Questo perché la stessa vulnerabilità potrebbe colpire due programmi 
-                # diversi installati sulla stessa macchina.
                 key = (cve_id, software)
                 
-                scanned_cves[key] = {
-                    "current_version": vuln.get('InstalledVersion', 'Sconosciuta'),
-                    "fixed_version": vuln.get('FixedVersion', ''),
-                    "severity": vuln.get('Severity', 'UNKNOWN'),
-                    "description": vuln.get('Description', 'Nessuna descrizione presente'),
-                    "link_patch": link_patch
-                }
+                # Se la vulnerabilità non è ancora nel dizionario, la aggiungo
+                if key not in scanned_cves:
+                    scanned_cves[key] = {
+                        "current_version": vuln.get('InstalledVersion', 'Sconosciuta'),
+                        "fixed_version": vuln.get('FixedVersion', ''),
+                        "severity": vuln.get('Severity', 'UNKNOWN'),
+                        "description": vuln.get('Description', 'Nessuna descrizione presente'),
+                        "link_patch": link_patch,
+                        "paths": [target_path] # Salvo il percorso in una lista
+                    }
+                else:
+                    # Se c'era già, significa che lo stesso componente vulnerabile è usato in più siti/cartelle. 
+                    # Aggiungo il nuovo percorso alla lista senza creare duplicati.
+                    if target_path not in scanned_cves[key]["paths"]:
+                        scanned_cves[key]["paths"].append(target_path)
 
         # Mi collego al database usando le configurazioni preparate all'inizio.
         connection = pymysql.connect(**DB_CONFIG)
         with connection.cursor() as cursor:
             
-            # Cerco l'hostname nel database. Se il server non è presente, rifiuto i dati. 
-            cursor.execute("SELECT id FROM targets WHERE hostname = %s", (hostname,))
+            # Cerco l'hostname nel database verificando che sia esplicitamente di tipo 'SERVER'. 
+            # Se il server non è presente o è un sito WEB, rifiuto i dati. 
+            cursor.execute("SELECT id FROM targets WHERE hostname = %s AND target_type = 'SERVER'", (hostname,))
             target = cursor.fetchone()
             
             if not target:
-                return jsonify({"status": "error", "message": "Questo host non esiste nel database"}), 404
+                return jsonify({"status": "error", "message": "Questo host non esiste nel database o non è di tipo SERVER"}), 404
                 
             target_id = target['id']
 
@@ -172,8 +177,18 @@ def receive_trivy_report():
                 # Prendo la label corrispondente (se non c'è, stringa vuota)
                 lbl = label_cve.get(data['severity'].upper(), "")
                 
+                # --- CORREZIONE PATH ---
+                # Recupero i percorsi se presenti, altrimenti metto un default per evitare l'errore 'paths'
+                paths_list = data.get('paths', ['Percorso non rilevato'])
+                paths_str = ", ".join(paths_list[:3])
+                if len(paths_list) > 3:
+                    paths_str += " (e altri...)"
+                
                 # Formatto il testo come Checkbox Markdown
                 text_block = f"- [ ] **[{cve_id}]** {software} v{data['current_version']} {lbl}\n"
+                
+                # Aggiungo la riga del Path (estremamente utile per il CTO)
+                text_block += f"  - Path: `{paths_str}`\n"
                 
                 # Aggiungo uno spazio iniziale per indentare i dettagli sotto la checkbox su GitLab
                 if has_patch:
@@ -182,7 +197,7 @@ def receive_trivy_report():
                     text_block += f"  - Gravità: {data['severity']} | Patch: NESSUNA\n"
                     
                 text_block += f"  - Link: {data['link_patch']}\n"
-                text_block += f"  - Info: {data['description'][:150]}...\n\n"
+                text_block += f"  - Info: {data['description']}\n\n"
 
                 # Inserisco il blocco di testo nel conteggio totale per tenere traccia dello stato attuale del server
                 if has_patch:

@@ -10,6 +10,37 @@ Il progetto sfrutta un'architettura a microservizi (Docker) per raccogliere pass
 * **Zabbix Orchestrator:** Zabbix riceve i dati tramite Trapper Items, calcola i gradi di sicurezza (da A+ a F) e lancia i trigger tramite una logica a impulsi per evitare spam di notifiche.
 * **GitLab Smart Webhook:** Un webhook JavaScript personalizzato gestisce il ciclo di vita delle Issue su GitLab: le crea, le aggiorna in caso di peggioramenti, inserisce report in Markdown con sezioni collassabili e applica etichette dinamiche (es. `headers-grade::A+`).
 
+## Requisiti di Sistema
+
+Per garantire il corretto funzionamento dell'intera infrastruttura a microservizi e la fluidità delle scansioni di sicurezza, si consigliano i seguenti requisiti hardware e software.
+
+### Hardware
+
+| Risorsa | Minimo (Test) | Consigliato (Produzione) |
+| :--- | :--- | :--- |
+| **CPU** | 2 Core (64-bit) | 4 Core o superiore |
+| **RAM** | 4 GB | 8 GB |
+| **Spazio Disco** | 20 GB (SSD) | 50 GB o superiore (SSD) |
+
+* **Nota sulla RAM:** Lo stack Zabbix (Server + Frontend + DB) richiede circa 2 GB di memoria dedicata per operare stabilmente. I restanti 2 GB (nei requisiti minimi) sono necessari per la gestione dei container Sygest e per i picchi di carico durante le scansioni `testssl.sh` e `nuclei`.
+
+### Software e Networking
+
+* **Sistema Operativo:** Linux (distribuzioni consigliate: Ubuntu Server 22.04+, Debian 11+, RHEL 8+).
+* **Docker Engine:** Versione 20.10.x o superiore.
+* **Docker Compose:** Versione 2.x o superiore.
+* **Porte di Rete da esporre:**
+    * `8080`: Accesso alla Dashboard Web di Zabbix.
+    * `5001`: Ricezione dei report JSON dai target (API Flask).
+    * `10051`: Comunicazione Zabbix Trapper per l'invio dati dal Worker.
+    * `3306`: (Opzionale) Accesso esterno al database `sygest-db` per manutenzione.
+
+### Connettività Outbound
+Il container `sygest-script-runner` richiede l'accesso a Internet per:
+1.  Scaricare i template aggiornati di **Nuclei** durante la fase di build.
+2.  Interrogare i target Web esterni durante i controlli di sicurezza.
+3.  Comunicare con le API di **GitLab** per l'apertura e l'aggiornamento dei ticket.
+
 ## Requisiti Preliminari
 
 * **Docker** e **Docker Compose** installati sul server host.

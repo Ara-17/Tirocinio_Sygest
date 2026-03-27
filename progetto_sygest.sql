@@ -5,10 +5,11 @@ SET time_zone = "+00:00";
 CREATE TABLE `targets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `hostname` varchar(255) NOT NULL,
+  `target_type` varchar(10) NOT NULL DEFAULT 'WEB',
   `active` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
-  UNIQUE KEY `hostname` (`hostname`)
+  UNIQUE KEY `idx_hostname_type` (`hostname`, `target_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `scans` (
@@ -45,40 +46,40 @@ CREATE TABLE `vulnerabilities` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Inserisco la lista completa dei target
-INSERT INTO `targets` (`hostname`, `active`) VALUES
-('jbt-packinglist-macchine.sys-suite.com', 1),
-('logistica.fortna.it', 1),
-('packinglistCFT.sygest.it', 1),
-('packinglist-cft.sys-suite.com', 1),
-('packinglistmmtest-fortna.sygest.it', 1),
-('packinglistPEI-test.sygest.it', 1),
-('placmi-test.sygest.it', 1),
-('plextendedtest.sygest.it', 1),
-('plmarchesini-test.sygest.it', 1),
-('packinglist.ocme.com', 1),
-('packinglistchimar.sygest.it', 1),
-('spcbweb.sys-suite.com', 1),
-('packinglistequipment.ocme.com', 1),
-('packinglistgebo.sygest.it', 1),
-('packinglistrobopac.sygest.it', 1),
-('packinglistrobopactest.sygest.it', 1),
-('pldemomm.sygest.it', 1),
-('packinglistzacmi.sygest.it', 1),
-('packinglistsidel.sidel.com', 1),
-('plocme.sygest.it', 1),
-('plextendedsvil.sygest.it', 1),
-('pit-plp.sys-suite.com', 1),
-('jbtams-packinglist.sys-suite.com', 1),
-('termotecnicapericoli-plp.sys-suite.com', 1),
-('clevertech-plp.sys-suite.com', 1),
-('jbt-packinglist.sys-suite.com', 1),
-('acmi-plp.sys-suite.com', 1),
-('packinglist.sidel.com', 1),
-('eparts-filling.gea.com', 1),
-('sparepartsadmin-procomac.gea.com', 1),
-('hom.spareparts.gea.com', 1),
-('admin.hom.spareparts.gea.com', 1),
-('extrudedfood.spareparts.gea.com', 1),
-('admin.extrudedfood.spareparts.gea.com', 1);
+INSERT INTO `targets` (`hostname`, `target_type`, `active`) VALUES
+('jbt-packinglist-macchine.sys-suite.com', 'WEB', 1),
+('logistica.fortna.it', 'WEB', 1),
+('packinglistCFT.sygest.it', 'WEB', 1),
+('packinglist-cft.sys-suite.com', 'WEB', 1),
+('packinglistmmtest-fortna.sygest.it', 'WEB', 1),
+('packinglistPEI-test.sygest.it', 'WEB', 1),
+('placmi-test.sygest.it', 'WEB', 1),
+('plextendedtest.sygest.it', 'WEB', 1),
+('plmarchesini-test.sygest.it', 'WEB', 1),
+('packinglist.ocme.com', 'WEB', 1),
+('packinglistchimar.sygest.it', 'WEB', 1),
+('spcbweb.sys-suite.com', 'WEB', 1),
+('packinglistequipment.ocme.com', 'WEB', 1),
+('packinglistgebo.sygest.it', 'WEB', 1),
+('packinglistrobopac.sygest.it', 'WEB', 1),
+('packinglistrobopactest.sygest.it', 'WEB', 1),
+('pldemomm.sygest.it', 'WEB', 1),
+('packinglistzacmi.sygest.it', 'WEB', 1),
+('packinglistsidel.sidel.com', 'WEB', 1),
+('plocme.sygest.it', 'WEB', 1),
+('plextendedsvil.sygest.it', 'WEB', 1),
+('pit-plp.sys-suite.com', 'WEB', 1),
+('jbtams-packinglist.sys-suite.com', 'WEB', 1),
+('termotecnicapericoli-plp.sys-suite.com', 'WEB', 1),
+('clevertech-plp.sys-suite.com', 'WEB', 1),
+('jbt-packinglist.sys-suite.com', 'WEB', 1),
+('acmi-plp.sys-suite.com', 'WEB', 1),
+('packinglist.sidel.com', 'WEB', 1),
+('eparts-filling.gea.com', 'WEB', 1),
+('sparepartsadmin-procomac.gea.com', 'WEB', 1),
+('hom.spareparts.gea.com', 'WEB', 1),
+('admin.hom.spareparts.gea.com', 'WEB', 1),
+('extrudedfood.spareparts.gea.com', 'WEB', 1),
+('admin.extrudedfood.spareparts.gea.com', 'WEB', 1);
 
 COMMIT;
